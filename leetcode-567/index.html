@@ -20,23 +20,23 @@
     var CONFIG = {"hostname":"github.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"valine","storage":true,"lazyload":false,"nav":null,"activeClass":"valine"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="LeetCode 第 1888 题：使二进制字符串交替的最少反转次数。这是一道非常有趣的中等难度题目，它巧妙地将字符串循环操作和经典算法模型“滑动窗口”结合了起来。">
+  <meta name="description" content="LeetCode 第 567 题：字符串的排列。这是一道经典的面试题，也是展示“滑动窗口”算法思想威力的绝佳范例。它教会我们如何将一个看似复杂的问题（关于“排列”）转化为一个更易于处理的计数问题。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="LeetCode 1888 | 利用滑动窗口巧解循环字符串反转问题">
-<meta property="og:url" content="http://github.com/leetcode-1-1.2-1888/index.html">
+<meta property="og:title" content="LeetCode 567 | 滑动窗口精解字符串排列问题">
+<meta property="og:url" content="http://github.com/leetcode-567/index.html">
 <meta property="og:site_name" content="Changan&#39;s Blog">
-<meta property="og:description" content="LeetCode 第 1888 题：使二进制字符串交替的最少反转次数。这是一道非常有趣的中等难度题目，它巧妙地将字符串循环操作和经典算法模型“滑动窗口”结合了起来。">
+<meta property="og:description" content="LeetCode 第 567 题：字符串的排列。这是一道经典的面试题，也是展示“滑动窗口”算法思想威力的绝佳范例。它教会我们如何将一个看似复杂的问题（关于“排列”）转化为一个更易于处理的计数问题。">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2025-09-16T03:05:16.000Z">
-<meta property="article:modified_time" content="2025-09-16T06:30:00.000Z">
+<meta property="article:published_time" content="2025-09-17T01:01:54.000Z">
+<meta property="article:modified_time" content="2025-09-17T04:55:16.000Z">
 <meta property="article:author" content="Changan">
 <meta property="article:tag" content="字符串">
 <meta property="article:tag" content="滑动窗口">
-<meta property="article:tag" content="动态规划">
-<meta property="article:tag" content="第244场周赛">
+<meta property="article:tag" content="哈希表">
+<meta property="article:tag" content="双指针">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="http://github.com/leetcode-1-1.2-1888/">
+<link rel="canonical" href="http://github.com/leetcode-567/">
 
 
 <script id="page-configurations">
@@ -49,7 +49,7 @@
   };
 </script>
 
-  <title>LeetCode 1888 | 利用滑动窗口巧解循环字符串反转问题 | Changan's Blog</title>
+  <title>LeetCode 567 | 滑动窗口精解字符串排列问题 | Changan's Blog</title>
   
 
 
@@ -199,7 +199,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://github.com/leetcode-1-1.2-1888/">
+    <link itemprop="mainEntityOfPage" href="http://github.com/leetcode-567/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.png">
@@ -212,7 +212,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          LeetCode 1888 | 利用滑动窗口巧解循环字符串反转问题
+          LeetCode 567 | 滑动窗口精解字符串排列问题
         </h1>
 
         <div class="post-meta">
@@ -223,7 +223,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2025-09-16 11:05:16 / 修改时间：14:30:00" itemprop="dateCreated datePublished" datetime="2025-09-16T11:05:16+08:00">2025-09-16</time>
+              <time title="创建时间：2025-09-17 09:01:54 / 修改时间：12:55:16" itemprop="dateCreated datePublished" datetime="2025-09-17T09:01:54+08:00">2025-09-17</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -259,8 +259,8 @@
       </span>
       <span class="post-meta-item-text">Valine：</span>
     
-    <a title="valine" href="/leetcode-1-1.2-1888/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/leetcode-1-1.2-1888/" itemprop="commentCount"></span>
+    <a title="valine" href="/leetcode-567/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/leetcode-567/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -277,72 +277,69 @@
       
         <blockquote class="blockquote-center">
             <i class="fa fa-quote-left"></i>
-            <p>LeetCode 第 1888 题：<a target="_blank" rel="noopener" href="https://leetcode.cn/problems/minimum-number-of-flips-to-make-the-binary-string-alternating/description/">使二进制字符串交替的最少反转次数</a>。<br>这是一道非常有趣的中等难度题目，它巧妙地将字符串循环操作和经典算法模型“滑动窗口”结合了起来。</p>
+            <p>LeetCode 第 567 题：<a target="_blank" rel="noopener" href="https://leetcode.cn/problems/permutation-in-string/">字符串的排列</a>。<br>这是一道经典的面试题，也是展示“滑动窗口”算法思想威力的绝佳范例。它教会我们如何将一个看似复杂的问题（关于“排列”）转化为一个更易于处理的计数问题。</p>
 
             <i class="fa fa-quote-right"></i>
           </blockquote>
 <span id="more"></span>
-<h3 id="问题解读"><a href="#问题解读" class="headerlink" title="问题解读"></a>问题解读</h3><p>首先，我们来分析一下题目的要求。给定一个二进制字符串 <code>s</code>，我们有两种操作：</p>
+<h3 id="问题解读"><a href="#问题解读" class="headerlink" title="问题解读"></a>问题解读</h3><p>我们来仔细分析一下题目：给定两个字符串 <code>s1</code> 和 <code>s2</code>，判断 <code>s2</code> 是否<strong>包含</strong> <code>s1</code> 的<strong>排列</strong>。</p>
 <ul>
-<li><strong>类型 1（循环移位）</strong>: 将字符串的第一个字符移动到末尾。这个操作可以执行任意次，意味着字符串的<strong>起点可以是任意位置</strong>。例如，<code>&quot;111000&quot;</code> 可以变成 <code>&quot;110001&quot;</code>、<code>&quot;100011&quot;</code> 等。</li>
-<li><strong>类型 2（字符反转）</strong>: 将任意一个 <code>&#39;0&#39;</code> 变成 <code>&#39;1&#39;</code>，或者 <code>&#39;1&#39;</code> 变成 <code>&#39;0&#39;</code>。</li>
+<li><strong>排列</strong>：意味着字符种类和数量完全相同，但顺序可以任意。例如，<code>&quot;abc&quot;</code> 的排列有 <code>&quot;acb&quot;</code>, <code>&quot;bac&quot;</code>, <code>&quot;bca&quot;</code>, <code>&quot;cab&quot;</code>, <code>&quot;cba&quot;</code>。</li>
+<li><strong>包含</strong>：意味着 <code>s1</code> 的某个排列是 <code>s2</code> 的一个<strong>连续子串</strong>。</li>
 </ul>
-<p>我们的目标是，通过这两种操作，将原字符串变成一个“交替字符串”（如 <code>&quot;01010...&quot;</code> 或 <code>&quot;10101...&quot;</code>），并求出<strong>最少的类型 2（反转）操作次数</strong>。</p>
-<h3 id="核心思路：转化问题"><a href="#核心思路：转化问题" class="headerlink" title="核心思路：转化问题"></a>核心思路：转化问题</h3><h4 id="如何处理“循环移位”？"><a href="#如何处理“循环移位”？" class="headerlink" title="如何处理“循环移位”？"></a>如何处理“循环移位”？</h4><p>“任意次循环移位”是一个非常关键的信息。它暗示我们，最终的字符串可能是原字符串通过旋转得到的任何一种形态。直接枚举所有旋转结果再计算会非常低效。</p>
-<p>处理这类环形或循环问题的经典技巧是：<strong>将字符串复制一份拼接在原字符串后面</strong>。</p>
-<p>例如，如果 <code>s = &quot;1110&quot;</code>，我们构造一个新的字符串 <code>s&#39; = s + s = &quot;11101110&quot;</code>。<br>现在，在 <code>s&#39;</code> 上任意一个长度为 <code>n</code>（原字符串长度）的子串，都对应了原字符串 <code>s</code> 的一种循环移位结果。</p>
-<ul>
-<li><code>s&#39;</code> 从索引 0 开始的子串: <code>&quot;1110&quot;</code> (原字符串)</li>
-<li><code>s&#39;</code> 从索引 1 开始的子串: <code>&quot;1101&quot;</code> (相当于原字符串循环移位 1 次)</li>
-<li><code>s&#39;</code> 从索引 2 开始的子串: <code>&quot;1011&quot;</code> (相当于原字符串循环移位 2 次)</li>
-<li><code>s&#39;</code> 从索引 3 开始的子串: <code>&quot;0111&quot;</code> (相当于原字符串循环移位 3 次)</li>
-</ul>
-<p>通过这个转换，我们就把一个复杂的“循环问题”转化成了一个更熟悉的“<strong>在固定长度的字符串上寻找最优子串</strong>”的问题。这自然而然地引出了我们的主角——<strong>滑动窗口</strong>。</p>
-<h4 id="确定我们的“目标”"><a href="#确定我们的“目标”" class="headerlink" title="确定我们的“目标”"></a>确定我们的“目标”</h4><p>我们的目标是把字符串变成一个交替字符串。对于一个固定长度 <code>n</code> 的字符串，交替的形式只有两种：</p>
+<p>例如，<code>s1 = &quot;ab&quot;</code>, <code>s2 = &quot;eidbaooo&quot;</code>。<code>s1</code> 的排列有 <code>&quot;ab&quot;</code> 和 <code>&quot;ba&quot;</code>。因为 <code>s2</code> 中包含子串 <code>&quot;ba&quot;</code>，所以应该返回 <code>true</code>。</p>
+<h3 id="核心思路：转化问题"><a href="#核心思路：转化问题" class="headerlink" title="核心思路：转化问题"></a>核心思路：转化问题</h3><h4 id="抛弃排列，拥抱计数"><a href="#抛弃排列，拥抱计数" class="headerlink" title="抛弃排列，拥抱计数"></a>抛弃排列，拥抱计数</h4><p>首先，一个很自然但效率极低的想法是：生成 <code>s1</code> 的所有排列，然后逐一检查它们是否存在于 <code>s2</code> 中。这个方法很快就会因为 <code>s1</code> 稍长而导致“超出时间限制”，因为一个长度为 <code>n</code> 的字符串，其排列数量是 <code>n!</code>。</p>
+<p>正确的思考方向是：<strong>一个字符串是另一个字符串的排列，充要条件是它们拥有完全相同的字符，且每种字符的数量都完全相等。</strong></p>
+<p>例如，<code>&quot;ba&quot;</code> 是 <code>&quot;ab&quot;</code> 的排列，因为它们都含有 1 个 <code>&#39;a&#39;</code> 和 1 个 <code>&#39;b&#39;</code>。</p>
+<p>所以，问题被巧妙地转化了：在 <code>s2</code> 中，是否存在一个长度与 <code>s1</code> 相等的子串，其字符频率（种类和数量）与 <code>s1</code> 完全相同？</p>
+<h4 id="滑动窗口登场"><a href="#滑动窗口登场" class="headerlink" title="滑动窗口登场"></a>滑动窗口登场</h4><p>这个问题完美地契合了<strong>定长滑动窗口</strong>的应用场景。我们可以：</p>
 <ol>
-<li>以 <code>&#39;0&#39;</code> 开头：我们称之为 <code>target1</code>，例如 <code>n=6</code> 时为 <code>&quot;010101&quot;</code>。</li>
-<li>以 <code>&#39;1&#39;</code> 开头：我们称之为 <code>target2</code>，例如 <code>n=6</code> 时为 <code>&quot;101010&quot;</code>。</li>
+<li>创建一个长度为 <code>len(s1)</code> 的窗口，在 <code>s2</code> 上从左到右滑动。</li>
+<li>对于每一个窗口内的子串，我们都去检查它的字符频率是否和 <code>s1</code> 的字符频率一致。</li>
+<li>如果找到一个匹配的窗口，立即返回 <code>true</code>。</li>
+<li>如果窗口滑到了 <code>s2</code> 的末尾仍然没有找到，则返回 <code>false</code>。</li>
 </ol>
-<p>我们的任务就是在 <code>s&#39;</code> 上滑动一个长度为 <code>n</code> 的窗口，对于每一个窗口，计算它变成 <code>target1</code> 或 <code>target2</code> 所需的最小反转次数，然后取所有这些结果中的最小值。</p>
+<p>为了高效地比较字符频率，我们可以使用哈希表（在 Python 中是 <code>Counter</code> 或 <code>dict</code>）或者一个大小为 26 的数组来存储每个字符的出现次数。</p>
 <h3 id="滑动窗口算法详解"><a href="#滑动窗口算法详解" class="headerlink" title="滑动窗口算法详解"></a>滑动窗口算法详解</h3><ol>
 <li><p><strong>准备工作</strong>:</p>
 <ul>
-<li>令 <code>n</code> 为原字符串 <code>s</code> 的长度。</li>
-<li>构造新字符串 <code>s&#39; = s + s</code>，其长度为 <code>2n</code>。</li>
-<li>构造两个长度为 <code>2n</code> 的目标字符串 <code>target1</code> 和 <code>target2</code>。</li>
+<li>令 <code>n1</code> 为 <code>s1</code> 的长度，<code>n2</code> 为 <code>s2</code> 的长度。如果 <code>n1 &gt; n2</code>，<code>s2</code> 必然无法包含 <code>s1</code> 的排列，直接返回 <code>False</code>。</li>
+<li>用哈希表 <code>s1_counts</code> 统计好目标字符串 <code>s1</code> 的字符频率。</li>
 </ul>
 </li>
 <li><p><strong>初始化窗口</strong>:</p>
 <ul>
-<li>计算 <code>s&#39;</code> 的前 <code>n</code> 个字符（即第一个窗口）与 <code>target1</code> 的前 <code>n</code> 个字符有多少位不同，记为 <code>diff1</code>。</li>
-<li>同理，计算与 <code>target2</code> 的前 <code>n</code> 个字符的不同位数，记为 <code>diff2</code>。</li>
-<li>此时，我们得到的最小反转次数 <code>ans = min(diff1, diff2)</code>。</li>
+<li>创建另一个哈希表 <code>window_counts</code> 用于统计当前窗口内字符的频率。</li>
+<li>将 <code>s2</code> 的前 <code>n1</code> 个字符（即第一个窗口）填入 <code>window_counts</code>。</li>
+<li>比较 <code>s1_counts</code> 和 <code>window_counts</code>。如果它们完全相同，说明我们已经找到了答案，返回 <code>True</code>。</li>
 </ul>
 </li>
 <li><p><strong>滑动窗口</strong>:</p>
 <ul>
-<li>窗口从索引 <code>1</code> 开始向右滑动，直到窗口的起始点到达 <code>n</code>。</li>
-<li>每次窗口向右滑动一格，我们不需要重新计算整个窗口的 <code>diff</code>。我们只需要更新变化的部分：<ul>
-<li><strong>移出字符</strong>：检查即将离开窗口的那个字符（例如 <code>s&#39;[i-1]</code>）是否与目标字符串的对应位置不同。如果不同，说明我们之前为这个不同点计了 1 次反转，现在它离开窗口了，所以 <code>diff</code> 应该减 1。</li>
-<li><strong>移入字符</strong>：检查新进入窗口的那个字符（例如 <code>s&#39;[i+n-1]</code>）是否与目标字符串的对应位置不同。如果不同，<code>diff</code> 应该加 1。</li>
+<li>从 <code>s2</code> 的第 <code>n1</code> 个字符开始向右遍历到末尾。在每一次循环中，窗口向右移动一格。</li>
+<li>窗口的移动伴随着两个变化：<ul>
+<li><strong>移入字符</strong>：一个新字符从窗口右侧进入。我们在 <code>window_counts</code> 中增加这个新字符的计数。</li>
+<li><strong>移出字符</strong>：一个旧字符从窗口左侧离开。我们在 <code>window_counts</code> 中减少这个旧字符的计数。</li>
 </ul>
 </li>
-<li>每次滑动后，我们都更新 <code>diff1</code> 和 <code>diff2</code>，并用 <code>min(diff1, diff2)</code> 来更新全局的 <code>ans</code>。</li>
+<li><strong>优化</strong>：如果一个字符移出窗口后，它在 <code>window_counts</code> 中的计数变为 0，最好将它从哈希表中移除。这可以确保我们进行 <code>s1_counts == window_counts</code> 比较时的准确性。</li>
+<li>每次滑动更新后，都进行一次比较。如果相等，返回 <code>True</code>。</li>
 </ul>
 </li>
 <li><p><strong>返回结果</strong>:</p>
 <ul>
-<li>遍历完所有窗口后，<code>ans</code> 就是最终答案。</li>
+<li>如果循环结束仍未找到匹配的窗口，说明不存在这样的子串，返回 <code>False</code>。</li>
 </ul>
 </li>
 </ol>
-<h3 id="Python-代码实现"><a href="#Python-代码实现" class="headerlink" title="Python 代码实现"></a>Python 代码实现</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">minFlips</span>(<span class="params">self, s: <span class="built_in">str</span></span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        n = <span class="built_in">len</span>(s)</span><br><span class="line">        s = s + s <span class="comment"># 步骤 1：处理循环问题</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># 步骤 1：构建两种目标交替字符串</span></span><br><span class="line">        target1 = <span class="string">&quot;&quot;</span> <span class="comment"># 形式如 &quot;010101...&quot;</span></span><br><span class="line">        target2 = <span class="string">&quot;&quot;</span> <span class="comment"># 形式如 &quot;101010...&quot;</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">2</span> * n):</span><br><span class="line">            <span class="keyword">if</span> i % <span class="number">2</span> == <span class="number">0</span>:</span><br><span class="line">                target1 += <span class="string">&quot;0&quot;</span></span><br><span class="line">                target2 += <span class="string">&quot;1&quot;</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                target1 += <span class="string">&quot;1&quot;</span></span><br><span class="line">                target2 += <span class="string">&quot;0&quot;</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 步骤 2：初始化第一个窗口的差异（需要反转的次数）</span></span><br><span class="line">        diff1 = <span class="number">0</span> <span class="comment"># 与 target1 的差异</span></span><br><span class="line">        diff2 = <span class="number">0</span> <span class="comment"># 与 target2 的差异</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(n):</span><br><span class="line">            <span class="keyword">if</span> s[i] != target1[i]:</span><br><span class="line">                diff1 += <span class="number">1</span></span><br><span class="line">            <span class="keyword">if</span> s[i] != target2[i]:</span><br><span class="line">                diff2 += <span class="number">1</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># 初始化最小反转次数</span></span><br><span class="line">        ans = <span class="built_in">min</span>(diff1, diff2)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 步骤 3：开始滑动窗口</span></span><br><span class="line">        <span class="comment"># left 是移出窗口的字符索引，i 是移入窗口的字符索引</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(n, <span class="number">2</span> * n):</span><br><span class="line">            left = i - n</span><br><span class="line"></span><br><span class="line">            <span class="comment"># 更新与 target1 的差异</span></span><br><span class="line">            <span class="keyword">if</span> s[left] != target1[left]:        </span><br><span class="line">                diff1 -= <span class="number">1</span></span><br><span class="line">            <span class="keyword">if</span> s[i] != target1[i]:</span><br><span class="line">                diff1 += <span class="number">1</span></span><br><span class="line"></span><br><span class="line">            <span class="comment"># 更新与 target2 的差异</span></span><br><span class="line">            <span class="keyword">if</span> s[left] != target2[left]:        </span><br><span class="line">                diff2 -= <span class="number">1</span></span><br><span class="line">            <span class="keyword">if</span> s[i] != target2[i]:</span><br><span class="line">                diff2 += <span class="number">1</span></span><br><span class="line">                </span><br><span class="line">            <span class="comment"># 更新全局最小反转次数</span></span><br><span class="line">            ans = <span class="built_in">min</span>(ans, diff1, diff2)</span><br><span class="line">            </span><br><span class="line">        <span class="keyword">return</span> ans</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h3 id="Python-代码实现"><a href="#Python-代码实现" class="headerlink" title="Python 代码实现"></a>Python 代码实现</h3><p>使用 <code>collections.Counter</code> 可以让代码变得异常简洁。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> Counter</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">checkInclusion</span>(<span class="params">self, s1: <span class="built_in">str</span>, s2: <span class="built_in">str</span></span>) -&gt; <span class="built_in">bool</span>:</span><br><span class="line">        n1, n2 = <span class="built_in">len</span>(s1), <span class="built_in">len</span>(s2)</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 步骤 1：处理边界情况</span></span><br><span class="line">        <span class="keyword">if</span> n1 &gt; n2:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">            </span><br><span class="line">        <span class="comment"># 步骤 1：统计 s1 的字符频率</span></span><br><span class="line">        s1_counts = Counter(s1)</span><br><span class="line">        window_counts = Counter()</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 步骤 2：初始化第一个窗口</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(n1):</span><br><span class="line">            window_counts[s2[i]] += <span class="number">1</span></span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span> window_counts == s1_counts:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line">            </span><br><span class="line">        <span class="comment"># 步骤 3：开始滑动窗口</span></span><br><span class="line">        <span class="comment"># right 是移入窗口的字符索引</span></span><br><span class="line">        <span class="keyword">for</span> right <span class="keyword">in</span> <span class="built_in">range</span>(n1, n2):</span><br><span class="line">            <span class="comment"># left 是移出窗口的字符索引</span></span><br><span class="line">            left = right - n1</span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 新字符从右侧进入窗口</span></span><br><span class="line">            window_counts[s2[right]] += <span class="number">1</span></span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 旧字符从左侧离开窗口</span></span><br><span class="line">            window_counts[s2[left]] -= <span class="number">1</span></span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 如果旧字符计数为 0，将其从哈希表中移除</span></span><br><span class="line">            <span class="keyword">if</span> window_counts[s2[left]] == <span class="number">0</span>:</span><br><span class="line">                <span class="keyword">del</span> window_counts[s2[left]]</span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 比较当前窗口和 s1 的频率是否相同</span></span><br><span class="line">            <span class="keyword">if</span> window_counts == s1_counts:</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line">                </span><br><span class="line">        <span class="comment"># 步骤 4：遍历结束未找到</span></span><br><span class="line">        <span class="keyword">return</span> <span class="literal">False</span></span><br></pre></td></tr></table></figure>
 
 <h3 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h3><ul>
-<li><strong>时间复杂度</strong>: O(n)。我们只遍历了长度为 <code>2n</code> 的新字符串一次。</li>
-<li><strong>空间复杂度</strong>: O(n)。我们需要额外的空间来存储拼接后的字符串 <code>s&#39;</code> 以及两个目标字符串。</li>
+<li><strong>时间复杂度</strong>: O(N₁ + (N₂ - N₁))，即 O(N₂)。其中 N₁ 是 <code>s1</code> 的长度，N₂ 是 <code>s2</code> 的长度。我们首先需要 O(N₁) 的时间来创建 <code>s1_counts</code>，然后滑动窗口遍历 <code>s2</code> 一次，花费 O(N₂) 的时间。哈希表的比较操作在字符集大小固定的情况下可视为 O(1)。</li>
+<li><strong>空间复杂度</strong>: O(K)，其中 K 是字符集的大小。在这里，因为题目规定只有小写字母，所以 K&#x3D;26，可以看作是 O(1) 的常数空间。</li>
 </ul>
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>这道题的核心在于将“循环移位”操作通过拼接字符串的方式，转化为一个可以在线性结构上求解的滑动窗口问题，这是一种非常值得学习和掌握的技巧。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>本题是运用滑动窗口解决字符串问题的典范。其核心思想在于<strong>用频率计数的相等性来替代排列的判断</strong>，从而将问题转化为一个可以通过线性扫描解决的子串匹配问题。当遇到涉及“连续子串”或“子数组”且需要满足某些条件的问题时，滑动窗口是应该优先考虑的强大工具。</p>
 
     </div>
 
@@ -373,8 +370,8 @@
           <div class="post-tags">
               <a href="/tags/%E5%AD%97%E7%AC%A6%E4%B8%B2/" rel="tag"># 字符串</a>
               <a href="/tags/%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3/" rel="tag"># 滑动窗口</a>
-              <a href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" rel="tag"># 动态规划</a>
-              <a href="/tags/%E7%AC%AC244%E5%9C%BA%E5%91%A8%E8%B5%9B/" rel="tag"># 第244场周赛</a>
+              <a href="/tags/%E5%93%88%E5%B8%8C%E8%A1%A8/" rel="tag"># 哈希表</a>
+              <a href="/tags/%E5%8F%8C%E6%8C%87%E9%92%88/" rel="tag"># 双指针</a>
           </div>
 
         
@@ -383,12 +380,12 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2025/09/15/hello-world/" rel="prev" title="Hello World">
-      <i class="fa fa-chevron-left"></i> Hello World
+    <a href="/leetcode-1888/" rel="prev" title="LeetCode 1888 | 利用滑动窗口巧解循环字符串反转问题">
+      <i class="fa fa-chevron-left"></i> LeetCode 1888 | 利用滑动窗口巧解循环字符串反转问题
     </a></div>
       <div class="post-nav-item">
-    <a href="/leetcode-1-1.2-567/" rel="next" title="LeetCode 567 | 滑动窗口精解字符串排列问题">
-      LeetCode 567 | 滑动窗口精解字符串排列问题 <i class="fa fa-chevron-right"></i>
+    <a href="/leetcode-438/" rel="next" title="LeetCode 438 | 滑动窗口巧解所有字母异位词">
+      LeetCode 438 | 滑动窗口巧解所有字母异位词 <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -449,7 +446,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E8%A7%A3%E8%AF%BB"><span class="nav-number">1.</span> <span class="nav-text">问题解读</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E6%80%9D%E8%B7%AF%EF%BC%9A%E8%BD%AC%E5%8C%96%E9%97%AE%E9%A2%98"><span class="nav-number">2.</span> <span class="nav-text">核心思路：转化问题</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E5%A4%84%E7%90%86%E2%80%9C%E5%BE%AA%E7%8E%AF%E7%A7%BB%E4%BD%8D%E2%80%9D%EF%BC%9F"><span class="nav-number">2.1.</span> <span class="nav-text">如何处理“循环移位”？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%A1%AE%E5%AE%9A%E6%88%91%E4%BB%AC%E7%9A%84%E2%80%9C%E7%9B%AE%E6%A0%87%E2%80%9D"><span class="nav-number">2.2.</span> <span class="nav-text">确定我们的“目标”</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%E7%AE%97%E6%B3%95%E8%AF%A6%E8%A7%A3"><span class="nav-number">3.</span> <span class="nav-text">滑动窗口算法详解</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Python-%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0"><span class="nav-number">4.</span> <span class="nav-text">Python 代码实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%8D%E6%9D%82%E5%BA%A6%E5%88%86%E6%9E%90"><span class="nav-number">5.</span> <span class="nav-text">复杂度分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">6.</span> <span class="nav-text">总结</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E8%A7%A3%E8%AF%BB"><span class="nav-number">1.</span> <span class="nav-text">问题解读</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E6%80%9D%E8%B7%AF%EF%BC%9A%E8%BD%AC%E5%8C%96%E9%97%AE%E9%A2%98"><span class="nav-number">2.</span> <span class="nav-text">核心思路：转化问题</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8A%9B%E5%BC%83%E6%8E%92%E5%88%97%EF%BC%8C%E6%8B%A5%E6%8A%B1%E8%AE%A1%E6%95%B0"><span class="nav-number">2.1.</span> <span class="nav-text">抛弃排列，拥抱计数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%E7%99%BB%E5%9C%BA"><span class="nav-number">2.2.</span> <span class="nav-text">滑动窗口登场</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%E7%AE%97%E6%B3%95%E8%AF%A6%E8%A7%A3"><span class="nav-number">3.</span> <span class="nav-text">滑动窗口算法详解</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Python-%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0"><span class="nav-number">4.</span> <span class="nav-text">Python 代码实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%8D%E6%9D%82%E5%BA%A6%E5%88%86%E6%9E%90"><span class="nav-number">5.</span> <span class="nav-text">复杂度分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">6.</span> <span class="nav-text">总结</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -465,14 +462,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">4</span>
+          <span class="site-state-item-count">5</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-count">4</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
