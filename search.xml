@@ -85,6 +85,100 @@
       </tags>
   </entry>
   <entry>
+    <title>LeetCode 2156 | 滚动哈希巧解给定哈希值的子串</title>
+    <url>//leetcode-2-1.3-2156/</url>
+    <content><![CDATA[<blockquote class="blockquote-center">
+            <i class="fa fa-quote-left"></i>
+            <p>LeetCode 第 2156 题：<a href="https://leetcode.cn/problems/find-substring-with-given-hash-value/description/">查找给定哈希值的子串</a>。<br>这道题将我们带入了“滚动哈希”（Rolling Hash）的精妙世界。它不仅仅是一个简单的滑动窗口，更是一次关于如何在模运算下高效更新哈希值的深刻实践。</p>
+
+            <i class="fa fa-quote-right"></i>
+          </blockquote>
+<span id="more"></span>
+<h3 id="问题解读"><a href="#问题解读" class="headerlink" title="问题解读"></a>问题解读</h3><p>题目要求我们根据一个自定义的哈希函数，在一个长字符串 <code>s</code> 中找到<strong>第一个</strong>长度为 <code>k</code> 且哈希值等于 <code>hashValue</code> 的子串。</p>
+<p>这个哈希函数定义如下：<br><code>hash(sub, p, m) = (val(sub[0])*p^0 + val(sub[1])*p^1 + ... + val(sub[k-1])*p^(k-1)) mod m</code></p>
+<p>其中 <code>val(c)</code> 是字符 <code>c</code> 的字母表顺序值（<code>&#39;a&#39;</code>&#x3D;1, <code>&#39;b&#39;</code>&#x3D;2, …）。</p>
+<ul>
+<li><strong>关键点</strong>：我们需要在一个大字符串中，对所有长度为 <code>k</code> 的子串计算哈希值。</li>
+<li><strong>目标</strong>：找到满足 <code>hash(sub) == hashValue</code> 的<strong>最靠前</strong>的那个子串。</li>
+</ul>
+<p>例如，对于 <code>s = &quot;fbxzaad&quot;</code>, <code>p = 31</code>, <code>m = 100</code>, <code>k = 3</code>, <code>hashValue = 32</code>，子串 <code>&quot;fbx&quot;</code> 和 <code>&quot;bxz&quot;</code> 的哈希值都是 32。但因为 <code>&quot;fbx&quot;</code> 在字符串中出现得更早，所以它是正确答案。</p>
+<h3 id="核心思路：逆向的滚动哈希"><a href="#核心思路：逆向的滚动哈希" class="headerlink" title="核心思路：逆向的滚动哈希"></a>核心思路：逆向的滚动哈希</h3><h4 id="暴力法的瓶颈"><a href="#暴力法的瓶颈" class="headerlink" title="暴力法的瓶颈"></a>暴力法的瓶颈</h4><p>最直观的方法是遍历 <code>s</code> 中每一个长度为 <code>k</code> 的子串，然后对每个子串都独立计算一次哈希值。这种方法的时间复杂度是 O(N<em>K)，其中 N 是 <code>s</code> 的长度。对于题目给定的数据范围 (<code>N</code> 可达 2</em>10^4)，这种方法会“超出时间限制”。</p>
+<h4 id="从左向右滑动的困境"><a href="#从左向右滑动的困境" class="headerlink" title="从左向右滑动的困境"></a>从左向右滑动的困境</h4><p>为了优化，我们自然会想到滑动窗口：当窗口从 <code>s[i:i+k]</code> 滑动到 <code>s[i+1:i+k+1]</code> 时，能否在 O(1) 的时间内更新哈希值？</p>
+<ul>
+<li><strong>移出</strong>：我们需要减去 <code>val(s[i]) * p^0</code> 的贡献。</li>
+<li><strong>移入</strong>：我们需要加入 <code>val(s[i+k]) * p^k</code>… 等等，这里就出现了问题。</li>
+</ul>
+<p>为了让原有的 <code>val(s[i+1])*p^1</code> 变为 <code>val(s[i+1])*p^0</code>，我们需要将整个哈希值（减去 <code>val(s[i])</code> 之后）除以 <code>power</code>。在模运算中，除以一个数等于乘以它的<strong>模逆元</strong>。计算模逆元本身就很复杂，而且当 <code>power</code> 和 <code>modulo</code> 不互质时，模逆元甚至不存在。这条路走不通。</p>
+<h4 id="柳暗花明：从右向左滑动"><a href="#柳暗花明：从右向左滑动" class="headerlink" title="柳暗花明：从右向左滑动"></a>柳暗花明：从右向左滑动</h4><p>既然从左向右有困难，我们何不逆向思考？<strong>从右向左滑动窗口</strong>！</p>
+<p>假设我们已知窗口 <code>s[i+1 : i+k+1]</code> 的哈希值 <code>h_old</code>，现在要计算它左边的窗口 <code>s[i : i+k]</code> 的哈希值 <code>h_new</code>。</p>
+<ul>
+<li><code>h_old = (val(s[i+1])*p^0 + ... + val(s[i+k])*p^(k-1)) mod m</code></li>
+</ul>
+<p>观察 <code>h_new</code> 的构成：</p>
+<ul>
+<li><code>h_new = (val(s[i])*p^0 + val(s[i+1])*p^1 + ... + val(s[i+k-1])*p^(k-1)) mod m</code></li>
+</ul>
+<p>我们可以找到一个递推关系：</p>
+<ol>
+<li>从 <code>h_old</code> 中减去最右侧字符 <code>s[i+k]</code> 的贡献，即 <code>val(s[i+k]) * p^(k-1)</code>。</li>
+<li>将剩余的部分整体乘以 <code>p</code>，这使得每一项的幂次都增加了 1 (<code>p^0</code> -&gt; <code>p^1</code>, <code>p^1</code> -&gt; <code>p^2</code>…)。</li>
+<li>最后，加上新进入窗口的字符 <code>s[i]</code> 的贡献，即 <code>val(s[i]) * p^0</code>。</li>
+</ol>
+<p>于是，我们得到了一个完美的 O(1) 更新公式：<br><code>h_new = ((h_old - val(s[i+k]) * p^(k-1)) * p + val(s[i])) mod m</code><br>这个公式只涉及加、减、乘，在模运算下非常简单！</p>
+<h3 id="滑动窗口算法详解"><a href="#滑动窗口算法详解" class="headerlink" title="滑动窗口算法详解"></a>滑动窗口算法详解</h3><ol>
+<li><p><strong>准备工作</strong>:</p>
+<ul>
+<li>预先计算 <code>power^(k-1) % modulo</code>，记为 <code>pk_1</code>。这个值在每次移除窗口最右侧字符时都会用到。</li>
+</ul>
+</li>
+<li><p><strong>初始化窗口</strong>:</p>
+<ul>
+<li>我们从字符串的<strong>最右端</strong>开始。首先完整计算最后一个窗口 <code>s[n-k : n]</code> 的哈希值，作为我们的初始 <code>current_hash</code>。</li>
+<li>检查这个初始哈希值是否与 <code>hashValue</code> 匹配。如果匹配，记录下当前的起始索引 <code>n-k</code> 作为候选答案。</li>
+</ul>
+</li>
+<li><p><strong>逆向滑动窗口</strong>:</p>
+<ul>
+<li>从 <code>i = n-k-1</code> 开始，循环递减至 <code>0</code>。<code>i</code> 代表新窗口的起始位置。</li>
+<li>在每次循环中，使用上面推导出的滚动哈希公式来更新 <code>current_hash</code>。<ul>
+<li><strong>移出</strong>：减去旧窗口最右侧字符 <code>s[i+k]</code> 的贡献。</li>
+<li><strong>乘幂</strong>：将结果乘以 <code>power</code>。</li>
+<li><strong>移入</strong>：加上新窗口最左侧字符 <code>s[i]</code> 的贡献。</li>
+<li><strong>注意</strong>：在进行模减法时，为防止出现负数，应写成 <code>(a - b + modulo) % modulo</code>。</li>
+</ul>
+</li>
+<li>每次更新哈希值后，都与 <code>hashValue</code> 进行比较。</li>
+<li>由于我们是从右向左遍历，任何一次匹配都意味着我们找到了一个比之前更靠前的答案。因此，只要匹配成功，就更新结果索引为当前的 <code>i</code>。</li>
+</ul>
+</li>
+<li><p><strong>返回结果</strong>:</p>
+<ul>
+<li>循环结束后，记录的最终索引就是题目所求的第一个满足条件的子串的起始位置。返回该子串即可。</li>
+</ul>
+</li>
+</ol>
+<h3 id="Python-代码实现"><a href="#Python-代码实现" class="headerlink" title="Python 代码实现"></a>Python 代码实现</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">subStrHash</span>(<span class="params">self, s: <span class="built_in">str</span>, power: <span class="built_in">int</span>, modulo: <span class="built_in">int</span>, k: <span class="built_in">int</span>, hashValue: <span class="built_in">int</span></span>) -&gt; <span class="built_in">str</span>:</span><br><span class="line">        n = <span class="built_in">len</span>(s)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 辅助函数，将 &#x27;a&#x27;-&#x27;z&#x27; 映射到 1-26</span></span><br><span class="line">        <span class="keyword">def</span> <span class="title function_">val</span>(<span class="params">c</span>):</span><br><span class="line">            <span class="keyword">return</span> <span class="built_in">ord</span>(c) - <span class="built_in">ord</span>(<span class="string">&#x27;a&#x27;</span>) + <span class="number">1</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># 步骤 1：预计算 p^(k-1) % m，用于移除窗口最右侧字符</span></span><br><span class="line">        pk_1 = <span class="built_in">pow</span>(power, k - <span class="number">1</span>, modulo)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 步骤 2：计算最右侧第一个窗口 s[n-k : n] 的哈希值</span></span><br><span class="line">        current_h = <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(k):</span><br><span class="line">            i = n - k + j <span class="comment"># 窗口内字符的索引</span></span><br><span class="line">            current_h = (current_h + val(s[i]) * <span class="built_in">pow</span>(power, j, modulo)) % modulo</span><br><span class="line">        </span><br><span class="line">        res_index = -<span class="number">1</span></span><br><span class="line">        <span class="keyword">if</span> current_h == hashValue:</span><br><span class="line">            res_index = n - k</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 步骤 3：从右向左滑动窗口</span></span><br><span class="line">        <span class="comment"># i 是新窗口的起始索引</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(n - k - <span class="number">1</span>, -<span class="number">1</span>, -<span class="number">1</span>):</span><br><span class="line">            <span class="comment"># old_hash (current_h) 对应 s[i+1 : i+k+1]</span></span><br><span class="line">            <span class="comment"># new_hash (将要计算的) 对应 s[i : i+k]</span></span><br><span class="line">            </span><br><span class="line">            old_right_val = val(s[i + k])</span><br><span class="line">            new_left_val = val(s[i])</span><br><span class="line"></span><br><span class="line">            <span class="comment"># 应用滚动哈希公式</span></span><br><span class="line">            <span class="comment"># a) 移除旧窗口最右侧字符的贡献</span></span><br><span class="line">            term_to_remove = (old_right_val * pk_1) % modulo</span><br><span class="line">            current_h = (current_h - term_to_remove + modulo) % modulo</span><br><span class="line">            </span><br><span class="line">            <span class="comment"># b) 所有项幂次加一</span></span><br><span class="line">            current_h = (current_h * power) % modulo</span><br><span class="line">            </span><br><span class="line">            <span class="comment"># c) 加上新窗口最左侧字符的贡献</span></span><br><span class="line">            current_h = (current_h + new_left_val) % modulo</span><br><span class="line"></span><br><span class="line">            <span class="comment"># 检查哈希值是否匹配</span></span><br><span class="line">            <span class="keyword">if</span> current_h == hashValue:</span><br><span class="line">                res_index = i <span class="comment"># 更新为更靠前的索引</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># 步骤 4：返回结果</span></span><br><span class="line">        <span class="keyword">return</span> s[res_index : res_index + k]</span><br></pre></td></tr></table></figure>
+
+<h3 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h3><ul>
+<li><strong>时间复杂度</strong>: O(N)。其中 N 是字符串 <code>s</code> 的长度。初始哈希计算耗时 O(K)，逆向滑动窗口循环 N-K 次，每次更新是 O(1)。总复杂度为 O(K + N - K) &#x3D; O(N)，实现了线性时间求解。</li>
+<li><strong>空间复杂度</strong>: O(1)。我们只使用了常数个变量来存储哈希值和中间计算结果。</li>
+</ul>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>本题是滚动哈希算法的绝佳应用案例。它告诉我们，当标准的从左到右的滑动窗口遇到数学难题（如模逆元）时，不妨换个方向思考。<strong>逆向滑动</strong>在本题中优雅地绕开了复杂的模除法，将哈希值的更新简化为基础的模运算，充分展现了算法设计的灵活性和数学之美。</p>
+]]></content>
+      <categories>
+        <category>算法题解</category>
+        <category>滑动窗口与双指针</category>
+        <category>定长滑动窗口</category>
+      </categories>
+      <tags>
+        <tag>字符串</tag>
+        <tag>滑动窗口</tag>
+        <tag>哈希函数</tag>
+        <tag>滚动哈希</tag>
+        <tag>第 278 场周赛</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>LeetCode 30 | 滑动窗口巧解串联所有单词的子串</title>
     <url>//leetcode-30/</url>
     <content><![CDATA[<blockquote class="blockquote-center">
@@ -167,7 +261,7 @@
       <categories>
         <category>算法题解</category>
         <category>滑动窗口与双指针</category>
-        <category>固定步长滑动窗口</category>
+        <category>定长滑动窗口</category>
       </categories>
       <tags>
         <tag>字符串</tag>
