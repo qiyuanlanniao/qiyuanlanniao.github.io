@@ -85,7 +85,7 @@
   </entry>
   <entry>
     <title>LeetCode 1888 | 利用滑动窗口巧解循环字符串反转问题</title>
-    <url>//postsleetcode-1888/</url>
+    <url>//posts/leetcode-1888/</url>
     <content><![CDATA[<blockquote class="blockquote-center">
             <i class="fa fa-quote-left"></i>
             <p>LeetCode 第 1888 题：<a href="https://leetcode.cn/problems/minimum-number-of-flips-to-make-the-binary-string-alternating/description/">使二进制字符串交替的最少反转次数</a>。<br>这是一道非常有趣的中等难度题目，它巧妙地将字符串循环操作和经典算法模型“滑动窗口”结合了起来。</p>
