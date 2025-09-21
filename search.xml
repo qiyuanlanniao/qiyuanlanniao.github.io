@@ -263,7 +263,7 @@
   </entry>
   <entry>
     <title>LeetCode 2953 | 分治+滑动窗口巧解“统计完全子字符串”</title>
-    <url>//leetcode-2953/</url>
+    <url>//posts/leetcode-2953/</url>
     <content><![CDATA[<blockquote class="blockquote-center">
             <i class="fa fa-quote-left"></i>
             <p>LeetCode 第 2953 题：<a href="https://leetcode.cn/problems/count-complete-substrings/description/">统计完全子字符串</a>。<br>这道题巧妙地将“分治思想”和“滑动窗口”结合在了一起。通过识别问题中的强约束条件来分解问题，是解决复杂问题的关键一步。</p>
@@ -598,7 +598,7 @@
   </entry>
   <entry>
     <title>Hello World</title>
-    <url>/2025/09/15/hello-world/</url>
+    <url>/posts/2025/09/15/hello-world/</url>
     <content><![CDATA[<blockquote class="blockquote-center">
             <i class="fa fa-quote-left"></i>
             <p>启蒙</p>
