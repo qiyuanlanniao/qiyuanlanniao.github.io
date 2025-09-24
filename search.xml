@@ -84,6 +84,101 @@
       </tags>
   </entry>
   <entry>
+    <title>LeetCode 1208 | 滑动窗口巧解“尽可能使字符串相等”</title>
+    <url>//posts/leetcode-1208/</url>
+    <content><![CDATA[<blockquote class="blockquote-center">
+            <i class="fa fa-quote-left"></i>
+            <p>LeetCode 第 1208 题：<a href="https://leetcode.cn/problems/get-equal-substrings-within-budget/">尽可能使字符串相等</a>。<br>当题目要求我们寻找一个满足特定条件的<strong>最长连续子数组或子字符串</strong>时，滑动窗口往往是最高效的解法。</p>
+
+            <i class="fa fa-quote-right"></i>
+          </blockquote>
+<span id="more"></span>
+<h3 id="问题解读"><a href="#问题解读" class="headerlink" title="问题解读"></a>问题解读</h3><p>我们来仔细分析一下题目的要求：</p>
+<ol>
+<li><strong>转换开销 (Cost)</strong>：将字符串 <code>s</code> 中的一个字符 <code>s[i]</code> 变为 <code>t</code> 中对应的字符 <code>t[i]</code>，需要 <code>|ord(s[i]) - ord(t[i])|</code> 的开销。这其实就是两个字符 ASCII 码值的差的绝对值。</li>
+<li><strong>预算限制 (Budget)</strong>：我们有一个总预算 <code>maxCost</code>。我们可以在 <code>s</code> 中选择一个子字符串，将其转换为 <code>t</code> 中对应的子字符串，但总开销不能超过 <code>maxCost</code>。</li>
+<li><strong>目标</strong>：找到在预算范围内，可以转换的<strong>最长</strong>子字符串的长度。</li>
+</ol>
+<p>例如，<code>s = &quot;abcd&quot;</code>, <code>t = &quot;bcdf&quot;</code>, <code>maxCost = 3</code>。<br>我们可以计算每个位置的转换开销：</p>
+<ul>
+<li><code>&#39;a&#39; -&gt; &#39;b&#39;</code>: |97 - 98| &#x3D; 1</li>
+<li><code>&#39;b&#39; -&gt; &#39;c&#39;</code>: |98 - 99| &#x3D; 1</li>
+<li><code>&#39;c&#39; -&gt; &#39;d&#39;</code>: |99 - 100| &#x3D; 1</li>
+<li><code>&#39;d&#39; -&gt; &#39;f&#39;</code>: |100 - 102| &#x3D; 2</li>
+</ul>
+<p>如果我们尝试转换子字符串 <code>&quot;abc&quot;</code>，总开销为 <code>1 + 1 + 1 = 3</code>。这个开销没有超过 <code>maxCost</code>，所以这是一个合法的转换，其长度为 3。如果我们尝试转换 <code>&quot;abcd&quot;</code>，总开销为 <code>3 + 2 = 5</code>，超出了预算。因此，能转换的最长子字符串就是 <code>&quot;abc&quot;</code>，答案是 3。</p>
+<h3 id="核心思路：滑动窗口"><a href="#核心思路：滑动窗口" class="headerlink" title="核心思路：滑动窗口"></a>核心思路：滑动窗口</h3><p>这个问题要求我们找到一个<strong>连续</strong>的子字符串，其总转换开销不超过一个给定值，并使这个子字符串的<strong>长度最大化</strong>。这正是滑动窗口算法的典型应用场景。</p>
+<p>我们可以把 <code>s</code> 的一个子字符串想象成一个“窗口”。这个窗口在字符串上从左到右滑动。</p>
+<ol>
+<li><strong>窗口的定义</strong>：窗口 <code>[left, right]</code> 表示我们当前正在考虑的 <code>s</code> 的子字符串 <code>s[left...right]</code>。</li>
+<li><strong>窗口的状态</strong>：我们需要一个变量 <code>current_cost</code> 来实时记录当前窗口内所有字符的总转换开销。</li>
+<li><strong>窗口的移动逻辑</strong>：<ul>
+<li><strong>扩大窗口</strong>：我们不断地将窗口的右边界 <code>right</code>向右移动，把新的字符 <code>s[right]</code> 纳入窗口，并将其转换开销累加到 <code>current_cost</code> 中。</li>
+<li><strong>收缩窗口</strong>：当 <code>current_cost</code> 超过了预算 <code>maxCost</code> 时，说明当前窗口太“贵”了，不满足条件。此时，我们必须从窗口的左边开始丢弃元素，即将左边界 <code>left</code> 向右移动，并从 <code>current_cost</code> 中减去被丢弃字符 <code>s[left]</code> 的转换开销。我们重复这个过程，直到 <code>current_cost</code> 再次回到预算范围内。</li>
+<li><strong>更新结果</strong>：在每一步中，只要窗口是有效的（即 <code>current_cost &lt;= maxCost</code>），它就是一个潜在的答案。我们记录下当前窗口的长度 <code>right - left + 1</code>，并与我们已知的最大长度 <code>max_len</code> 进行比较，随时保留最大值。</li>
+</ul>
+</li>
+</ol>
+<p>通过这种方式，窗口在字符串上滑动一次，我们就能找到最长的有效子字符串。</p>
+<h3 id="算法详解"><a href="#算法详解" class="headerlink" title="算法详解"></a>算法详解</h3><ol>
+<li><p><strong>初始化</strong>：</p>
+<ul>
+<li><code>left = 0</code>：窗口的左边界。</li>
+<li><code>current_cost = 0</code>：当前窗口的总开销。</li>
+<li><code>max_len = 0</code>：记录满足条件的最大长度。</li>
+</ul>
+</li>
+<li><p><strong>遍历与扩大窗口</strong>：</p>
+<ul>
+<li>用一个 <code>right</code> 指针从 0 开始遍历整个字符串，它代表窗口的右边界。</li>
+<li>在循环的每一步，计算 <code>s[right]</code> 到 <code>t[right]</code> 的开销，并加入到 <code>current_cost</code>。</li>
+</ul>
+</li>
+<li><p><strong>检查与收缩窗口</strong>：</p>
+<ul>
+<li>在扩大窗口后，立即检查 <code>current_cost</code> 是否大于 <code>maxCost</code>。</li>
+<li>如果大于，则进入一个 <code>while</code> 循环：从 <code>current_cost</code> 中减去 <code>s[left]</code> 对应的开销，然后将 <code>left</code> 指针右移一位。重复此操作直到 <code>current_cost &lt;= maxCost</code>。</li>
+</ul>
+</li>
+<li><p><strong>更新最大长度</strong>：</p>
+<ul>
+<li>当窗口的总开销满足预算时，当前窗口 <code>[left, right]</code> 就是一个有效的子字符串。</li>
+<li>计算其长度 <code>right - left + 1</code>，并更新 <code>max_len = max(max_len, right - left + 1)</code>。</li>
+</ul>
+</li>
+<li><p><strong>返回结果</strong>：</p>
+<ul>
+<li>遍历结束后，<code>max_len</code> 就是最终的答案。</li>
+</ul>
+</li>
+</ol>
+<h3 id="Python-代码实现"><a href="#Python-代码实现" class="headerlink" title="Python 代码实现"></a>Python 代码实现</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">equalSubstring</span>(<span class="params">self, s: <span class="built_in">str</span>, t: <span class="built_in">str</span>, maxCost: <span class="built_in">int</span></span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        使用滑动窗口解决问题。</span></span><br><span class="line"><span class="string">        </span></span><br><span class="line"><span class="string">        我们维护一个窗口 [left, right]，表示我们试图转换的子字符串。</span></span><br><span class="line"><span class="string">        current_cost 记录了当前窗口内所有字符的转换总成本。</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        left = <span class="number">0</span></span><br><span class="line">        current_cost = <span class="number">0</span></span><br><span class="line">        max_len = <span class="number">0</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment"># right 指针作为窗口的右边界，用于扩大窗口</span></span><br><span class="line">        <span class="keyword">for</span> right <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(s)):</span><br><span class="line">            <span class="comment"># 步骤 1: 扩大窗口</span></span><br><span class="line">            <span class="comment"># 累加新进入窗口的右侧字符的转换开销</span></span><br><span class="line">            current_cost += <span class="built_in">abs</span>(<span class="built_in">ord</span>(s[right]) - <span class="built_in">ord</span>(t[right]))</span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 步骤 2: 判断是否需要收缩窗口</span></span><br><span class="line">            <span class="comment"># 如果当前窗口的总开销超过了预算</span></span><br><span class="line">            <span class="keyword">while</span> current_cost &gt; maxCost:</span><br><span class="line">                <span class="comment"># 从总开销中减去即将移出窗口的左侧字符的开销</span></span><br><span class="line">                current_cost -= <span class="built_in">abs</span>(<span class="built_in">ord</span>(s[left]) - <span class="built_in">ord</span>(t[left]))</span><br><span class="line">                <span class="comment"># 左指针向右移动，完成收缩</span></span><br><span class="line">                left += <span class="number">1</span></span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 步骤 3: 更新结果</span></span><br><span class="line">            <span class="comment"># 此时的窗口 [left, right] 是一个有效的窗口</span></span><br><span class="line">            <span class="comment"># 计算其长度并更新最大长度记录</span></span><br><span class="line">            max_len = <span class="built_in">max</span>(max_len, right - left + <span class="number">1</span>)</span><br><span class="line">            </span><br><span class="line">        <span class="keyword">return</span> max_len</span><br></pre></td></tr></table></figure>
+
+<h3 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h3><ul>
+<li><strong>时间复杂度</strong>: O(N)，其中 N 是字符串的长度。虽然代码中有一个 <code>while</code> 循环嵌套在 <code>for</code> 循环内部，但 <code>left</code> 和 <code>right</code> 指针都只会从头到尾遍历字符串一次，每个字符最多被访问两次（一次被 <code>right</code> 指针加入，一次被 <code>left</code> 指针移出）。因此，总的时间复杂度是线性的。</li>
+<li><strong>空间复杂度</strong>: O(1)。我们只使用了几个额外的变量 (<code>left</code>, <code>current_cost</code>, <code>max_len</code>) 来存储状态，其空间占用与输入字符串的长度无关。</li>
+</ul>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>本题是滑动窗口算法的绝佳练习题。通过这道题，我们可以加深对滑动窗口思想的理解：</p>
+<ol>
+<li><strong>识别应用场景</strong>：当问题涉及在序列（数组、字符串）上寻找满足条件的<strong>最长&#x2F;最短连续子序列</strong>时，滑动窗口是一个强有力的工具。</li>
+<li><strong>双指针与状态维护</strong>：滑动窗口的核心是使用 <code>left</code> 和 <code>right</code> 两个指针来定义一个动态变化的窗口，并高效地维护窗口内的状态（例如本题中的 <code>current_cost</code>）。</li>
+<li><strong>“收缩”的智慧</strong>：滑动窗口的精髓在于，当窗口不满足条件时，我们不是暴力地重新开始，而是通过“收缩”窗口的左边界来尝试使其重新满足条件，这大大提高了算法的效率。</li>
+</ol>
+]]></content>
+      <categories>
+        <category>算法题解</category>
+        <category>滑动窗口与双指针</category>
+        <category>不定长滑动窗口</category>
+      </categories>
+      <tags>
+        <tag>字符串</tag>
+        <tag>滑动窗口</tag>
+        <tag>二分查找</tag>
+        <tag>前缀和</tag>
+        <tag>第 156 场周赛</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>LeetCode 1888 | 利用滑动窗口巧解循环字符串反转问题</title>
     <url>//posts/leetcode-1888/</url>
     <content><![CDATA[<blockquote class="blockquote-center">
@@ -593,7 +688,7 @@
       <categories>
         <category>算法题解</category>
         <category>滑动窗口与双指针</category>
-        <category>不定长窗口</category>
+        <category>不定长滑动窗口</category>
       </categories>
       <tags>
         <tag>滑动窗口</tag>
