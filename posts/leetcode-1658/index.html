@@ -20,23 +20,25 @@
     var CONFIG = {"hostname":"github.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"valine","storage":true,"lazyload":false,"nav":null,"activeClass":"valine"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="LeetCode 第 567 题：字符串的排列。这是一道经典的面试题，也是展示“滑动窗口”算法思想威力的绝佳范例。它教会我们如何将一个看似复杂的问题（关于“排列”）转化为一个更易于处理的计数问题。">
+  <meta name="description" content="LeetCode 第 1658 题：将 x 减到 0 的最小操作数。这道题看似复杂，因为它允许从数组的两端进行操作。但只要我们转换一下思路，它就会变成一个非常经典的滑动窗口问题。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="LeetCode 567 | 滑动窗口精解字符串排列问题">
-<meta property="og:url" content="http://github.com/posts/leetcode-567/index.html">
+<meta property="og:title" content="LeetCode 1658 | 逆向思维+滑动窗口求解“将 x 减到 0 的最小操作数”">
+<meta property="og:url" content="http://github.com/posts/leetcode-1658/index.html">
 <meta property="og:site_name" content="Changan&#39;s Blog">
-<meta property="og:description" content="LeetCode 第 567 题：字符串的排列。这是一道经典的面试题，也是展示“滑动窗口”算法思想威力的绝佳范例。它教会我们如何将一个看似复杂的问题（关于“排列”）转化为一个更易于处理的计数问题。">
+<meta property="og:description" content="LeetCode 第 1658 题：将 x 减到 0 的最小操作数。这道题看似复杂，因为它允许从数组的两端进行操作。但只要我们转换一下思路，它就会变成一个非常经典的滑动窗口问题。">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2025-09-17T01:01:54.000Z">
-<meta property="article:modified_time" content="2025-09-17T04:55:16.000Z">
+<meta property="article:published_time" content="2025-09-26T02:30:15.000Z">
+<meta property="article:modified_time" content="2025-09-26T02:30:15.000Z">
 <meta property="article:author" content="Changan">
-<meta property="article:tag" content="字符串">
 <meta property="article:tag" content="哈希表">
 <meta property="article:tag" content="滑动窗口">
-<meta property="article:tag" content="双指针">
+<meta property="article:tag" content="二分查找">
+<meta property="article:tag" content="前缀和">
+<meta property="article:tag" content="数组">
+<meta property="article:tag" content="第215场周赛">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="http://github.com/posts/leetcode-567/">
+<link rel="canonical" href="http://github.com/posts/leetcode-1658/">
 
 
 <script id="page-configurations">
@@ -49,7 +51,7 @@
   };
 </script>
 
-  <title>LeetCode 567 | 滑动窗口精解字符串排列问题 | Changan's Blog</title>
+  <title>LeetCode 1658 | 逆向思维+滑动窗口求解“将 x 减到 0 的最小操作数” | Changan's Blog</title>
   
 
 
@@ -199,7 +201,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://github.com/posts/leetcode-567/">
+    <link itemprop="mainEntityOfPage" href="http://github.com/posts/leetcode-1658/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -212,7 +214,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          LeetCode 567 | 滑动窗口精解字符串排列问题
+          LeetCode 1658 | 逆向思维+滑动窗口求解“将 x 减到 0 的最小操作数”
         </h1>
 
         <div class="post-meta">
@@ -221,9 +223,8 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2025-09-17 09:01:54 / 修改时间：12:55:16" itemprop="dateCreated datePublished" datetime="2025-09-17T09:01:54+08:00">2025-09-17</time>
+              <time title="创建时间：2025-09-26 10:30:15" itemprop="dateCreated datePublished" datetime="2025-09-26T10:30:15+08:00">2025-09-26</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -239,7 +240,7 @@
                 </span>
                   ，
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E7%AE%97%E6%B3%95%E9%A2%98%E8%A7%A3/%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%E4%B8%8E%E5%8F%8C%E6%8C%87%E9%92%88/%E5%AE%9A%E9%95%BF%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3/" itemprop="url" rel="index"><span itemprop="name">定长滑动窗口</span></a>
+                  <a href="/categories/%E7%AE%97%E6%B3%95%E9%A2%98%E8%A7%A3/%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%E4%B8%8E%E5%8F%8C%E6%8C%87%E9%92%88/%E4%B8%8D%E5%AE%9A%E9%95%BF%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3/" itemprop="url" rel="index"><span itemprop="name">不定长滑动窗口</span></a>
                 </span>
             </span>
 
@@ -259,8 +260,8 @@
       </span>
       <span class="post-meta-item-text">Valine：</span>
     
-    <a title="valine" href="/posts/leetcode-567/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/posts/leetcode-567/" itemprop="commentCount"></span>
+    <a title="valine" href="/posts/leetcode-1658/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/posts/leetcode-1658/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -277,69 +278,68 @@
       
         <blockquote class="blockquote-center">
             <i class="fa fa-quote-left"></i>
-            <p>LeetCode 第 567 题：<a target="_blank" rel="noopener" href="https://leetcode.cn/problems/permutation-in-string/">字符串的排列</a>。<br>这是一道经典的面试题，也是展示“滑动窗口”算法思想威力的绝佳范例。它教会我们如何将一个看似复杂的问题（关于“排列”）转化为一个更易于处理的计数问题。</p>
+            <p>LeetCode 第 1658 题：<a target="_blank" rel="noopener" href="https://leetcode.cn/problems/minimum-operations-to-reduce-x-to-zero/description/">将 x 减到 0 的最小操作数</a>。<br>这道题看似复杂，因为它允许从数组的两端进行操作。但只要我们转换一下思路，它就会变成一个非常经典的滑动窗口问题。</p>
 
             <i class="fa fa-quote-right"></i>
           </blockquote>
 <span id="more"></span>
-<h3 id="问题解读"><a href="#问题解读" class="headerlink" title="问题解读"></a>问题解读</h3><p>我们来仔细分析一下题目：给定两个字符串 <code>s1</code> 和 <code>s2</code>，判断 <code>s2</code> 是否<strong>包含</strong> <code>s1</code> 的<strong>排列</strong>。</p>
+<h3 id="问题解读"><a href="#问题解读" class="headerlink" title="问题解读"></a>问题解读</h3><p>题目要求我们从一个整数数组 <code>nums</code> 的最左边或最右边移除元素，每次移除一个元素，它的值就从 <code>x</code> 中减去。目标是用<strong>最少的操作次数</strong>将 <code>x</code> 恰好减到 0。</p>
+<p>我们来分析一下这个操作：</p>
 <ul>
-<li><strong>排列</strong>：意味着字符种类和数量完全相同，但顺序可以任意。例如，<code>&quot;abc&quot;</code> 的排列有 <code>&quot;acb&quot;</code>, <code>&quot;bac&quot;</code>, <code>&quot;bca&quot;</code>, <code>&quot;cab&quot;</code>, <code>&quot;cba&quot;</code>。</li>
-<li><strong>包含</strong>：意味着 <code>s1</code> 的某个排列是 <code>s2</code> 的一个<strong>连续子串</strong>。</li>
+<li>可以只从左边移除</li>
+<li>可以只从右边移除</li>
+<li>可以两边都移除</li>
 </ul>
-<p>例如，<code>s1 = &quot;ab&quot;</code>, <code>s2 = &quot;eidbaooo&quot;</code>。<code>s1</code> 的排列有 <code>&quot;ab&quot;</code> 和 <code>&quot;ba&quot;</code>。因为 <code>s2</code> 中包含子串 <code>&quot;ba&quot;</code>，所以应该返回 <code>true</code>。</p>
-<h3 id="核心思路：转化问题"><a href="#核心思路：转化问题" class="headerlink" title="核心思路：转化问题"></a>核心思路：转化问题</h3><h4 id="抛弃排列，拥抱计数"><a href="#抛弃排列，拥抱计数" class="headerlink" title="抛弃排列，拥抱计数"></a>抛弃排列，拥抱计数</h4><p>首先，一个很自然但效率极低的想法是：生成 <code>s1</code> 的所有排列，然后逐一检查它们是否存在于 <code>s2</code> 中。这个方法很快就会因为 <code>s1</code> 稍长而导致“超出时间限制”，因为一个长度为 <code>n</code> 的字符串，其排列数量是 <code>n!</code>。</p>
-<p>正确的思考方向是：<strong>一个字符串是另一个字符串的排列，充要条件是它们拥有完全相同的字符，且每种字符的数量都完全相等。</strong></p>
-<p>例如，<code>&quot;ba&quot;</code> 是 <code>&quot;ab&quot;</code> 的排列，因为它们都含有 1 个 <code>&#39;a&#39;</code> 和 1 个 <code>&#39;b&#39;</code>。</p>
-<p>所以，问题被巧妙地转化了：在 <code>s2</code> 中，是否存在一个长度与 <code>s1</code> 相等的子串，其字符频率（种类和数量）与 <code>s1</code> 完全相同？</p>
-<h4 id="滑动窗口登场"><a href="#滑动窗口登场" class="headerlink" title="滑动窗口登场"></a>滑动窗口登场</h4><p>这个问题完美地契合了<strong>定长滑动窗口</strong>的应用场景。我们可以：</p>
-<ol>
-<li>创建一个长度为 <code>len(s1)</code> 的窗口，在 <code>s2</code> 上从左到右滑动。</li>
-<li>对于每一个窗口内的子串，我们都去检查它的字符频率是否和 <code>s1</code> 的字符频率一致。</li>
-<li>如果找到一个匹配的窗口，立即返回 <code>true</code>。</li>
-<li>如果窗口滑到了 <code>s2</code> 的末尾仍然没有找到，则返回 <code>false</code>。</li>
+<p>例如，对于 <code>nums = [1,1,4,2,3], x = 5</code>：</p>
+<ul>
+<li>我们可以从左边移除 <code>1</code> 和 <code>1</code>，再从右边移除 <code>3</code>，总和为 <code>1+1+3=5</code>，操作 3 次。</li>
+<li>我们也可以直接从右边移除 <code>3</code> 和 <code>2</code>，总和为 <code>3+2=5</code>，操作 2 次。</li>
+</ul>
+<p>因为 <code>2 &lt; 3</code>，所以最小操作数是 2。</p>
+<p>直接模拟所有“左边取 i 个，右边取 j 个”的组合会非常低效。我们需要找到一个更优雅的切入点。</p>
+<h3 id="核心思路：逆向思维与问题转化"><a href="#核心思路：逆向思维与问题转化" class="headerlink" title="核心思路：逆向思维与问题转化"></a>核心思路：逆向思维与问题转化</h3><p>直接求解“两端移除的最小元素数量”比较困难，那我们不妨换个角度思考：<strong>当我们从两端移除一部分元素后，剩下的是什么？</strong></p>
+<p>答案是：<strong>一个连续的、位于数组中间的子数组。</strong></p>
+<p>我们的目标是让移除的元素之和恰好为 <code>x</code>，并且移除的元素数量最少。这等价于什么呢？</p>
+<p><strong>让保留在中间的子数组最长！</strong></p>
+<p>如果数组的总和是 <code>total_sum</code>，要移除的元素之和是 <code>x</code>，那么保留在中间的那个连续子数组，其元素之和就必须是 <code>target = total_sum - x</code>。</p>
+<p>这样一来，原问题就被我们巧妙地转化成了另一个问题：<br><strong>在数组 <code>nums</code> 中，找到一个和为 <code>total_sum - x</code> 的最长的连续子数组。</strong></p>
+<p>只要我们找到了这个最长的子数组，用数组的总长度 <code>n</code> 减去这个子数组的长度，就是我们要求的“最小操作数”。</p>
+<p>而“寻找和为定值的最长连续子数组”正是一个可以用滑动窗口高效解决的经典问题！</p>
+<h3 id="算法详解"><a href="#算法详解" class="headerlink" title="算法详解"></a>算法详解</h3><ol>
+<li><p><strong>问题转化</strong>:</p>
+<ul>
+<li>首先计算整个数组的总和 <code>total_sum</code>。</li>
+<li>计算出我们要在中间寻找的目标子数组的和 <code>target = total_sum - x</code>。</li>
+<li>处理一些边界情况：<ul>
+<li>如果 <code>target &lt; 0</code>，说明 <code>x</code> 本身就比数组所有元素之和还大，不可能凑成，返回 <code>-1</code>。</li>
+<li>如果 <code>target == 0</code>，说明需要移除所有元素才能使 <code>x</code> 减到 0，此时最长的中间子数组为空，但我们需要移除所有元素，答案是数组长度 <code>n</code>。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>滑动窗口求解</strong>:</p>
+<ul>
+<li>现在，我们在数组 <code>nums</code> 上寻找和为 <code>target</code> 的最长连续子数组。</li>
+<li>初始化左指针 <code>left = 0</code>，当前窗口内元素的和 <code>current_sum = 0</code>，以及记录最长长度的 <code>max_len = -1</code>（-1 表示尚未找到）。</li>
+<li>使用右指针 <code>right</code> 遍历数组，<code>right</code> 每向右移动一步，就将 <code>nums[right]</code> 加入 <code>current_sum</code>，这代表窗口在向右扩张。</li>
+<li>当 <code>current_sum &gt; target</code> 时，说明当前窗口的和太大了，需要缩小。我们让 <code>left</code> 指针向右移动，并从 <code>current_sum</code> 中减去 <code>nums[left]</code>，直到 <code>current_sum &lt;= target</code>。</li>
+<li>在每一步扩张或收缩后，如果 <code>current_sum == target</code>，我们就找到了一个符合条件的子数组。计算其长度 <code>right - left + 1</code>，并更新 <code>max_len</code>。</li>
+</ul>
+</li>
+<li><p><strong>计算最终结果</strong>:</p>
+<ul>
+<li>遍历结束后，如果 <code>max_len</code> 仍然是 <code>-1</code>，说明数组中不存在和为 <code>target</code> 的子数组，即无法通过移除操作使 <code>x</code> 减到 0，返回 <code>-1</code>。</li>
+<li>否则，最小操作数就是 <code>n - max_len</code>。</li>
+</ul>
+</li>
 </ol>
-<p>为了高效地比较字符频率，我们可以使用哈希表（在 Python 中是 <code>Counter</code> 或 <code>dict</code>）或者一个大小为 26 的数组来存储每个字符的出现次数。</p>
-<h3 id="滑动窗口算法详解"><a href="#滑动窗口算法详解" class="headerlink" title="滑动窗口算法详解"></a>滑动窗口算法详解</h3><ol>
-<li><p><strong>准备工作</strong>:</p>
-<ul>
-<li>令 <code>n1</code> 为 <code>s1</code> 的长度，<code>n2</code> 为 <code>s2</code> 的长度。如果 <code>n1 &gt; n2</code>，<code>s2</code> 必然无法包含 <code>s1</code> 的排列，直接返回 <code>False</code>。</li>
-<li>用哈希表 <code>s1_counts</code> 统计好目标字符串 <code>s1</code> 的字符频率。</li>
-</ul>
-</li>
-<li><p><strong>初始化窗口</strong>:</p>
-<ul>
-<li>创建另一个哈希表 <code>window_counts</code> 用于统计当前窗口内字符的频率。</li>
-<li>将 <code>s2</code> 的前 <code>n1</code> 个字符（即第一个窗口）填入 <code>window_counts</code>。</li>
-<li>比较 <code>s1_counts</code> 和 <code>window_counts</code>。如果它们完全相同，说明我们已经找到了答案，返回 <code>True</code>。</li>
-</ul>
-</li>
-<li><p><strong>滑动窗口</strong>:</p>
-<ul>
-<li>从 <code>s2</code> 的第 <code>n1</code> 个字符开始向右遍历到末尾。在每一次循环中，窗口向右移动一格。</li>
-<li>窗口的移动伴随着两个变化：<ul>
-<li><strong>移入字符</strong>：一个新字符从窗口右侧进入。我们在 <code>window_counts</code> 中增加这个新字符的计数。</li>
-<li><strong>移出字符</strong>：一个旧字符从窗口左侧离开。我们在 <code>window_counts</code> 中减少这个旧字符的计数。</li>
-</ul>
-</li>
-<li><strong>优化</strong>：如果一个字符移出窗口后，它在 <code>window_counts</code> 中的计数变为 0，最好将它从哈希表中移除。这可以确保我们进行 <code>s1_counts == window_counts</code> 比较时的准确性。</li>
-<li>每次滑动更新后，都进行一次比较。如果相等，返回 <code>True</code>。</li>
-</ul>
-</li>
-<li><p><strong>返回结果</strong>:</p>
-<ul>
-<li>如果循环结束仍未找到匹配的窗口，说明不存在这样的子串，返回 <code>False</code>。</li>
-</ul>
-</li>
-</ol>
-<h3 id="Python-代码实现"><a href="#Python-代码实现" class="headerlink" title="Python 代码实现"></a>Python 代码实现</h3><p>使用 <code>collections.Counter</code> 可以让代码变得异常简洁。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> Counter</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">checkInclusion</span>(<span class="params">self, s1: <span class="built_in">str</span>, s2: <span class="built_in">str</span></span>) -&gt; <span class="built_in">bool</span>:</span><br><span class="line">        n1, n2 = <span class="built_in">len</span>(s1), <span class="built_in">len</span>(s2)</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 步骤 1：处理边界情况</span></span><br><span class="line">        <span class="keyword">if</span> n1 &gt; n2:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">            </span><br><span class="line">        <span class="comment"># 步骤 1：统计 s1 的字符频率</span></span><br><span class="line">        s1_counts = Counter(s1)</span><br><span class="line">        window_counts = Counter()</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 步骤 2：初始化第一个窗口</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(n1):</span><br><span class="line">            window_counts[s2[i]] += <span class="number">1</span></span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span> window_counts == s1_counts:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line">            </span><br><span class="line">        <span class="comment"># 步骤 3：开始滑动窗口</span></span><br><span class="line">        <span class="comment"># right 是移入窗口的字符索引</span></span><br><span class="line">        <span class="keyword">for</span> right <span class="keyword">in</span> <span class="built_in">range</span>(n1, n2):</span><br><span class="line">            <span class="comment"># left 是移出窗口的字符索引</span></span><br><span class="line">            left = right - n1</span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 新字符从右侧进入窗口</span></span><br><span class="line">            window_counts[s2[right]] += <span class="number">1</span></span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 旧字符从左侧离开窗口</span></span><br><span class="line">            window_counts[s2[left]] -= <span class="number">1</span></span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 如果旧字符计数为 0，将其从哈希表中移除</span></span><br><span class="line">            <span class="keyword">if</span> window_counts[s2[left]] == <span class="number">0</span>:</span><br><span class="line">                <span class="keyword">del</span> window_counts[s2[left]]</span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 比较当前窗口和 s1 的频率是否相同</span></span><br><span class="line">            <span class="keyword">if</span> window_counts == s1_counts:</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line">                </span><br><span class="line">        <span class="comment"># 步骤 4：遍历结束未找到</span></span><br><span class="line">        <span class="keyword">return</span> <span class="literal">False</span></span><br></pre></td></tr></table></figure>
+<h3 id="Python-代码实现"><a href="#Python-代码实现" class="headerlink" title="Python 代码实现"></a>Python 代码实现</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> typing <span class="keyword">import</span> <span class="type">List</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">minOperations</span>(<span class="params">self, nums: <span class="type">List</span>[<span class="built_in">int</span>], x: <span class="built_in">int</span></span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        n = <span class="built_in">len</span>(nums)</span><br><span class="line">        total_sum = <span class="built_in">sum</span>(nums)</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 步骤 1: 问题转化，计算目标和</span></span><br><span class="line">        target = total_sum - x</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 边界情况：x 大于数组总和，无解</span></span><br><span class="line">        <span class="keyword">if</span> target &lt; <span class="number">0</span>:</span><br><span class="line">            <span class="keyword">return</span> -<span class="number">1</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 边界情况：需要移除所有元素</span></span><br><span class="line">        <span class="keyword">if</span> target == <span class="number">0</span>:</span><br><span class="line">            <span class="keyword">return</span> n</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 步骤 2: 滑动窗口寻找和为 target 的最长子数组</span></span><br><span class="line">        max_len = -<span class="number">1</span>  <span class="comment"># 记录最长子数组的长度</span></span><br><span class="line">        current_sum = <span class="number">0</span></span><br><span class="line">        left = <span class="number">0</span>  <span class="comment"># 窗口左边界</span></span><br><span class="line">        </span><br><span class="line">        <span class="keyword">for</span> right <span class="keyword">in</span> <span class="built_in">range</span>(n):</span><br><span class="line">            <span class="comment"># 窗口右边界扩张</span></span><br><span class="line">            current_sum += nums[right]</span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 当窗口和大于 target 时，收缩左边界</span></span><br><span class="line">            <span class="keyword">while</span> current_sum &gt; target <span class="keyword">and</span> left &lt;= right:</span><br><span class="line">                current_sum -= nums[left]</span><br><span class="line">                left += <span class="number">1</span></span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 如果窗口和等于 target，更新最大长度</span></span><br><span class="line">            <span class="keyword">if</span> current_sum == target:</span><br><span class="line">                max_len = <span class="built_in">max</span>(max_len, right - left + <span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 步骤 3: 计算最终结果</span></span><br><span class="line">        <span class="comment"># 如果 max_len 未被更新，说明找不到满足条件的子数组</span></span><br><span class="line">        <span class="keyword">if</span> max_len == -<span class="number">1</span>:</span><br><span class="line">            <span class="keyword">return</span> -<span class="number">1</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">return</span> n - max_len</span><br></pre></td></tr></table></figure>
 
 <h3 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h3><ul>
-<li><strong>时间复杂度</strong>: O(N₁ + (N₂ - N₁))，即 O(N₂)。其中 N₁ 是 <code>s1</code> 的长度，N₂ 是 <code>s2</code> 的长度。我们首先需要 O(N₁) 的时间来创建 <code>s1_counts</code>，然后滑动窗口遍历 <code>s2</code> 一次，花费 O(N₂) 的时间。哈希表的比较操作在字符集大小固定的情况下可视为 O(1)。</li>
-<li><strong>空间复杂度</strong>: O(K)，其中 K 是字符集的大小。在这里，因为题目规定只有小写字母，所以 K&#x3D;26，可以看作是 O(1) 的常数空间。</li>
+<li><strong>时间复杂度</strong>: O(N)。其中 N 是数组 <code>nums</code> 的长度。滑动窗口的左、右指针 <code>left</code> 和 <code>right</code> 都只会从头到尾遍历数组一次，因此总的时间复杂度是线性的。</li>
+<li><strong>空间复杂度</strong>: O(1)。我们只使用了常数个额外变量（如 <code>left</code>, <code>right</code>, <code>current_sum</code> 等），没有使用额外的数据结构。</li>
 </ul>
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>本题是运用滑动窗口解决字符串问题的典范。其核心思想在于<strong>用频率计数的相等性来替代排列的判断</strong>，从而将问题转化为一个可以通过线性扫描解决的子串匹配问题。当遇到涉及“连续子串”或“子数组”且需要满足某些条件的问题时，滑动窗口是应该优先考虑的强大工具。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>本题的核心在于<strong>逆向思维</strong>。当我们面对一个从两端操作、看似复杂的问题时，不妨思考一下操作的“补集”是什么。通过将“求两端最小移除数”转化为“求中间最长保留数”，问题瞬间豁然开朗，变成了一个我们非常熟悉的滑动窗口模板题。这个思路在很多算法题中都非常有效，是工具箱中必备的思维技巧。</p>
 
     </div>
 
@@ -368,10 +368,12 @@
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/%E5%AD%97%E7%AC%A6%E4%B8%B2/" rel="tag"># 字符串</a>
               <a href="/tags/%E5%93%88%E5%B8%8C%E8%A1%A8/" rel="tag"># 哈希表</a>
               <a href="/tags/%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3/" rel="tag"># 滑动窗口</a>
-              <a href="/tags/%E5%8F%8C%E6%8C%87%E9%92%88/" rel="tag"># 双指针</a>
+              <a href="/tags/%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE/" rel="tag"># 二分查找</a>
+              <a href="/tags/%E5%89%8D%E7%BC%80%E5%92%8C/" rel="tag"># 前缀和</a>
+              <a href="/tags/%E6%95%B0%E7%BB%84/" rel="tag"># 数组</a>
+              <a href="/tags/%E7%AC%AC215%E5%9C%BA%E5%91%A8%E8%B5%9B/" rel="tag"># 第215场周赛</a>
           </div>
 
         
@@ -380,13 +382,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/posts/leetcode-1888/" rel="prev" title="LeetCode 1888 | 利用滑动窗口巧解循环字符串反转问题">
-      <i class="fa fa-chevron-left"></i> LeetCode 1888 | 利用滑动窗口巧解循环字符串反转问题
+    <a href="/posts/leetcode-2024/" rel="prev" title="LeetCode 2024 | 滑动窗口求解“考试的最大困扰度”">
+      <i class="fa fa-chevron-left"></i> LeetCode 2024 | 滑动窗口求解“考试的最大困扰度”
     </a></div>
-      <div class="post-nav-item">
-    <a href="/posts/leetcode-438/" rel="next" title="LeetCode 438 | 滑动窗口巧解所有字母异位词">
-      LeetCode 438 | 滑动窗口巧解所有字母异位词 <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -446,7 +445,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E8%A7%A3%E8%AF%BB"><span class="nav-number">1.</span> <span class="nav-text">问题解读</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E6%80%9D%E8%B7%AF%EF%BC%9A%E8%BD%AC%E5%8C%96%E9%97%AE%E9%A2%98"><span class="nav-number">2.</span> <span class="nav-text">核心思路：转化问题</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8A%9B%E5%BC%83%E6%8E%92%E5%88%97%EF%BC%8C%E6%8B%A5%E6%8A%B1%E8%AE%A1%E6%95%B0"><span class="nav-number">2.1.</span> <span class="nav-text">抛弃排列，拥抱计数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%E7%99%BB%E5%9C%BA"><span class="nav-number">2.2.</span> <span class="nav-text">滑动窗口登场</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%E7%AE%97%E6%B3%95%E8%AF%A6%E8%A7%A3"><span class="nav-number">3.</span> <span class="nav-text">滑动窗口算法详解</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Python-%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0"><span class="nav-number">4.</span> <span class="nav-text">Python 代码实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%8D%E6%9D%82%E5%BA%A6%E5%88%86%E6%9E%90"><span class="nav-number">5.</span> <span class="nav-text">复杂度分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">6.</span> <span class="nav-text">总结</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E8%A7%A3%E8%AF%BB"><span class="nav-number">1.</span> <span class="nav-text">问题解读</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E6%80%9D%E8%B7%AF%EF%BC%9A%E9%80%86%E5%90%91%E6%80%9D%E7%BB%B4%E4%B8%8E%E9%97%AE%E9%A2%98%E8%BD%AC%E5%8C%96"><span class="nav-number">2.</span> <span class="nav-text">核心思路：逆向思维与问题转化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E8%AF%A6%E8%A7%A3"><span class="nav-number">3.</span> <span class="nav-text">算法详解</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Python-%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0"><span class="nav-number">4.</span> <span class="nav-text">Python 代码实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%8D%E6%9D%82%E5%BA%A6%E5%88%86%E6%9E%90"><span class="nav-number">5.</span> <span class="nav-text">复杂度分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">6.</span> <span class="nav-text">总结</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
