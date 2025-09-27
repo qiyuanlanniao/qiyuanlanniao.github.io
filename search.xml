@@ -535,6 +535,100 @@
       </tags>
   </entry>
   <entry>
+    <title>LeetCode 2730 | 滑动窗口求解“找到最长的半重复子字符串”</title>
+    <url>//posts/leetcode-2730/</url>
+    <content><![CDATA[<blockquote class="blockquote-center">
+            <i class="fa fa-quote-left"></i>
+            <p>LeetCode 第 2730 题：<a href="https://leetcode.cn/problems/find-the-longest-semi-repetitive-substring/description/">找到最长的半重复子字符串</a>。<br>这道题是“寻找满足特定条件的最长子字符串”这一类问题的典型代表，非常适合使用滑动窗口算法来优雅地解决。</p>
+
+            <i class="fa fa-quote-right"></i>
+          </blockquote>
+<span id="more"></span>
+<h3 id="问题解读"><a href="#问题解读" class="headerlink" title="问题解读"></a>问题解读</h3><p>题目要求我们从一个数字字符串 <code>s</code> 中，找出一个最长的子字符串，这个子字符串需要满足一个特殊的性质，即“半重复”。</p>
+<p>“半重复”的定义是：一个字符串中<strong>至多有一对</strong>相邻字符是相等的。</p>
+<p>我们来具体分析一下这个定义：</p>
+<ul>
+<li>没有相邻重复字符的字符串是半重复的，例如 <code>&quot;0123&quot;</code>、<code>&quot;5494&quot;</code>。</li>
+<li>只有一对相邻重复字符的字符串也是半重复的，例如 <code>&quot;0010&quot;</code>、<code>&quot;54944&quot;</code>。</li>
+<li>有两对或更多对相邻重复字符的字符串则不是半重复的，例如 <code>&quot;52233&quot;</code>（有 <code>22</code> 和 <code>33</code> 两对）、<code>&quot;111&quot;</code>（<code>s[0]==s[1]</code> 和 <code>s[1]==s[2]</code>，也算两对）。</li>
+</ul>
+<p>我们的目标就是从原字符串 <code>s</code> 中，找到一个最长的、满足“半重复”条件的连续子字符串，并返回它的长度。</p>
+<p>例如，对于 <code>s = &quot;52233&quot;</code>：</p>
+<ul>
+<li>子字符串 <code>&quot;5223&quot;</code> 中只有一对相邻重复 <code>22</code>，是半重复的，长度为 4。</li>
+<li>整个字符串 <code>&quot;52233&quot;</code> 中有 <code>22</code> 和 <code>33</code> 两对，不是半重复的。</li>
+<li>子字符串 <code>&quot;111&quot;</code> 中有两对相邻重复，不是半重复的，但它的子串 <code>&quot;11&quot;</code> 是半重复的，长度为 2。</li>
+</ul>
+<h3 id="核心思路：滑动窗口"><a href="#核心思路：滑动窗口" class="headerlink" title="核心思路：滑动窗口"></a>核心思路：滑动窗口</h3><p>这类求解“最长连续子数组&#x2F;子字符串”且该子串需满足特定条件的问题，是滑动窗口算法的绝佳应用场景。</p>
+<p>我们可以用 <code>left</code> 和 <code>right</code> 两个指针来维护一个“窗口”，即子字符串 <code>s[left:right+1]</code>。我们的目标是让这个窗口始终保持“半重复”的状态，并在这个过程中找到它能达到的最大宽度。</p>
+<p>为了判断窗口是否满足条件，我们需要一个状态变量来记录窗口内<strong>相邻重复字符对的数量</strong>，我们称之为 <code>pair_count</code>。</p>
+<p>算法的动态过程如下：</p>
+<ol>
+<li><strong>窗口扩张</strong>：<code>right</code> 指针不断向右移动，将新的字符纳入窗口。每当新字符 <code>s[right]</code> 与它前面的字符 <code>s[right-1]</code> 相同时，就意味着窗口内新增了一对相邻重复，我们让 <code>pair_count</code> 加 1。</li>
+<li><strong>条件判断与窗口收缩</strong>：在扩张后，如果发现 <code>pair_count</code> 的值大于 1，说明当前窗口已经不再是“半重复”的了，不满足题意。此时，我们必须从左侧收缩窗口，即把 <code>left</code> 指针向右移动。</li>
+<li><strong>状态更新</strong>：在收缩窗口（移动 <code>left</code> 指针）时，我们需要检查被移出窗口的旧字符 <code>s[left]</code> 是否是某一对相邻重复的开端（即 <code>s[left] == s[left+1]</code>）。如果是，那么随着 <code>s[left]</code> 的移除，这对重复也就被破坏了，所以我们需要将 <code>pair_count</code> 减 1。</li>
+<li><strong>结果更新</strong>：<code>right</code> 指针每移动一步，在确保窗口有效（即 <code>pair_count &lt;= 1</code>）之后，我们都计算当前窗口的长度 <code>right - left + 1</code>，并用它来更新我们记录的全局最大长度 <code>max_len</code>。</li>
+</ol>
+<p>通过这个“扩张-收缩”的循环过程，我们就能在一次遍历中找到最长的半重复子字符串。</p>
+<h3 id="算法详解"><a href="#算法详解" class="headerlink" title="算法详解"></a>算法详解</h3><ol>
+<li><p><strong>初始化</strong>：</p>
+<ul>
+<li>左指针 <code>left = 0</code>。</li>
+<li>记录最大长度 <code>max_len = 0</code>。</li>
+<li>记录窗口内相邻重复对的数量 <code>pair_count = 0</code>。</li>
+</ul>
+</li>
+<li><p><strong>遍历与扩张</strong>：</p>
+<ul>
+<li>用右指针 <code>right</code> 从 <code>0</code> 到 <code>n-1</code> 遍历整个字符串 <code>s</code>。</li>
+<li>在循环的每一步，首先检查新加入窗口的字符 <code>s[right]</code>。如果 <code>right &gt; 0</code> 且 <code>s[right] == s[right-1]</code>，则 <code>pair_count</code> 自增 1。</li>
+</ul>
+</li>
+<li><p><strong>收缩</strong>：</p>
+<ul>
+<li>紧接着，使用一个 <code>while</code> 循环检查窗口的有效性：<code>while pair_count &gt; 1</code>。</li>
+<li>只要条件成立，就说明窗口需要收缩。在收缩前，检查 <code>s[left]</code> 和 <code>s[left+1]</code> 是否相等。如果相等，说明一个重复对即将被移出，所以 <code>pair_count</code> 自减 1。</li>
+<li>然后，将左指针 <code>left</code> 右移一位。</li>
+<li><code>while</code> 循环会一直执行，直到 <code>pair_count</code> 重新变回 1 或 0，窗口恢复有效状态。</li>
+</ul>
+</li>
+<li><p><strong>更新结果</strong>：</p>
+<ul>
+<li>在 <code>while</code> 循环结束后（或者根本没进入 <code>while</code> 循环），当前窗口 <code>s[left:right+1]</code> 一定是半重复的。</li>
+<li>计算当前长度 <code>right - left + 1</code>，并更新 <code>max_len = max(max_len, right - left + 1)</code>。</li>
+</ul>
+</li>
+<li><p><strong>返回</strong>：</p>
+<ul>
+<li><code>right</code> 指针遍历完整个字符串后，<code>max_len</code> 中存储的就是最终答案。</li>
+</ul>
+</li>
+</ol>
+<h3 id="Python-代码实现"><a href="#Python-代码实现" class="headerlink" title="Python 代码实现"></a>Python 代码实现</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">longestSemiRepetitiveSubstring</span>(<span class="params">self, s: <span class="built_in">str</span></span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        n = <span class="built_in">len</span>(s)</span><br><span class="line">        <span class="keyword">if</span> n &lt;= <span class="number">2</span>:</span><br><span class="line">            <span class="keyword">return</span> n</span><br><span class="line"></span><br><span class="line">        left = <span class="number">0</span></span><br><span class="line">        max_len = <span class="number">0</span></span><br><span class="line">        pair_count = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> right <span class="keyword">in</span> <span class="built_in">range</span>(n):</span><br><span class="line">            <span class="comment"># 步骤 2: 窗口扩张，并检查是否形成新的重复对</span></span><br><span class="line">            <span class="keyword">if</span> right &gt; <span class="number">0</span> <span class="keyword">and</span> s[right] == s[right - <span class="number">1</span>]:</span><br><span class="line">                pair_count += <span class="number">1</span></span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 步骤 3: 当窗口不满足条件时，进行收缩</span></span><br><span class="line">            <span class="keyword">while</span> pair_count &gt; <span class="number">1</span>:</span><br><span class="line">                <span class="comment"># 检查将要移出窗口的 s[left] 是否是重复对的一部分</span></span><br><span class="line">                <span class="keyword">if</span> s[left] == s[left + <span class="number">1</span>]:</span><br><span class="line">                    pair_count -= <span class="number">1</span></span><br><span class="line">                left += <span class="number">1</span></span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 步骤 4: 更新最大长度，此时的窗口一定是有效的</span></span><br><span class="line">            max_len = <span class="built_in">max</span>(max_len, right - left + <span class="number">1</span>)</span><br><span class="line">                </span><br><span class="line">        <span class="keyword">return</span> max_len</span><br></pre></td></tr></table></figure>
+
+<h3 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h3><ul>
+<li><strong>时间复杂度</strong>: O(N)。其中 N 是字符串 <code>s</code> 的长度。滑动窗口的左指针 <code>left</code> 和右指针 <code>right</code> 都只会从头到尾遍历字符串一次，每个元素最多被访问两次（一次被 <code>right</code> 纳入，一次被 <code>left</code> 移出）。因此，总的时间复杂度是线性的。</li>
+<li><strong>空间复杂度</strong>: O(1)。我们只使用了常数个额外变量（如 <code>left</code>, <code>right</code>, <code>pair_count</code> 等），没有使用随输入规模增长的额外空间。</li>
+</ul>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>本题是滑动窗口思想的一个直接且经典的应用。解决这类问题的关键在于三点：</p>
+<ol>
+<li><strong>确定窗口维护的“状态”</strong>：在本题中，这个状态就是“相邻重复对的数量 <code>pair_count</code>”。</li>
+<li><strong>定义窗口扩张时的状态更新逻辑</strong>：<code>right</code> 指针移动，如何影响 <code>pair_count</code>。</li>
+<li><strong>定义窗口收缩时的状态更新逻辑</strong>：<code>left</code> 指针移动，如何影响 <code>pair_count</code>。</li>
+</ol>
+]]></content>
+      <categories>
+        <category>算法题解</category>
+        <category>滑动窗口与双指针</category>
+        <category>不定长滑动窗口</category>
+      </categories>
+      <tags>
+        <tag>字符串</tag>
+        <tag>滑动窗口</tag>
+        <tag>第106场双周赛</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>LeetCode 2953 | 分治+滑动窗口巧解“统计完全子字符串”</title>
     <url>//posts/leetcode-2953/</url>
     <content><![CDATA[<blockquote class="blockquote-center">
