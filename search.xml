@@ -601,90 +601,6 @@
       </tags>
   </entry>
   <entry>
-    <title>LeetCode 1888 | 利用滑动窗口巧解循环字符串反转问题</title>
-    <url>//posts/leetcode-1888/</url>
-    <content><![CDATA[<blockquote class="blockquote-center">
-            <i class="fa fa-quote-left"></i>
-            <p>LeetCode 第 1888 题：<a href="https://leetcode.cn/problems/minimum-number-of-flips-to-make-the-binary-string-alternating/description/">使二进制字符串交替的最少反转次数</a>。<br>这是一道非常有趣的中等难度题目，它巧妙地将字符串循环操作和经典算法模型“滑动窗口”结合了起来。</p>
-
-            <i class="fa fa-quote-right"></i>
-          </blockquote>
-<span id="more"></span>
-<h3 id="问题解读"><a href="#问题解读" class="headerlink" title="问题解读"></a>问题解读</h3><p>首先，我们来分析一下题目的要求。给定一个二进制字符串 <code>s</code>，我们有两种操作：</p>
-<ul>
-<li><strong>类型 1（循环移位）</strong>: 将字符串的第一个字符移动到末尾。这个操作可以执行任意次，意味着字符串的<strong>起点可以是任意位置</strong>。例如，<code>&quot;111000&quot;</code> 可以变成 <code>&quot;110001&quot;</code>、<code>&quot;100011&quot;</code> 等。</li>
-<li><strong>类型 2（字符反转）</strong>: 将任意一个 <code>&#39;0&#39;</code> 变成 <code>&#39;1&#39;</code>，或者 <code>&#39;1&#39;</code> 变成 <code>&#39;0&#39;</code>。</li>
-</ul>
-<p>我们的目标是，通过这两种操作，将原字符串变成一个“交替字符串”（如 <code>&quot;01010...&quot;</code> 或 <code>&quot;10101...&quot;</code>），并求出<strong>最少的类型 2（反转）操作次数</strong>。</p>
-<h3 id="核心思路：转化问题"><a href="#核心思路：转化问题" class="headerlink" title="核心思路：转化问题"></a>核心思路：转化问题</h3><h4 id="如何处理“循环移位”？"><a href="#如何处理“循环移位”？" class="headerlink" title="如何处理“循环移位”？"></a>如何处理“循环移位”？</h4><p>“任意次循环移位”是一个非常关键的信息。它暗示我们，最终的字符串可能是原字符串通过旋转得到的任何一种形态。直接枚举所有旋转结果再计算会非常低效。</p>
-<p>处理这类环形或循环问题的经典技巧是：<strong>将字符串复制一份拼接在原字符串后面</strong>。</p>
-<p>例如，如果 <code>s = &quot;1110&quot;</code>，我们构造一个新的字符串 <code>s&#39; = s + s = &quot;11101110&quot;</code>。<br>现在，在 <code>s&#39;</code> 上任意一个长度为 <code>n</code>（原字符串长度）的子串，都对应了原字符串 <code>s</code> 的一种循环移位结果。</p>
-<ul>
-<li><code>s&#39;</code> 从索引 0 开始的子串: <code>&quot;1110&quot;</code> (原字符串)</li>
-<li><code>s&#39;</code> 从索引 1 开始的子串: <code>&quot;1101&quot;</code> (相当于原字符串循环移位 1 次)</li>
-<li><code>s&#39;</code> 从索引 2 开始的子串: <code>&quot;1011&quot;</code> (相当于原字符串循环移位 2 次)</li>
-<li><code>s&#39;</code> 从索引 3 开始的子串: <code>&quot;0111&quot;</code> (相当于原字符串循环移位 3 次)</li>
-</ul>
-<p>通过这个转换，我们就把一个复杂的“循环问题”转化成了一个更熟悉的“<strong>在固定长度的字符串上寻找最优子串</strong>”的问题。这自然而然地引出了我们的主角——<strong>滑动窗口</strong>。</p>
-<h4 id="确定我们的“目标”"><a href="#确定我们的“目标”" class="headerlink" title="确定我们的“目标”"></a>确定我们的“目标”</h4><p>我们的目标是把字符串变成一个交替字符串。对于一个固定长度 <code>n</code> 的字符串，交替的形式只有两种：</p>
-<ol>
-<li>以 <code>&#39;0&#39;</code> 开头：我们称之为 <code>target1</code>，例如 <code>n=6</code> 时为 <code>&quot;010101&quot;</code>。</li>
-<li>以 <code>&#39;1&#39;</code> 开头：我们称之为 <code>target2</code>，例如 <code>n=6</code> 时为 <code>&quot;101010&quot;</code>。</li>
-</ol>
-<p>我们的任务就是在 <code>s&#39;</code> 上滑动一个长度为 <code>n</code> 的窗口，对于每一个窗口，计算它变成 <code>target1</code> 或 <code>target2</code> 所需的最小反转次数，然后取所有这些结果中的最小值。</p>
-<h3 id="滑动窗口算法详解"><a href="#滑动窗口算法详解" class="headerlink" title="滑动窗口算法详解"></a>滑动窗口算法详解</h3><ol>
-<li><p><strong>准备工作</strong>:</p>
-<ul>
-<li>令 <code>n</code> 为原字符串 <code>s</code> 的长度。</li>
-<li>构造新字符串 <code>s&#39; = s + s</code>，其长度为 <code>2n</code>。</li>
-<li>构造两个长度为 <code>2n</code> 的目标字符串 <code>target1</code> 和 <code>target2</code>。</li>
-</ul>
-</li>
-<li><p><strong>初始化窗口</strong>:</p>
-<ul>
-<li>计算 <code>s&#39;</code> 的前 <code>n</code> 个字符（即第一个窗口）与 <code>target1</code> 的前 <code>n</code> 个字符有多少位不同，记为 <code>diff1</code>。</li>
-<li>同理，计算与 <code>target2</code> 的前 <code>n</code> 个字符的不同位数，记为 <code>diff2</code>。</li>
-<li>此时，我们得到的最小反转次数 <code>ans = min(diff1, diff2)</code>。</li>
-</ul>
-</li>
-<li><p><strong>滑动窗口</strong>:</p>
-<ul>
-<li>窗口从索引 <code>1</code> 开始向右滑动，直到窗口的起始点到达 <code>n</code>。</li>
-<li>每次窗口向右滑动一格，我们不需要重新计算整个窗口的 <code>diff</code>。我们只需要更新变化的部分：<ul>
-<li><strong>移出字符</strong>：检查即将离开窗口的那个字符（例如 <code>s&#39;[i-1]</code>）是否与目标字符串的对应位置不同。如果不同，说明我们之前为这个不同点计了 1 次反转，现在它离开窗口了，所以 <code>diff</code> 应该减 1。</li>
-<li><strong>移入字符</strong>：检查新进入窗口的那个字符（例如 <code>s&#39;[i+n-1]</code>）是否与目标字符串的对应位置不同。如果不同，<code>diff</code> 应该加 1。</li>
-</ul>
-</li>
-<li>每次滑动后，我们都更新 <code>diff1</code> 和 <code>diff2</code>，并用 <code>min(diff1, diff2)</code> 来更新全局的 <code>ans</code>。</li>
-</ul>
-</li>
-<li><p><strong>返回结果</strong>:</p>
-<ul>
-<li>遍历完所有窗口后，<code>ans</code> 就是最终答案。</li>
-</ul>
-</li>
-</ol>
-<h3 id="Python-代码实现"><a href="#Python-代码实现" class="headerlink" title="Python 代码实现"></a>Python 代码实现</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">minFlips</span>(<span class="params">self, s: <span class="built_in">str</span></span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        n = <span class="built_in">len</span>(s)</span><br><span class="line">        s = s + s <span class="comment"># 步骤 1：处理循环问题</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># 步骤 1：构建两种目标交替字符串</span></span><br><span class="line">        target1 = <span class="string">&quot;&quot;</span> <span class="comment"># 形式如 &quot;010101...&quot;</span></span><br><span class="line">        target2 = <span class="string">&quot;&quot;</span> <span class="comment"># 形式如 &quot;101010...&quot;</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">2</span> * n):</span><br><span class="line">            <span class="keyword">if</span> i % <span class="number">2</span> == <span class="number">0</span>:</span><br><span class="line">                target1 += <span class="string">&quot;0&quot;</span></span><br><span class="line">                target2 += <span class="string">&quot;1&quot;</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                target1 += <span class="string">&quot;1&quot;</span></span><br><span class="line">                target2 += <span class="string">&quot;0&quot;</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 步骤 2：初始化第一个窗口的差异（需要反转的次数）</span></span><br><span class="line">        diff1 = <span class="number">0</span> <span class="comment"># 与 target1 的差异</span></span><br><span class="line">        diff2 = <span class="number">0</span> <span class="comment"># 与 target2 的差异</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(n):</span><br><span class="line">            <span class="keyword">if</span> s[i] != target1[i]:</span><br><span class="line">                diff1 += <span class="number">1</span></span><br><span class="line">            <span class="keyword">if</span> s[i] != target2[i]:</span><br><span class="line">                diff2 += <span class="number">1</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># 初始化最小反转次数</span></span><br><span class="line">        ans = <span class="built_in">min</span>(diff1, diff2)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 步骤 3：开始滑动窗口</span></span><br><span class="line">        <span class="comment"># left 是移出窗口的字符索引，i 是移入窗口的字符索引</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(n, <span class="number">2</span> * n):</span><br><span class="line">            left = i - n</span><br><span class="line"></span><br><span class="line">            <span class="comment"># 更新与 target1 的差异</span></span><br><span class="line">            <span class="keyword">if</span> s[left] != target1[left]:        </span><br><span class="line">                diff1 -= <span class="number">1</span></span><br><span class="line">            <span class="keyword">if</span> s[i] != target1[i]:</span><br><span class="line">                diff1 += <span class="number">1</span></span><br><span class="line"></span><br><span class="line">            <span class="comment"># 更新与 target2 的差异</span></span><br><span class="line">            <span class="keyword">if</span> s[left] != target2[left]:        </span><br><span class="line">                diff2 -= <span class="number">1</span></span><br><span class="line">            <span class="keyword">if</span> s[i] != target2[i]:</span><br><span class="line">                diff2 += <span class="number">1</span></span><br><span class="line">                </span><br><span class="line">            <span class="comment"># 更新全局最小反转次数</span></span><br><span class="line">            ans = <span class="built_in">min</span>(ans, diff1, diff2)</span><br><span class="line">            </span><br><span class="line">        <span class="keyword">return</span> ans</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h3 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h3><ul>
-<li><strong>时间复杂度</strong>: O(n)。我们只遍历了长度为 <code>2n</code> 的新字符串一次。</li>
-<li><strong>空间复杂度</strong>: O(n)。我们需要额外的空间来存储拼接后的字符串 <code>s&#39;</code> 以及两个目标字符串。</li>
-</ul>
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>这道题的核心在于将“循环移位”操作通过拼接字符串的方式，转化为一个可以在线性结构上求解的滑动窗口问题，这是一种非常值得学习和掌握的技巧。</p>
-]]></content>
-      <categories>
-        <category>算法题解</category>
-        <category>滑动窗口与双指针</category>
-        <category>定长滑动窗口</category>
-      </categories>
-      <tags>
-        <tag>字符串</tag>
-        <tag>滑动窗口</tag>
-        <tag>动态规划</tag>
-        <tag>第244场周赛</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>LeetCode 2024 | 滑动窗口求解“考试的最大困扰度”</title>
     <url>//posts/leetcode-2024/</url>
     <content><![CDATA[<blockquote class="blockquote-center">
@@ -970,6 +886,90 @@
         <tag>哈希函数</tag>
         <tag>滚动哈希</tag>
         <tag>第 278 场周赛</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>LeetCode 1888 | 利用滑动窗口巧解循环字符串反转问题</title>
+    <url>//posts/leetcode-1888/</url>
+    <content><![CDATA[<blockquote class="blockquote-center">
+            <i class="fa fa-quote-left"></i>
+            <p>LeetCode 第 1888 题：<a href="https://leetcode.cn/problems/minimum-number-of-flips-to-make-the-binary-string-alternating/description/">使二进制字符串交替的最少反转次数</a>。<br>这是一道非常有趣的中等难度题目，它巧妙地将字符串循环操作和经典算法模型“滑动窗口”结合了起来。</p>
+
+            <i class="fa fa-quote-right"></i>
+          </blockquote>
+<span id="more"></span>
+<h3 id="问题解读"><a href="#问题解读" class="headerlink" title="问题解读"></a>问题解读</h3><p>首先，我们来分析一下题目的要求。给定一个二进制字符串 <code>s</code>，我们有两种操作：</p>
+<ul>
+<li><strong>类型 1（循环移位）</strong>: 将字符串的第一个字符移动到末尾。这个操作可以执行任意次，意味着字符串的<strong>起点可以是任意位置</strong>。例如，<code>&quot;111000&quot;</code> 可以变成 <code>&quot;110001&quot;</code>、<code>&quot;100011&quot;</code> 等。</li>
+<li><strong>类型 2（字符反转）</strong>: 将任意一个 <code>&#39;0&#39;</code> 变成 <code>&#39;1&#39;</code>，或者 <code>&#39;1&#39;</code> 变成 <code>&#39;0&#39;</code>。</li>
+</ul>
+<p>我们的目标是，通过这两种操作，将原字符串变成一个“交替字符串”（如 <code>&quot;01010...&quot;</code> 或 <code>&quot;10101...&quot;</code>），并求出<strong>最少的类型 2（反转）操作次数</strong>。</p>
+<h3 id="核心思路：转化问题"><a href="#核心思路：转化问题" class="headerlink" title="核心思路：转化问题"></a>核心思路：转化问题</h3><h4 id="如何处理“循环移位”？"><a href="#如何处理“循环移位”？" class="headerlink" title="如何处理“循环移位”？"></a>如何处理“循环移位”？</h4><p>“任意次循环移位”是一个非常关键的信息。它暗示我们，最终的字符串可能是原字符串通过旋转得到的任何一种形态。直接枚举所有旋转结果再计算会非常低效。</p>
+<p>处理这类环形或循环问题的经典技巧是：<strong>将字符串复制一份拼接在原字符串后面</strong>。</p>
+<p>例如，如果 <code>s = &quot;1110&quot;</code>，我们构造一个新的字符串 <code>s&#39; = s + s = &quot;11101110&quot;</code>。<br>现在，在 <code>s&#39;</code> 上任意一个长度为 <code>n</code>（原字符串长度）的子串，都对应了原字符串 <code>s</code> 的一种循环移位结果。</p>
+<ul>
+<li><code>s&#39;</code> 从索引 0 开始的子串: <code>&quot;1110&quot;</code> (原字符串)</li>
+<li><code>s&#39;</code> 从索引 1 开始的子串: <code>&quot;1101&quot;</code> (相当于原字符串循环移位 1 次)</li>
+<li><code>s&#39;</code> 从索引 2 开始的子串: <code>&quot;1011&quot;</code> (相当于原字符串循环移位 2 次)</li>
+<li><code>s&#39;</code> 从索引 3 开始的子串: <code>&quot;0111&quot;</code> (相当于原字符串循环移位 3 次)</li>
+</ul>
+<p>通过这个转换，我们就把一个复杂的“循环问题”转化成了一个更熟悉的“<strong>在固定长度的字符串上寻找最优子串</strong>”的问题。这自然而然地引出了我们的主角——<strong>滑动窗口</strong>。</p>
+<h4 id="确定我们的“目标”"><a href="#确定我们的“目标”" class="headerlink" title="确定我们的“目标”"></a>确定我们的“目标”</h4><p>我们的目标是把字符串变成一个交替字符串。对于一个固定长度 <code>n</code> 的字符串，交替的形式只有两种：</p>
+<ol>
+<li>以 <code>&#39;0&#39;</code> 开头：我们称之为 <code>target1</code>，例如 <code>n=6</code> 时为 <code>&quot;010101&quot;</code>。</li>
+<li>以 <code>&#39;1&#39;</code> 开头：我们称之为 <code>target2</code>，例如 <code>n=6</code> 时为 <code>&quot;101010&quot;</code>。</li>
+</ol>
+<p>我们的任务就是在 <code>s&#39;</code> 上滑动一个长度为 <code>n</code> 的窗口，对于每一个窗口，计算它变成 <code>target1</code> 或 <code>target2</code> 所需的最小反转次数，然后取所有这些结果中的最小值。</p>
+<h3 id="滑动窗口算法详解"><a href="#滑动窗口算法详解" class="headerlink" title="滑动窗口算法详解"></a>滑动窗口算法详解</h3><ol>
+<li><p><strong>准备工作</strong>:</p>
+<ul>
+<li>令 <code>n</code> 为原字符串 <code>s</code> 的长度。</li>
+<li>构造新字符串 <code>s&#39; = s + s</code>，其长度为 <code>2n</code>。</li>
+<li>构造两个长度为 <code>2n</code> 的目标字符串 <code>target1</code> 和 <code>target2</code>。</li>
+</ul>
+</li>
+<li><p><strong>初始化窗口</strong>:</p>
+<ul>
+<li>计算 <code>s&#39;</code> 的前 <code>n</code> 个字符（即第一个窗口）与 <code>target1</code> 的前 <code>n</code> 个字符有多少位不同，记为 <code>diff1</code>。</li>
+<li>同理，计算与 <code>target2</code> 的前 <code>n</code> 个字符的不同位数，记为 <code>diff2</code>。</li>
+<li>此时，我们得到的最小反转次数 <code>ans = min(diff1, diff2)</code>。</li>
+</ul>
+</li>
+<li><p><strong>滑动窗口</strong>:</p>
+<ul>
+<li>窗口从索引 <code>1</code> 开始向右滑动，直到窗口的起始点到达 <code>n</code>。</li>
+<li>每次窗口向右滑动一格，我们不需要重新计算整个窗口的 <code>diff</code>。我们只需要更新变化的部分：<ul>
+<li><strong>移出字符</strong>：检查即将离开窗口的那个字符（例如 <code>s&#39;[i-1]</code>）是否与目标字符串的对应位置不同。如果不同，说明我们之前为这个不同点计了 1 次反转，现在它离开窗口了，所以 <code>diff</code> 应该减 1。</li>
+<li><strong>移入字符</strong>：检查新进入窗口的那个字符（例如 <code>s&#39;[i+n-1]</code>）是否与目标字符串的对应位置不同。如果不同，<code>diff</code> 应该加 1。</li>
+</ul>
+</li>
+<li>每次滑动后，我们都更新 <code>diff1</code> 和 <code>diff2</code>，并用 <code>min(diff1, diff2)</code> 来更新全局的 <code>ans</code>。</li>
+</ul>
+</li>
+<li><p><strong>返回结果</strong>:</p>
+<ul>
+<li>遍历完所有窗口后，<code>ans</code> 就是最终答案。</li>
+</ul>
+</li>
+</ol>
+<h3 id="Python-代码实现"><a href="#Python-代码实现" class="headerlink" title="Python 代码实现"></a>Python 代码实现</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">minFlips</span>(<span class="params">self, s: <span class="built_in">str</span></span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        n = <span class="built_in">len</span>(s)</span><br><span class="line">        s = s + s <span class="comment"># 步骤 1：处理循环问题</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># 步骤 1：构建两种目标交替字符串</span></span><br><span class="line">        target1 = <span class="string">&quot;&quot;</span> <span class="comment"># 形式如 &quot;010101...&quot;</span></span><br><span class="line">        target2 = <span class="string">&quot;&quot;</span> <span class="comment"># 形式如 &quot;101010...&quot;</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">2</span> * n):</span><br><span class="line">            <span class="keyword">if</span> i % <span class="number">2</span> == <span class="number">0</span>:</span><br><span class="line">                target1 += <span class="string">&quot;0&quot;</span></span><br><span class="line">                target2 += <span class="string">&quot;1&quot;</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                target1 += <span class="string">&quot;1&quot;</span></span><br><span class="line">                target2 += <span class="string">&quot;0&quot;</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 步骤 2：初始化第一个窗口的差异（需要反转的次数）</span></span><br><span class="line">        diff1 = <span class="number">0</span> <span class="comment"># 与 target1 的差异</span></span><br><span class="line">        diff2 = <span class="number">0</span> <span class="comment"># 与 target2 的差异</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(n):</span><br><span class="line">            <span class="keyword">if</span> s[i] != target1[i]:</span><br><span class="line">                diff1 += <span class="number">1</span></span><br><span class="line">            <span class="keyword">if</span> s[i] != target2[i]:</span><br><span class="line">                diff2 += <span class="number">1</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># 初始化最小反转次数</span></span><br><span class="line">        ans = <span class="built_in">min</span>(diff1, diff2)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 步骤 3：开始滑动窗口</span></span><br><span class="line">        <span class="comment"># left 是移出窗口的字符索引，i 是移入窗口的字符索引</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(n, <span class="number">2</span> * n):</span><br><span class="line">            left = i - n</span><br><span class="line"></span><br><span class="line">            <span class="comment"># 更新与 target1 的差异</span></span><br><span class="line">            <span class="keyword">if</span> s[left] != target1[left]:        </span><br><span class="line">                diff1 -= <span class="number">1</span></span><br><span class="line">            <span class="keyword">if</span> s[i] != target1[i]:</span><br><span class="line">                diff1 += <span class="number">1</span></span><br><span class="line"></span><br><span class="line">            <span class="comment"># 更新与 target2 的差异</span></span><br><span class="line">            <span class="keyword">if</span> s[left] != target2[left]:        </span><br><span class="line">                diff2 -= <span class="number">1</span></span><br><span class="line">            <span class="keyword">if</span> s[i] != target2[i]:</span><br><span class="line">                diff2 += <span class="number">1</span></span><br><span class="line">                </span><br><span class="line">            <span class="comment"># 更新全局最小反转次数</span></span><br><span class="line">            ans = <span class="built_in">min</span>(ans, diff1, diff2)</span><br><span class="line">            </span><br><span class="line">        <span class="keyword">return</span> ans</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h3><ul>
+<li><strong>时间复杂度</strong>: O(n)。我们只遍历了长度为 <code>2n</code> 的新字符串一次。</li>
+<li><strong>空间复杂度</strong>: O(n)。我们需要额外的空间来存储拼接后的字符串 <code>s&#39;</code> 以及两个目标字符串。</li>
+</ul>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>这道题的核心在于将“循环移位”操作通过拼接字符串的方式，转化为一个可以在线性结构上求解的滑动窗口问题，这是一种非常值得学习和掌握的技巧。</p>
+]]></content>
+      <categories>
+        <category>算法题解</category>
+        <category>滑动窗口与双指针</category>
+        <category>定长滑动窗口</category>
+      </categories>
+      <tags>
+        <tag>字符串</tag>
+        <tag>滑动窗口</tag>
+        <tag>动态规划</tag>
+        <tag>第244场周赛</tag>
       </tags>
   </entry>
   <entry>
