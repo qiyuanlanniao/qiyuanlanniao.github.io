@@ -84,85 +84,6 @@
       </tags>
   </entry>
   <entry>
-    <title>LeetCode 1040 | SW脑筋急转弯求解“移动石子直到连续 II”</title>
-    <url>//posts/leetcode-1040/</url>
-    <content><![CDATA[<blockquote class="blockquote-center">
-            <i class="fa fa-quote-left"></i>
-            <p>LeetCode 第 1040 题：<a href="https://leetcode.cn/problems/moving-stones-until-consecutive-ii/description/">移动石子直到连续 II</a>。<br>该题要求我们计算将一组分散的石子移动成连续序列所需的最小和最大步数。最大步数是一个有趣的数学问题，而最小步数则巧妙地伪装成了一个滑动窗口问题，并带有一个需要细心处理的“陷阱”。</p>
-
-            <i class="fa fa-quote-right"></i>
-          </blockquote>
-<span id="more"></span>
-<h3 id="问题解读"><a href="#问题解读" class="headerlink" title="问题解读"></a>问题解读</h3><p>题目给了我们 X 轴上一些不同位置的石子，要求我们通过一系列移动，将它们变成连续的。移动规则如下：</p>
-<ol>
-<li>只能移动位于<strong>最小</strong>或<strong>最大</strong>位置的<strong>端点石子</strong>。</li>
-<li>必须将它移动到一个<strong>未被占用</strong>的位置。</li>
-<li>移动后，该石子<strong>不能</strong>成为新的端点石子。这意味着它必须被放置在其他两个石子之间。</li>
-</ol>
-<p>游戏在所有石子位置连续时结束。我们需要返回一个数组 <code>[最小移动次数, 最大移动次数]</code>。</p>
-<p>例如，对于 <code>stones = [7,4,9]</code>，排序后是 <code>[4, 7, 9]</code>。</p>
-<ul>
-<li><strong>最大移动</strong>：可以先将 <code>4</code> 移动到 <code>6</code>，得到 <code>[6, 7, 9]</code>；再将 <code>9</code> 移动到 <code>8</code>，得到 <code>[6, 7, 8]</code>。共 2 步。</li>
-<li><strong>最小移动</strong>：可以将 <code>4</code> 移动到 <code>8</code>，直接得到 <code>[7, 8, 9]</code>。只需 1 步。<br>所以答案是 <code>[1, 2]</code>。</li>
-</ul>
-<h3 id="核心思路：最大和最小分开击破"><a href="#核心思路：最大和最小分开击破" class="headerlink" title="核心思路：最大和最小分开击破"></a>核心思路：最大和最小分开击破</h3><p>这类要求两个极值的题目，通常可以将最大值和最小值的求解策略分开考虑。</p>
-<h4 id="最大移动次数：贪心思想"><a href="#最大移动次数：贪心思想" class="headerlink" title="最大移动次数：贪心思想"></a>最大移动次数：贪心思想</h4><p>要让移动次数最多，我们应该“小步慢走”，每次只填补一个最小的空位，从而为后续移动保留最大的空间。</p>
-<ol>
-<li><strong>排序</strong>：首先将石子位置 <code>stones</code> 排序。</li>
-<li><strong>总空位数</strong>：石子占据的总区间长度是 <code>stones[n-1] - stones[0] + 1</code>。其中有 <code>n</code> 个石子，所以总的空位数是 <code>(stones[n-1] - stones[0] + 1) - n</code>。</li>
-<li><strong>贪心策略</strong>：每次移动，我们都会放弃一端的空间。为了保留最大的可操作空间，我们应该总是从<strong>间隙更小</strong>的那一端移动端点石子。例如，如果 <code>stones[1] - stones[0]</code> 比 <code>stones[n-1] - stones[n-2]</code> 小，我们就应该先移动 <code>stones[0]</code>，把 <code>stones[1]</code> 作为新的左端点。</li>
-<li><strong>简化公式</strong>：这个过程最终可以简化成一个优美的数学公式。最大移动次数等于<strong>总空位数</strong>减去<strong>两端中较小的那个空隙</strong>。<ul>
-<li><code>max_moves = (总空位数) - min(左端空隙, 右端空隙)</code></li>
-<li>左端空隙 &#x3D; <code>stones[1] - stones[0] - 1</code></li>
-<li>右端空隙 &#x3D; <code>stones[n-1] - stones[n-2] - 1</code></li>
-<li>代入化简后可得：<code>max_moves = max(stones[n-1] - stones[1] - n + 2, stones[n-2] - stones[0] - n + 2)</code></li>
-</ul>
-</li>
-</ol>
-<h4 id="最小移动次数：滑动窗口"><a href="#最小移动次数：滑动窗口" class="headerlink" title="最小移动次数：滑动窗口"></a>最小移动次数：滑动窗口</h4><p>要让移动次数最少，我们应该尽可能多地保留原地不动的石子。最终，所有石子会占据一个长度为 <code>n</code> 的连续区间。我们的目标就是找到这样一个目标区间，它能容纳最多的原始石子。</p>
-<p>这个问题可以转化为：<strong>用一个长度为 <code>n</code> 的尺子（窗口），在数轴上滑动，找到它能覆盖的最多石子数</strong>。</p>
-<p>假设我们找到了这个最大可覆盖数 <code>max_coverage</code>。那么，需要移动的石子数就是 <code>n - max_coverage</code>。这就是最小移动次数的基本思路。</p>
-<h3 id="算法详解"><a href="#算法详解" class="headerlink" title="算法详解"></a>算法详解</h3><ol>
-<li><strong>排序</strong>：对 <code>stones</code> 数组进行升序排序。</li>
-<li><strong>计算 <code>max_moves</code></strong>：直接套用上面推导出的公式。</li>
-<li><strong>计算 <code>min_moves</code></strong>：<ul>
-<li>使用一个滑动窗口 <code>[j, i]</code> 遍历排序后的 <code>stones</code> 数组。</li>
-<li>对于每个右端点 <code>i</code>，我们向右移动左端点 <code>j</code>，直到窗口代表的区间长度 <code>stones[i] - stones[j] + 1</code> 不超过 <code>n</code>。</li>
-<li>此时，窗口 <code>[j, i]</code> 内的石子数是 <code>i - j + 1</code>，这些是可以被一个长度为 <code>n</code> 的最终序列容纳的。我们记录这个数量的最大值 <code>max_coverage</code>。</li>
-<li>基本的 <code>min_moves</code> 就是 <code>n - max_coverage</code>。</li>
-</ul>
-</li>
-<li><strong>处理 <code>min_moves</code> 的特殊情况</strong>：<ul>
-<li>考虑一种情况：<code>stones = [2,3,4,5,10]</code> (<code>n=5</code>)。我们的滑动窗口会找到 <code>[2,3,4,5]</code> 这 4 个石子，<code>max_coverage = 4</code>，得出 <code>min_moves = 1</code>。</li>
-<li>但问题是，我们能一步完成吗？目标是 <code>[2,3,4,5,6]</code>。我们需要移动 <code>10</code> 到 <code>6</code>。移动后，石子 <code>10</code> 位于 <code>6</code>，成为新的最大端点，这违反了规则 “移动后不能是端点石子”。</li>
-<li>因此，我们不能直接移动 <code>10</code>。我们必须移动 <code>2</code> 或 <code>5</code>，比如把 <code>5</code> 移动到 <code>6</code>，得到 <code>[2,3,4,6,10]</code>。这之后还需要移动 <code>10</code>，总共需要 2 步。</li>
-<li>这个<strong>特殊情况</strong>发生在：当 <code>max_coverage = n-1</code> 且这 <code>n-1</code> 个石子本身是<strong>紧密连续</strong>的，同时那个唯一的“局外石”与这个连续块的距离<strong>大于1</strong>时，最小移动次数是 <strong>2</strong>。</li>
-<li>我们可以通过检查排序后数组的两端是否存在这种情况来判断。</li>
-</ul>
-</li>
-</ol>
-<h3 id="Python-代码实现"><a href="#Python-代码实现" class="headerlink" title="Python 代码实现"></a>Python 代码实现</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> typing <span class="keyword">import</span> <span class="type">List</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">numMovesStonesII</span>(<span class="params">self, stones: <span class="type">List</span>[<span class="built_in">int</span>]</span>) -&gt; <span class="type">List</span>[<span class="built_in">int</span>]:</span><br><span class="line">        stones.sort()</span><br><span class="line">        n = <span class="built_in">len</span>(stones)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 计算最大移动次数</span></span><br><span class="line">        max_moves = <span class="built_in">max</span>(stones[n-<span class="number">1</span>] - stones[<span class="number">1</span>] - n + <span class="number">2</span>, stones[n-<span class="number">2</span>] - stones[<span class="number">0</span>] - n + <span class="number">2</span>)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 使用滑动窗口计算最小移动次数</span></span><br><span class="line">        j = <span class="number">0</span></span><br><span class="line">        max_coverage = <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(n):</span><br><span class="line">            <span class="comment"># 保证窗口 `[j, i]` 内的石子可以被一个长度为 n 的尺子覆盖</span></span><br><span class="line">            <span class="keyword">while</span> stones[i] - stones[j] + <span class="number">1</span> &gt; n:</span><br><span class="line">                j += <span class="number">1</span></span><br><span class="line">            max_coverage = <span class="built_in">max</span>(max_coverage, i - j + <span class="number">1</span>)</span><br><span class="line">        </span><br><span class="line">        min_moves = n - max_coverage</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 处理特殊情况：n-1个石子连续，且 outlier 距离 &gt; 1</span></span><br><span class="line">        <span class="comment"># 例如 [2,3,4,5,10] (n=5), stones[3]-stones[0]=3 (n-2), stones[4]-stones[3]=5 (&gt;2)</span></span><br><span class="line">        is_consecutive_at_start = (stones[n-<span class="number">2</span>] - stones[<span class="number">0</span>] == n - <span class="number">2</span>)</span><br><span class="line">        is_consecutive_at_end = (stones[n-<span class="number">1</span>] - stones[<span class="number">1</span>] == n - <span class="number">2</span>)</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span> (is_consecutive_at_start <span class="keyword">and</span> stones[n-<span class="number">1</span>] - stones[n-<span class="number">2</span>] &gt; <span class="number">2</span>) <span class="keyword">or</span> \</span><br><span class="line">           (is_consecutive_at_end <span class="keyword">and</span> stones[<span class="number">1</span>] - stones[<span class="number">0</span>] &gt; <span class="number">2</span>):</span><br><span class="line">            min_moves = <span class="number">2</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> [min_moves, max_moves]</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h3 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h3><ul>
-<li><strong>时间复杂度</strong>: O(N log N)。主要开销来自于初始的排序。后续的滑动窗口和计算都是 O(N)。</li>
-<li><strong>空间复杂度</strong>: O(1) 或 O(N)，取决于排序算法使用的空间。</li>
-</ul>
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>本题是数学思维和经典算法模型的结合。最大移动次数可以通过分析移动过程中的“状态保持”推导出贪心策略和数学公式。最小移动次数则是一个典型的“最大化保留&#x2F;覆盖”问题，可以优雅地用滑动窗口解决。解题的关键在于不仅要想到滑动窗口模型，还要根据题目独特的移动限制，识别并正确处理那个导致答案从 1 变为 2 的特殊情况。</p>
-]]></content>
-      <categories>
-        <category>算法题解</category>
-        <category>滑动窗口与双指针</category>
-        <category>不定长滑动窗口</category>
-      </categories>
-      <tags>
-        <tag>滑动窗口</tag>
-        <tag>数组</tag>
-        <tag>数学</tag>
-        <tag>排序</tag>
-        <tag>第135场周赛</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>LeetCode 1208 | 滑动窗口巧解“尽可能使字符串相等”</title>
     <url>//posts/leetcode-1208/</url>
     <content><![CDATA[<blockquote class="blockquote-center">
@@ -345,10 +266,10 @@
       </categories>
       <tags>
         <tag>滑动窗口</tag>
-        <tag>数组</tag>
+        <tag>几何</tag>
         <tag>数学</tag>
         <tag>排序</tag>
-        <tag>几何</tag>
+        <tag>数组</tag>
         <tag>第209场周赛</tag>
       </tags>
   </entry>
@@ -428,56 +349,77 @@
       <tags>
         <tag>哈希表</tag>
         <tag>滑动窗口</tag>
-        <tag>数组</tag>
         <tag>二分查找</tag>
         <tag>前缀和</tag>
+        <tag>数组</tag>
         <tag>第215场周赛</tag>
       </tags>
   </entry>
   <entry>
-    <title>LeetCode 1763 | 滑动窗口求解“最长的美好子字符串”</title>
-    <url>//posts/leetcode-1763/</url>
+    <title>LeetCode 1040 | SW脑筋急转弯求解“移动石子直到连续 II”</title>
+    <url>//posts/leetcode-1040/</url>
     <content><![CDATA[<blockquote class="blockquote-center">
             <i class="fa fa-quote-left"></i>
-            <p>LeetCode 第 1763 题：<a href="https://leetcode.cn/problems/longest-nice-substring/description/">最长的美好子字符串</a>。<br>该题要求在字符串中寻找一个最长的子串，该子串中出现的每个字母，其大小写形式都必须同时存在。直接枚举所有子串的复杂度较高，但我们可以通过枚举子串的“属性”，将问题转化为一个巧妙的滑动窗口模型来高效求解。</p>
+            <p>LeetCode 第 1040 题：<a href="https://leetcode.cn/problems/moving-stones-until-consecutive-ii/description/">移动石子直到连续 II</a>。<br>该题要求我们计算将一组分散的石子移动成连续序列所需的最小和最大步数。最大步数是一个有趣的数学问题，而最小步数则巧妙地伪装成了一个滑动窗口问题，并带有一个需要细心处理的“陷阱”。</p>
 
             <i class="fa fa-quote-right"></i>
           </blockquote>
 <span id="more"></span>
-<h3 id="问题解读"><a href="#问题解读" class="headerlink" title="问题解读"></a>问题解读</h3><p>题目定义了一个“美好字符串”：对于字符串中出现的任意一种字母，它的大写和小写形式必须同时存在。例如 <code>&quot;aAa&quot;</code> 是美好的，因为 <code>&#39;a&#39;</code> 和 <code>&#39;A&#39;</code> 都出现了。而 <code>&quot;abA&quot;</code> 不是美好的，因为 <code>&#39;b&#39;</code> 出现了但 <code>&#39;B&#39;</code> 没有。</p>
-<p>我们的任务是，给定一个字符串 <code>s</code>，找到它最长的一个“美好子字符串”。如果长度相同，返回最先出现的那一个。</p>
-<p>直接用暴力法（枚举所有子串 <code>s[i:j]</code> 并逐一检查）的时间复杂度会达到 O(N³)，对于 <code>N=100</code> 的限制虽然可行，但不够优雅。我们可以构思一个更高效的算法。</p>
-<h3 id="核心思路：枚举字符类型的滑动窗口"><a href="#核心思路：枚举字符类型的滑动窗口" class="headerlink" title="核心思路：枚举字符类型的滑动窗口"></a>核心思路：枚举字符类型的滑动窗口</h3><p>一个常规的滑动窗口通常依赖于一个单调的性质（比如窗口内不同字符数不超过 <code>k</code>）。但“美好”这个性质并非单调的：给一个美好的子串 <code>&quot;aA&quot;</code> 添加一个字符 <code>&#39;b&#39;</code> 会使其变得不美好；给一个不美好的子串 <code>&quot;aAb&quot;</code> 添加 <code>&#39;B&#39;</code> 又可能使其变得美好。</p>
-<p>这种性质的复杂性让我们很难用一个简单的规则来收缩窗口。此时，一个高级的技巧是**“枚举窗口属性”<strong>。与其让窗口自己寻找满足复杂条件的子串，不如我们</strong>指定窗口应该满足的某个简单属性**，然后用滑动窗口来寻找符合这个简单属性的最优解。</p>
-<p>在这里，我们可以枚举美好子串中<strong>包含的唯一字母类型的数量</strong>，设为 <code>k</code>（例如，<code>&quot;aAZ&quot;</code> 包含 <code>&#39;a&#39;/&#39;A&#39;</code> 和 <code>&#39;z&#39;/&#39;Z&#39;</code> 两种类型，所以 <code>k=2</code>）。<code>k</code> 的取值范围是 1 到 26。</p>
-<p>对于每一个固定的 <code>k</code>，问题就转化为：<strong>寻找一个最长的子字符串，它恰好包含 <code>k</code> 种字母类型，并且这 <code>k</code> 种类型都是“美好”的（即大小写齐全）。</strong></p>
-<p>这个问题就非常适合用滑动窗口来解决了。窗口需要维护两个核心信息：</p>
+<h3 id="问题解读"><a href="#问题解读" class="headerlink" title="问题解读"></a>问题解读</h3><p>题目给了我们 X 轴上一些不同位置的石子，要求我们通过一系列移动，将它们变成连续的。移动规则如下：</p>
 <ol>
-<li>当前窗口内有多少种唯一字母类型。</li>
-<li>这其中，有多少种是“美好”的。</li>
+<li>只能移动位于<strong>最小</strong>或<strong>最大</strong>位置的<strong>端点石子</strong>。</li>
+<li>必须将它移动到一个<strong>未被占用</strong>的位置。</li>
+<li>移动后，该石子<strong>不能</strong>成为新的端点石子。这意味着它必须被放置在其他两个石子之间。</li>
 </ol>
-<p>当两个计数器都等于我们正在枚举的 <code>k</code> 时，就意味着我们找到了一个候选的子字符串。</p>
-<h3 id="算法详解"><a href="#算法详解" class="headerlink" title="算法详解"></a>算法详解</h3><ol>
-<li><p><strong>外层循环</strong>：我们用一个循环来枚举唯一字母类型的数量 <code>k</code>，从 1 遍历到 26。</p>
-</li>
-<li><p><strong>内层滑动窗口</strong>：对于每个 <code>k</code>，我们执行一次完整的滑动窗口遍历。</p>
+<p>游戏在所有石子位置连续时结束。我们需要返回一个数组 <code>[最小移动次数, 最大移动次数]</code>。</p>
+<p>例如，对于 <code>stones = [7,4,9]</code>，排序后是 <code>[4, 7, 9]</code>。</p>
 <ul>
-<li><strong>状态维护</strong>：我们需要 <code>lower_count</code> 和 <code>upper_count</code> 两个数组来记录窗口内26个字母大小写的频率。此外，还需要两个计数器：<code>unique_types</code> 记录窗口内唯一字母类型的总数，<code>nice_types</code> 记录大小写都存在的字母类型数。</li>
-<li><strong>扩张窗口</strong>：<code>right</code> 指针向右移动，将新字符 <code>s[right]</code> 纳入窗口。相应地更新 <code>lower/upper_count</code> 数组，并根据新字符的加入，判断 <code>unique_types</code> 和 <code>nice_types</code> 是否需要增加。</li>
-<li><strong>收缩窗口</strong>：扩张后，如果 <code>unique_types &gt; k</code>，说明当前窗口包含的字母类型太多了，不符合我们对 <code>k</code> 的设定。此时需要移动 <code>left</code> 指针向右，从窗口中移除 <code>s[left]</code>，并同步更新 <code>lower/upper_count</code> 和两个计数器。这个过程一直持续到 <code>unique_types &lt;= k</code> 为止。</li>
-<li><strong>更新答案</strong>：当窗口收缩完毕后（也可能无需收缩），我们检查是否满足 <code>unique_types == k</code> 并且 <code>nice_types == k</code>。如果满足，说明当前窗口 <code>s[left:right+1]</code> 就是一个恰好包含 <code>k</code> 种美好字母类型的子串。我们用它的长度来更新全局的最大长度和起始位置。</li>
+<li><strong>最大移动</strong>：可以先将 <code>4</code> 移动到 <code>6</code>，得到 <code>[6, 7, 9]</code>；再将 <code>9</code> 移动到 <code>8</code>，得到 <code>[6, 7, 8]</code>。共 2 步。</li>
+<li><strong>最小移动</strong>：可以将 <code>4</code> 移动到 <code>8</code>，直接得到 <code>[7, 8, 9]</code>。只需 1 步。<br>所以答案是 <code>[1, 2]</code>。</li>
+</ul>
+<h3 id="核心思路：最大和最小分开击破"><a href="#核心思路：最大和最小分开击破" class="headerlink" title="核心思路：最大和最小分开击破"></a>核心思路：最大和最小分开击破</h3><p>这类要求两个极值的题目，通常可以将最大值和最小值的求解策略分开考虑。</p>
+<h4 id="最大移动次数：贪心思想"><a href="#最大移动次数：贪心思想" class="headerlink" title="最大移动次数：贪心思想"></a>最大移动次数：贪心思想</h4><p>要让移动次数最多，我们应该“小步慢走”，每次只填补一个最小的空位，从而为后续移动保留最大的空间。</p>
+<ol>
+<li><strong>排序</strong>：首先将石子位置 <code>stones</code> 排序。</li>
+<li><strong>总空位数</strong>：石子占据的总区间长度是 <code>stones[n-1] - stones[0] + 1</code>。其中有 <code>n</code> 个石子，所以总的空位数是 <code>(stones[n-1] - stones[0] + 1) - n</code>。</li>
+<li><strong>贪心策略</strong>：每次移动，我们都会放弃一端的空间。为了保留最大的可操作空间，我们应该总是从<strong>间隙更小</strong>的那一端移动端点石子。例如，如果 <code>stones[1] - stones[0]</code> 比 <code>stones[n-1] - stones[n-2]</code> 小，我们就应该先移动 <code>stones[0]</code>，把 <code>stones[1]</code> 作为新的左端点。</li>
+<li><strong>简化公式</strong>：这个过程最终可以简化成一个优美的数学公式。最大移动次数等于<strong>总空位数</strong>减去<strong>两端中较小的那个空隙</strong>。<ul>
+<li><code>max_moves = (总空位数) - min(左端空隙, 右端空隙)</code></li>
+<li>左端空隙 &#x3D; <code>stones[1] - stones[0] - 1</code></li>
+<li>右端空隙 &#x3D; <code>stones[n-1] - stones[n-2] - 1</code></li>
+<li>代入化简后可得：<code>max_moves = max(stones[n-1] - stones[1] - n + 2, stones[n-2] - stones[0] - n + 2)</code></li>
 </ul>
 </li>
-<li><p><strong>返回结果</strong>：外层循环结束后，记录下的最长长度和起始位置对应的子串即为最终答案。</p>
+</ol>
+<h4 id="最小移动次数：滑动窗口"><a href="#最小移动次数：滑动窗口" class="headerlink" title="最小移动次数：滑动窗口"></a>最小移动次数：滑动窗口</h4><p>要让移动次数最少，我们应该尽可能多地保留原地不动的石子。最终，所有石子会占据一个长度为 <code>n</code> 的连续区间。我们的目标就是找到这样一个目标区间，它能容纳最多的原始石子。</p>
+<p>这个问题可以转化为：<strong>用一个长度为 <code>n</code> 的尺子（窗口），在数轴上滑动，找到它能覆盖的最多石子数</strong>。</p>
+<p>假设我们找到了这个最大可覆盖数 <code>max_coverage</code>。那么，需要移动的石子数就是 <code>n - max_coverage</code>。这就是最小移动次数的基本思路。</p>
+<h3 id="算法详解"><a href="#算法详解" class="headerlink" title="算法详解"></a>算法详解</h3><ol>
+<li><strong>排序</strong>：对 <code>stones</code> 数组进行升序排序。</li>
+<li><strong>计算 <code>max_moves</code></strong>：直接套用上面推导出的公式。</li>
+<li><strong>计算 <code>min_moves</code></strong>：<ul>
+<li>使用一个滑动窗口 <code>[j, i]</code> 遍历排序后的 <code>stones</code> 数组。</li>
+<li>对于每个右端点 <code>i</code>，我们向右移动左端点 <code>j</code>，直到窗口代表的区间长度 <code>stones[i] - stones[j] + 1</code> 不超过 <code>n</code>。</li>
+<li>此时，窗口 <code>[j, i]</code> 内的石子数是 <code>i - j + 1</code>，这些是可以被一个长度为 <code>n</code> 的最终序列容纳的。我们记录这个数量的最大值 <code>max_coverage</code>。</li>
+<li>基本的 <code>min_moves</code> 就是 <code>n - max_coverage</code>。</li>
+</ul>
+</li>
+<li><strong>处理 <code>min_moves</code> 的特殊情况</strong>：<ul>
+<li>考虑一种情况：<code>stones = [2,3,4,5,10]</code> (<code>n=5</code>)。我们的滑动窗口会找到 <code>[2,3,4,5]</code> 这 4 个石子，<code>max_coverage = 4</code>，得出 <code>min_moves = 1</code>。</li>
+<li>但问题是，我们能一步完成吗？目标是 <code>[2,3,4,5,6]</code>。我们需要移动 <code>10</code> 到 <code>6</code>。移动后，石子 <code>10</code> 位于 <code>6</code>，成为新的最大端点，这违反了规则 “移动后不能是端点石子”。</li>
+<li>因此，我们不能直接移动 <code>10</code>。我们必须移动 <code>2</code> 或 <code>5</code>，比如把 <code>5</code> 移动到 <code>6</code>，得到 <code>[2,3,4,6,10]</code>。这之后还需要移动 <code>10</code>，总共需要 2 步。</li>
+<li>这个<strong>特殊情况</strong>发生在：当 <code>max_coverage = n-1</code> 且这 <code>n-1</code> 个石子本身是<strong>紧密连续</strong>的，同时那个唯一的“局外石”与这个连续块的距离<strong>大于1</strong>时，最小移动次数是 <strong>2</strong>。</li>
+<li>我们可以通过检查排序后数组的两端是否存在这种情况来判断。</li>
+</ul>
 </li>
 </ol>
-<h3 id="Python-代码实现"><a href="#Python-代码实现" class="headerlink" title="Python 代码实现"></a>Python 代码实现</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">longestNiceSubstring</span>(<span class="params">self, s: <span class="built_in">str</span></span>) -&gt; <span class="built_in">str</span>:</span><br><span class="line">        n = <span class="built_in">len</span>(s)</span><br><span class="line">        <span class="keyword">if</span> n &lt; <span class="number">2</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">&quot;&quot;</span></span><br><span class="line"></span><br><span class="line">        max_len = <span class="number">0</span></span><br><span class="line">        result_start = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># k: 枚举窗口中唯一字母类型的数量</span></span><br><span class="line">        <span class="keyword">for</span> k <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, <span class="number">27</span>):</span><br><span class="line">            left = <span class="number">0</span></span><br><span class="line">            lower_count = [<span class="number">0</span>] * <span class="number">26</span></span><br><span class="line">            upper_count = [<span class="number">0</span>] * <span class="number">26</span></span><br><span class="line">            unique_types = <span class="number">0</span></span><br><span class="line">            nice_types = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">            <span class="keyword">for</span> right <span class="keyword">in</span> <span class="built_in">range</span>(n):</span><br><span class="line">                <span class="comment"># --- 1. 右指针扩张窗口 ---</span></span><br><span class="line">                char_r = s[right]</span><br><span class="line">                <span class="keyword">if</span> <span class="string">&#x27;a&#x27;</span> &lt;= char_r &lt;= <span class="string">&#x27;z&#x27;</span>:</span><br><span class="line">                    idx = <span class="built_in">ord</span>(char_r) - <span class="built_in">ord</span>(<span class="string">&#x27;a&#x27;</span>)</span><br><span class="line">                    <span class="keyword">if</span> lower_count[idx] == <span class="number">0</span> <span class="keyword">and</span> upper_count[idx] == <span class="number">0</span>:</span><br><span class="line">                        unique_types += <span class="number">1</span></span><br><span class="line">                    <span class="keyword">if</span> lower_count[idx] == <span class="number">0</span> <span class="keyword">and</span> upper_count[idx] &gt; <span class="number">0</span>:</span><br><span class="line">                        nice_types += <span class="number">1</span></span><br><span class="line">                    lower_count[idx] += <span class="number">1</span></span><br><span class="line">                <span class="keyword">else</span>: <span class="comment"># 大写字母</span></span><br><span class="line">                    idx = <span class="built_in">ord</span>(char_r) - <span class="built_in">ord</span>(<span class="string">&#x27;A&#x27;</span>)</span><br><span class="line">                    <span class="keyword">if</span> lower_count[idx] == <span class="number">0</span> <span class="keyword">and</span> upper_count[idx] == <span class="number">0</span>:</span><br><span class="line">                        unique_types += <span class="number">1</span></span><br><span class="line">                    <span class="keyword">if</span> upper_count[idx] == <span class="number">0</span> <span class="keyword">and</span> lower_count[idx] &gt; <span class="number">0</span>:</span><br><span class="line">                        nice_types += <span class="number">1</span></span><br><span class="line">                    upper_count[idx] += <span class="number">1</span></span><br><span class="line">                </span><br><span class="line">                <span class="comment"># --- 2. 左指针收缩窗口 ---</span></span><br><span class="line">                <span class="keyword">while</span> unique_types &gt; k:</span><br><span class="line">                    char_l = s[left]</span><br><span class="line">                    <span class="keyword">if</span> <span class="string">&#x27;a&#x27;</span> &lt;= char_l &lt;= <span class="string">&#x27;z&#x27;</span>:</span><br><span class="line">                        idx = <span class="built_in">ord</span>(char_l) - <span class="built_in">ord</span>(<span class="string">&#x27;a&#x27;</span>)</span><br><span class="line">                        lower_count[idx] -= <span class="number">1</span></span><br><span class="line">                        <span class="keyword">if</span> lower_count[idx] == <span class="number">0</span> <span class="keyword">and</span> upper_count[idx] &gt; <span class="number">0</span>:</span><br><span class="line">                            nice_types -= <span class="number">1</span></span><br><span class="line">                        <span class="keyword">if</span> lower_count[idx] == <span class="number">0</span> <span class="keyword">and</span> upper_count[idx] == <span class="number">0</span>:</span><br><span class="line">                            unique_types -= <span class="number">1</span></span><br><span class="line">                    <span class="keyword">else</span>: <span class="comment"># 大写字母</span></span><br><span class="line">                        idx = <span class="built_in">ord</span>(char_l) - <span class="built_in">ord</span>(<span class="string">&#x27;A&#x27;</span>)</span><br><span class="line">                        upper_count[idx] -= <span class="number">1</span></span><br><span class="line">                        <span class="keyword">if</span> upper_count[idx] == <span class="number">0</span> <span class="keyword">and</span> lower_count[idx] &gt; <span class="number">0</span>:</span><br><span class="line">                            nice_types -= <span class="number">1</span></span><br><span class="line">                        <span class="keyword">if</span> lower_count[idx] == <span class="number">0</span> <span class="keyword">and</span> upper_count[idx] == <span class="number">0</span>:</span><br><span class="line">                            unique_types -= <span class="number">1</span></span><br><span class="line">                    left += <span class="number">1</span></span><br><span class="line"></span><br><span class="line">                <span class="comment"># --- 3. 更新结果 ---</span></span><br><span class="line">                <span class="keyword">if</span> unique_types == k <span class="keyword">and</span> nice_types == k:</span><br><span class="line">                    current_len = right - left + <span class="number">1</span></span><br><span class="line">                    <span class="keyword">if</span> current_len &gt; max_len:</span><br><span class="line">                        max_len = current_len</span><br><span class="line">                        result_start = left</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span> max_len == <span class="number">0</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">&quot;&quot;</span></span><br><span class="line">        <span class="keyword">return</span> s[result_start : result_start + max_len]</span><br></pre></td></tr></table></figure>
+<h3 id="Python-代码实现"><a href="#Python-代码实现" class="headerlink" title="Python 代码实现"></a>Python 代码实现</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> typing <span class="keyword">import</span> <span class="type">List</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">numMovesStonesII</span>(<span class="params">self, stones: <span class="type">List</span>[<span class="built_in">int</span>]</span>) -&gt; <span class="type">List</span>[<span class="built_in">int</span>]:</span><br><span class="line">        stones.sort()</span><br><span class="line">        n = <span class="built_in">len</span>(stones)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 计算最大移动次数</span></span><br><span class="line">        max_moves = <span class="built_in">max</span>(stones[n-<span class="number">1</span>] - stones[<span class="number">1</span>] - n + <span class="number">2</span>, stones[n-<span class="number">2</span>] - stones[<span class="number">0</span>] - n + <span class="number">2</span>)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 使用滑动窗口计算最小移动次数</span></span><br><span class="line">        j = <span class="number">0</span></span><br><span class="line">        max_coverage = <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(n):</span><br><span class="line">            <span class="comment"># 保证窗口 `[j, i]` 内的石子可以被一个长度为 n 的尺子覆盖</span></span><br><span class="line">            <span class="keyword">while</span> stones[i] - stones[j] + <span class="number">1</span> &gt; n:</span><br><span class="line">                j += <span class="number">1</span></span><br><span class="line">            max_coverage = <span class="built_in">max</span>(max_coverage, i - j + <span class="number">1</span>)</span><br><span class="line">        </span><br><span class="line">        min_moves = n - max_coverage</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 处理特殊情况：n-1个石子连续，且 outlier 距离 &gt; 1</span></span><br><span class="line">        <span class="comment"># 例如 [2,3,4,5,10] (n=5), stones[3]-stones[0]=3 (n-2), stones[4]-stones[3]=5 (&gt;2)</span></span><br><span class="line">        is_consecutive_at_start = (stones[n-<span class="number">2</span>] - stones[<span class="number">0</span>] == n - <span class="number">2</span>)</span><br><span class="line">        is_consecutive_at_end = (stones[n-<span class="number">1</span>] - stones[<span class="number">1</span>] == n - <span class="number">2</span>)</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span> (is_consecutive_at_start <span class="keyword">and</span> stones[n-<span class="number">1</span>] - stones[n-<span class="number">2</span>] &gt; <span class="number">2</span>) <span class="keyword">or</span> \</span><br><span class="line">           (is_consecutive_at_end <span class="keyword">and</span> stones[<span class="number">1</span>] - stones[<span class="number">0</span>] &gt; <span class="number">2</span>):</span><br><span class="line">            min_moves = <span class="number">2</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> [min_moves, max_moves]</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
 <h3 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h3><ul>
-<li><strong>时间复杂度</strong>: O(C * N)，其中 C 是字符集的大小（这里是 26），N 是字符串 <code>s</code> 的长度。外层循环固定为 26 次，内部的滑动窗口逻辑中，<code>left</code> 和 <code>right</code> 指针都只遍历一次字符串。因此，总时间复杂度为 O(N)。</li>
-<li><strong>空间复杂度</strong>: O(C)。我们使用了几个固定大小的数组（<code>lower_count</code>, <code>upper_count</code>）来存储状态，空间是常数级别的。</li>
+<li><strong>时间复杂度</strong>: O(N log N)。主要开销来自于初始的排序。后续的滑动窗口和计算都是 O(N)。</li>
+<li><strong>空间复杂度</strong>: O(1) 或 O(N)，取决于排序算法使用的空间。</li>
 </ul>
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>本题是滑动窗口技巧的一个精彩应用。当窗口需要满足的条件比较复杂、不单调时，可以尝试**“升维”**的思路：通过枚举窗口的某个关键属性（本题中是唯一字母类型的数量），将一个复杂问题分解为一系列具有更清晰约束的简单子问题，然后逐一用滑动窗口求解。这种“分类讨论 + 滑动窗口”的模式是解决困难字符串问题的一个有力武器。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>本题是数学思维和经典算法模型的结合。最大移动次数可以通过分析移动过程中的“状态保持”推导出贪心策略和数学公式。最小移动次数则是一个典型的“最大化保留&#x2F;覆盖”问题，可以优雅地用滑动窗口解决。解题的关键在于不仅要想到滑动窗口模型，还要根据题目独特的移动限制，识别并正确处理那个导致答案从 1 变为 2 的特殊情况。</p>
 ]]></content>
       <categories>
         <category>算法题解</category>
@@ -485,12 +427,11 @@
         <category>不定长滑动窗口</category>
       </categories>
       <tags>
-        <tag>字符串</tag>
-        <tag>位运算</tag>
-        <tag>哈希表</tag>
         <tag>滑动窗口</tag>
-        <tag>分治</tag>
-        <tag>第46场双周赛</tag>
+        <tag>数学</tag>
+        <tag>排序</tag>
+        <tag>数组</tag>
+        <tag>第135场周赛</tag>
       </tags>
   </entry>
   <entry>
@@ -592,10 +533,10 @@
       </categories>
       <tags>
         <tag>滑动窗口</tag>
-        <tag>数组</tag>
-        <tag>排序</tag>
         <tag>二分查找</tag>
         <tag>前缀和</tag>
+        <tag>排序</tag>
+        <tag>数组</tag>
         <tag>贪心</tag>
         <tag>第 238 场周赛</tag>
       </tags>
@@ -872,9 +813,9 @@
       </categories>
       <tags>
         <tag>滑动窗口</tag>
-        <tag>数组</tag>
         <tag>二分查找</tag>
         <tag>前缀和</tag>
+        <tag>数组</tag>
         <tag>第 271 场周赛</tag>
       </tags>
   </entry>
@@ -1079,10 +1020,10 @@
       </categories>
       <tags>
         <tag>滑动窗口</tag>
-        <tag>数组</tag>
-        <tag>排序</tag>
         <tag>二分查找</tag>
         <tag>前缀和</tag>
+        <tag>排序</tag>
+        <tag>数组</tag>
         <tag>贪心</tag>
       </tags>
   </entry>
@@ -1274,9 +1215,9 @@
       </categories>
       <tags>
         <tag>滑动窗口</tag>
-        <tag>数组</tag>
         <tag>二分查找</tag>
         <tag>前缀和</tag>
+        <tag>数组</tag>
         <tag>动态规划</tag>
         <tag>第97场双周赛</tag>
       </tags>
@@ -1622,10 +1563,10 @@
       </categories>
       <tags>
         <tag>滑动窗口</tag>
-        <tag>数组</tag>
-        <tag>排序</tag>
         <tag>二分查找</tag>
         <tag>前缀和</tag>
+        <tag>排序</tag>
+        <tag>数组</tag>
         <tag>第376场周赛</tag>
       </tags>
   </entry>
@@ -1720,6 +1661,65 @@
         <tag>哈希表</tag>
         <tag>滑动窗口</tag>
         <tag>双指针</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>LeetCode 1763 | 滑动窗口求解“最长的美好子字符串”</title>
+    <url>//posts/leetcode-1763/</url>
+    <content><![CDATA[<blockquote class="blockquote-center">
+            <i class="fa fa-quote-left"></i>
+            <p>LeetCode 第 1763 题：<a href="https://leetcode.cn/problems/longest-nice-substring/description/">最长的美好子字符串</a>。<br>该题要求在字符串中寻找一个最长的子串，该子串中出现的每个字母，其大小写形式都必须同时存在。直接枚举所有子串的复杂度较高，但我们可以通过枚举子串的“属性”，将问题转化为一个巧妙的滑动窗口模型来高效求解。</p>
+
+            <i class="fa fa-quote-right"></i>
+          </blockquote>
+<span id="more"></span>
+<h3 id="问题解读"><a href="#问题解读" class="headerlink" title="问题解读"></a>问题解读</h3><p>题目定义了一个“美好字符串”：对于字符串中出现的任意一种字母，它的大写和小写形式必须同时存在。例如 <code>&quot;aAa&quot;</code> 是美好的，因为 <code>&#39;a&#39;</code> 和 <code>&#39;A&#39;</code> 都出现了。而 <code>&quot;abA&quot;</code> 不是美好的，因为 <code>&#39;b&#39;</code> 出现了但 <code>&#39;B&#39;</code> 没有。</p>
+<p>我们的任务是，给定一个字符串 <code>s</code>，找到它最长的一个“美好子字符串”。如果长度相同，返回最先出现的那一个。</p>
+<p>直接用暴力法（枚举所有子串 <code>s[i:j]</code> 并逐一检查）的时间复杂度会达到 O(N³)，对于 <code>N=100</code> 的限制虽然可行，但不够优雅。我们可以构思一个更高效的算法。</p>
+<h3 id="核心思路：枚举字符类型的滑动窗口"><a href="#核心思路：枚举字符类型的滑动窗口" class="headerlink" title="核心思路：枚举字符类型的滑动窗口"></a>核心思路：枚举字符类型的滑动窗口</h3><p>一个常规的滑动窗口通常依赖于一个单调的性质（比如窗口内不同字符数不超过 <code>k</code>）。但“美好”这个性质并非单调的：给一个美好的子串 <code>&quot;aA&quot;</code> 添加一个字符 <code>&#39;b&#39;</code> 会使其变得不美好；给一个不美好的子串 <code>&quot;aAb&quot;</code> 添加 <code>&#39;B&#39;</code> 又可能使其变得美好。</p>
+<p>这种性质的复杂性让我们很难用一个简单的规则来收缩窗口。此时，一个高级的技巧是**“枚举窗口属性”<strong>。与其让窗口自己寻找满足复杂条件的子串，不如我们</strong>指定窗口应该满足的某个简单属性**，然后用滑动窗口来寻找符合这个简单属性的最优解。</p>
+<p>在这里，我们可以枚举美好子串中<strong>包含的唯一字母类型的数量</strong>，设为 <code>k</code>（例如，<code>&quot;aAZ&quot;</code> 包含 <code>&#39;a&#39;/&#39;A&#39;</code> 和 <code>&#39;z&#39;/&#39;Z&#39;</code> 两种类型，所以 <code>k=2</code>）。<code>k</code> 的取值范围是 1 到 26。</p>
+<p>对于每一个固定的 <code>k</code>，问题就转化为：<strong>寻找一个最长的子字符串，它恰好包含 <code>k</code> 种字母类型，并且这 <code>k</code> 种类型都是“美好”的（即大小写齐全）。</strong></p>
+<p>这个问题就非常适合用滑动窗口来解决了。窗口需要维护两个核心信息：</p>
+<ol>
+<li>当前窗口内有多少种唯一字母类型。</li>
+<li>这其中，有多少种是“美好”的。</li>
+</ol>
+<p>当两个计数器都等于我们正在枚举的 <code>k</code> 时，就意味着我们找到了一个候选的子字符串。</p>
+<h3 id="算法详解"><a href="#算法详解" class="headerlink" title="算法详解"></a>算法详解</h3><ol>
+<li><p><strong>外层循环</strong>：我们用一个循环来枚举唯一字母类型的数量 <code>k</code>，从 1 遍历到 26。</p>
+</li>
+<li><p><strong>内层滑动窗口</strong>：对于每个 <code>k</code>，我们执行一次完整的滑动窗口遍历。</p>
+<ul>
+<li><strong>状态维护</strong>：我们需要 <code>lower_count</code> 和 <code>upper_count</code> 两个数组来记录窗口内26个字母大小写的频率。此外，还需要两个计数器：<code>unique_types</code> 记录窗口内唯一字母类型的总数，<code>nice_types</code> 记录大小写都存在的字母类型数。</li>
+<li><strong>扩张窗口</strong>：<code>right</code> 指针向右移动，将新字符 <code>s[right]</code> 纳入窗口。相应地更新 <code>lower/upper_count</code> 数组，并根据新字符的加入，判断 <code>unique_types</code> 和 <code>nice_types</code> 是否需要增加。</li>
+<li><strong>收缩窗口</strong>：扩张后，如果 <code>unique_types &gt; k</code>，说明当前窗口包含的字母类型太多了，不符合我们对 <code>k</code> 的设定。此时需要移动 <code>left</code> 指针向右，从窗口中移除 <code>s[left]</code>，并同步更新 <code>lower/upper_count</code> 和两个计数器。这个过程一直持续到 <code>unique_types &lt;= k</code> 为止。</li>
+<li><strong>更新答案</strong>：当窗口收缩完毕后（也可能无需收缩），我们检查是否满足 <code>unique_types == k</code> 并且 <code>nice_types == k</code>。如果满足，说明当前窗口 <code>s[left:right+1]</code> 就是一个恰好包含 <code>k</code> 种美好字母类型的子串。我们用它的长度来更新全局的最大长度和起始位置。</li>
+</ul>
+</li>
+<li><p><strong>返回结果</strong>：外层循环结束后，记录下的最长长度和起始位置对应的子串即为最终答案。</p>
+</li>
+</ol>
+<h3 id="Python-代码实现"><a href="#Python-代码实现" class="headerlink" title="Python 代码实现"></a>Python 代码实现</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">longestNiceSubstring</span>(<span class="params">self, s: <span class="built_in">str</span></span>) -&gt; <span class="built_in">str</span>:</span><br><span class="line">        n = <span class="built_in">len</span>(s)</span><br><span class="line">        <span class="keyword">if</span> n &lt; <span class="number">2</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">&quot;&quot;</span></span><br><span class="line"></span><br><span class="line">        max_len = <span class="number">0</span></span><br><span class="line">        result_start = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># k: 枚举窗口中唯一字母类型的数量</span></span><br><span class="line">        <span class="keyword">for</span> k <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, <span class="number">27</span>):</span><br><span class="line">            left = <span class="number">0</span></span><br><span class="line">            lower_count = [<span class="number">0</span>] * <span class="number">26</span></span><br><span class="line">            upper_count = [<span class="number">0</span>] * <span class="number">26</span></span><br><span class="line">            unique_types = <span class="number">0</span></span><br><span class="line">            nice_types = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">            <span class="keyword">for</span> right <span class="keyword">in</span> <span class="built_in">range</span>(n):</span><br><span class="line">                <span class="comment"># --- 1. 右指针扩张窗口 ---</span></span><br><span class="line">                char_r = s[right]</span><br><span class="line">                <span class="keyword">if</span> <span class="string">&#x27;a&#x27;</span> &lt;= char_r &lt;= <span class="string">&#x27;z&#x27;</span>:</span><br><span class="line">                    idx = <span class="built_in">ord</span>(char_r) - <span class="built_in">ord</span>(<span class="string">&#x27;a&#x27;</span>)</span><br><span class="line">                    <span class="keyword">if</span> lower_count[idx] == <span class="number">0</span> <span class="keyword">and</span> upper_count[idx] == <span class="number">0</span>:</span><br><span class="line">                        unique_types += <span class="number">1</span></span><br><span class="line">                    <span class="keyword">if</span> lower_count[idx] == <span class="number">0</span> <span class="keyword">and</span> upper_count[idx] &gt; <span class="number">0</span>:</span><br><span class="line">                        nice_types += <span class="number">1</span></span><br><span class="line">                    lower_count[idx] += <span class="number">1</span></span><br><span class="line">                <span class="keyword">else</span>: <span class="comment"># 大写字母</span></span><br><span class="line">                    idx = <span class="built_in">ord</span>(char_r) - <span class="built_in">ord</span>(<span class="string">&#x27;A&#x27;</span>)</span><br><span class="line">                    <span class="keyword">if</span> lower_count[idx] == <span class="number">0</span> <span class="keyword">and</span> upper_count[idx] == <span class="number">0</span>:</span><br><span class="line">                        unique_types += <span class="number">1</span></span><br><span class="line">                    <span class="keyword">if</span> upper_count[idx] == <span class="number">0</span> <span class="keyword">and</span> lower_count[idx] &gt; <span class="number">0</span>:</span><br><span class="line">                        nice_types += <span class="number">1</span></span><br><span class="line">                    upper_count[idx] += <span class="number">1</span></span><br><span class="line">                </span><br><span class="line">                <span class="comment"># --- 2. 左指针收缩窗口 ---</span></span><br><span class="line">                <span class="keyword">while</span> unique_types &gt; k:</span><br><span class="line">                    char_l = s[left]</span><br><span class="line">                    <span class="keyword">if</span> <span class="string">&#x27;a&#x27;</span> &lt;= char_l &lt;= <span class="string">&#x27;z&#x27;</span>:</span><br><span class="line">                        idx = <span class="built_in">ord</span>(char_l) - <span class="built_in">ord</span>(<span class="string">&#x27;a&#x27;</span>)</span><br><span class="line">                        lower_count[idx] -= <span class="number">1</span></span><br><span class="line">                        <span class="keyword">if</span> lower_count[idx] == <span class="number">0</span> <span class="keyword">and</span> upper_count[idx] &gt; <span class="number">0</span>:</span><br><span class="line">                            nice_types -= <span class="number">1</span></span><br><span class="line">                        <span class="keyword">if</span> lower_count[idx] == <span class="number">0</span> <span class="keyword">and</span> upper_count[idx] == <span class="number">0</span>:</span><br><span class="line">                            unique_types -= <span class="number">1</span></span><br><span class="line">                    <span class="keyword">else</span>: <span class="comment"># 大写字母</span></span><br><span class="line">                        idx = <span class="built_in">ord</span>(char_l) - <span class="built_in">ord</span>(<span class="string">&#x27;A&#x27;</span>)</span><br><span class="line">                        upper_count[idx] -= <span class="number">1</span></span><br><span class="line">                        <span class="keyword">if</span> upper_count[idx] == <span class="number">0</span> <span class="keyword">and</span> lower_count[idx] &gt; <span class="number">0</span>:</span><br><span class="line">                            nice_types -= <span class="number">1</span></span><br><span class="line">                        <span class="keyword">if</span> lower_count[idx] == <span class="number">0</span> <span class="keyword">and</span> upper_count[idx] == <span class="number">0</span>:</span><br><span class="line">                            unique_types -= <span class="number">1</span></span><br><span class="line">                    left += <span class="number">1</span></span><br><span class="line"></span><br><span class="line">                <span class="comment"># --- 3. 更新结果 ---</span></span><br><span class="line">                <span class="keyword">if</span> unique_types == k <span class="keyword">and</span> nice_types == k:</span><br><span class="line">                    current_len = right - left + <span class="number">1</span></span><br><span class="line">                    <span class="keyword">if</span> current_len &gt; max_len:</span><br><span class="line">                        max_len = current_len</span><br><span class="line">                        result_start = left</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span> max_len == <span class="number">0</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">&quot;&quot;</span></span><br><span class="line">        <span class="keyword">return</span> s[result_start : result_start + max_len]</span><br></pre></td></tr></table></figure>
+
+<h3 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h3><ul>
+<li><strong>时间复杂度</strong>: O(C * N)，其中 C 是字符集的大小（这里是 26），N 是字符串 <code>s</code> 的长度。外层循环固定为 26 次，内部的滑动窗口逻辑中，<code>left</code> 和 <code>right</code> 指针都只遍历一次字符串。因此，总时间复杂度为 O(N)。</li>
+<li><strong>空间复杂度</strong>: O(C)。我们使用了几个固定大小的数组（<code>lower_count</code>, <code>upper_count</code>）来存储状态，空间是常数级别的。</li>
+</ul>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>本题是滑动窗口技巧的一个精彩应用。当窗口需要满足的条件比较复杂、不单调时，可以尝试**“升维”**的思路：通过枚举窗口的某个关键属性（本题中是唯一字母类型的数量），将一个复杂问题分解为一系列具有更清晰约束的简单子问题，然后逐一用滑动窗口求解。这种“分类讨论 + 滑动窗口”的模式是解决困难字符串问题的一个有力武器。</p>
+]]></content>
+      <categories>
+        <category>算法题解</category>
+        <category>滑动窗口与双指针</category>
+        <category>不定长滑动窗口</category>
+      </categories>
+      <tags>
+        <tag>字符串</tag>
+        <tag>位运算</tag>
+        <tag>哈希表</tag>
+        <tag>滑动窗口</tag>
+        <tag>分治</tag>
+        <tag>第46场双周赛</tag>
       </tags>
   </entry>
   <entry>
@@ -1913,8 +1913,8 @@
       </categories>
       <tags>
         <tag>滑动窗口</tag>
-        <tag>数组</tag>
         <tag>数学</tag>
+        <tag>数组</tag>
         <tag>数论</tag>
         <tag>枚举</tag>
         <tag>第 431 场周赛</tag>
@@ -1987,10 +1987,10 @@
       </categories>
       <tags>
         <tag>滑动窗口</tag>
-        <tag>数组</tag>
-        <tag>排序</tag>
         <tag>二分查找</tag>
         <tag>前缀和</tag>
+        <tag>排序</tag>
+        <tag>数组</tag>
         <tag>贪心</tag>
         <tag>第431场周赛</tag>
       </tags>
@@ -2068,8 +2068,8 @@
       </categories>
       <tags>
         <tag>滑动窗口</tag>
-        <tag>数组</tag>
         <tag>排序</tag>
+        <tag>数组</tag>
         <tag>第 162 场双周赛</tag>
       </tags>
   </entry>
