@@ -23,12 +23,12 @@
     <published>2025-10-10T02:05:00.000Z</published>
     <updated>2025-10-10T02:05:00.000Z</updated>
     
-    <content type="html"><![CDATA[<blockquote class="blockquote-center">            <i class="fa fa-quote-left"></i>            <p>LeetCode 第 1763 题：<a href="https://leetcode.cn/problems/longest-nice-substring/description/">最长的美好子字符串</a>。<br>该题要求在字符串中寻找一个最长的子串，该子串中出现的每个字母，其大小写形式都必须同时存在。直接枚举所有子串的复杂度较高，但我们可以通过枚举子串的“属性”，将问题转化为一个巧妙的滑动窗口模型来高效求解。</p>            <i class="fa fa-quote-right"></i>          </blockquote><span id="more"></span><h3 id="问题解读"><a href="#问题解读" class="headerlink" title="问题解读"></a>问题解读</h3><p>题目定义了一个“美好字符串”：对于字符串中出现的任意一种字母，它的大写和小写形式必须同时存在。例如 <code>&quot;aAa&quot;</code> 是美好的，因为 <code>&#39;a&#39;</code> 和 <code>&#39;A&#39;</code> 都出现了。而 <code>&quot;abA&quot;</code> 不是美好的，因为 <code>&#39;b&#39;</code> 出现了但 <code>&#39;B&#39;</code> 没有。</p><p>我们的任务是，给定一个字符串 <code>s</code>，找到它最长的一个“美好子字符串”。如果长度相同，返回最先出现的那一个。</p><p>直接用暴力法（枚举所有子串 <code>s[i:j]</code> 并逐一检查）的时间复杂度会达到 O(N³)，对于 <code>N=100</code> 的限制虽然可行，但不够优雅。我们可以构思一个更高效的算法。</p><h3 id="核心思路：枚举字符类型的滑动窗口"><a href="#核心思路：枚举字符类型的滑动窗口" class="headerlink" title="核心思路：枚举字符类型的滑动窗口"></a>核心思路：枚举字符类型的滑动窗口</h3><p>一个常规的滑动窗口通常依赖于一个单调的性质（比如窗口内不同字符数不超过 <code>k</code>）。但“美好”这个性质并非单调的：给一个美好的子串 <code>&quot;aA&quot;</code> 添加一个字符 <code>&#39;b&#39;</code> 会使其变得不美好；给一个不美好的子串 <code>&quot;aAb&quot;</code> 添加 <code>&#39;B&#39;</code> 又可能使其变得美好。</p><p>这种性质的复杂性让我们很难用一个简单的规则来收缩窗口。此时，一个高级的技巧是**“枚举窗口属性”<strong>。与其让窗口自己寻找满足复杂条件的子串，不如我们</strong>指定窗口应该满足的某个简单属性**，然后用滑动窗口来寻找符合这个简单属性的最优解。</p><p>在这里，我们可以枚举美好子串中<strong>包含的唯一字母类型的数量</strong>，设为 <code>k</code>（例如，<code>&quot;aAZ&quot;</code> 包含 <code>&#39;a&#39;/&#39;A&#39;</code> 和 <code>&#39;z&#39;/&#39;Z&#39;</code> 两种类型，所以 <code>k=2</code>）。<code>k</code> 的取值范围是 1 到 26。</p><p>对于每一个固定的 <code>k</code>，问题就转化为：<strong>寻找一个最长的子字符串，它恰好包含 <code>k</code> 种字母类型，并且这 <code>k</code> 种类型都是“美好”的（即大小写齐全）。</strong></p><p>这个问题就非常适合用滑动窗口来解决了。窗口需要维护两个核心信息：</p><ol><li>当前窗口内有多少种唯一字母类型。</li><li>这其中，有多少种是“美好”的。</li></ol><p>当两个计数器都等于我们正在枚举的 <code>k</code> 时，就意味着我们找到了一个候选的子字符串。</p><h3 id="算法详解"><a href="#算法详解" class="headerlink" title="算法详解"></a>算法详解</h3><ol><li><p><strong>外层循环</strong>：我们用一个循环来枚举唯一字母类型的数量 <code>k</code>，从 1 遍历到 26。</p></li><li><p><strong>内层滑动窗口</strong>：对于每个 <code>k</code>，我们执行一次完整的滑动窗口遍历。</p><ul><li><strong>状态维护</strong>：我们需要 <code>lower_count</code> 和 <code>upper_count</code> 两个数组来记录窗口内26个字母大小写的频率。此外，还需要两个计数器：<code>unique_types</code> 记录窗口内唯一字母类型的总数，<code>nice_types</code> 记录大小写都存在的字母类型数。</li><li><strong>扩张窗口</strong>：<code>right</code> 指针向右移动，将新字符 <code>s[right]</code> 纳入窗口。相应地更新 <code>lower/upper_count</code> 数组，并根据新字符的加入，判断 <code>unique_types</code> 和 <code>nice_types</code> 是否需要增加。</li><li><strong>收缩窗口</strong>：扩张后，如果 <code>unique_types &gt; k</code>，说明当前窗口包含的字母类型太多了，不符合我们对 <code>k</code> 的设定。此时需要移动 <code>left</code> 指针向右，从窗口中移除 <code>s[left]</code>，并同步更新 <code>lower/upper_count</code> 和两个计数器。这个过程一直持续到 <code>unique_types &lt;= k</code> 为止。</li><li><strong>更新答案</strong>：当窗口收缩完毕后（也可能无需收缩），我们检查是否满足 <code>unique_types == k</code> 并且 <code>nice_types == k</code>。如果满足，说明当前窗口 <code>s[left:right+1]</code> 就是一个恰好包含 <code>k</code> 种美好字母类型的子串。我们用它的长度来更新全局的最大长度和起始位置。</li></ul></li><li><p><strong>返回结果</strong>：外层循环结束后，记录下的最长长度和起始位置对应的子串即为最终答案。</p></li></ol><h3 id="Python-代码实现"><a href="#Python-代码实现" class="headerlink" title="Python 代码实现"></a>Python 代码实现</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">longestNiceSubstring</span>(<span class="params">self, s: <span class="built_in">str</span></span>) -&gt; <span class="built_in">str</span>:</span><br><span class="line">        n = <span class="built_in">len</span>(s)</span><br><span class="line">        <span class="keyword">if</span> n &lt; <span class="number">2</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">&quot;&quot;</span></span><br><span class="line"></span><br><span class="line">        max_len = <span class="number">0</span></span><br><span class="line">        result_start = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># k: 枚举窗口中唯一字母类型的数量</span></span><br><span class="line">        <span class="keyword">for</span> k <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, <span class="number">27</span>):</span><br><span class="line">            left = <span class="number">0</span></span><br><span class="line">            lower_count = [<span class="number">0</span>] * <span class="number">26</span></span><br><span class="line">            upper_count = [<span class="number">0</span>] * <span class="number">26</span></span><br><span class="line">            unique_types = <span class="number">0</span></span><br><span class="line">            nice_types = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">            <span class="keyword">for</span> right <span class="keyword">in</span> <span class="built_in">range</span>(n):</span><br><span class="line">                <span class="comment"># --- 1. 右指针扩张窗口 ---</span></span><br><span class="line">                char_r = s[right]</span><br><span class="line">                <span class="keyword">if</span> <span class="string">&#x27;a&#x27;</span> &lt;= char_r &lt;= <span class="string">&#x27;z&#x27;</span>:</span><br><span class="line">                    idx = <span class="built_in">ord</span>(char_r) - <span class="built_in">ord</span>(<span class="string">&#x27;a&#x27;</span>)</span><br><span class="line">                    <span class="keyword">if</span> lower_count[idx] == <span class="number">0</span> <span class="keyword">and</span> upper_count[idx] == <span class="number">0</span>:</span><br><span class="line">                        unique_types += <span class="number">1</span></span><br><span class="line">                    <span class="keyword">if</span> lower_count[idx] == <span class="number">0</span> <span class="keyword">and</span> upper_count[idx] &gt; <span class="number">0</span>:</span><br><span class="line">                        nice_types += <span class="number">1</span></span><br><span class="line">                    lower_count[idx] += <span class="number">1</span></span><br><span class="line">                <span class="keyword">else</span>: <span class="comment"># 大写字母</span></span><br><span class="line">                    idx = <span class="built_in">ord</span>(char_r) - <span class="built_in">ord</span>(<span class="string">&#x27;A&#x27;</span>)</span><br><span class="line">                    <span class="keyword">if</span> lower_count[idx] == <span class="number">0</span> <span class="keyword">and</span> upper_count[idx] == <span class="number">0</span>:</span><br><span class="line">                        unique_types += <span class="number">1</span></span><br><span class="line">                    <span class="keyword">if</span> upper_count[idx] == <span class="number">0</span> <span class="keyword">and</span> lower_count[idx] &gt; <span class="number">0</span>:</span><br><span class="line">                        nice_types += <span class="number">1</span></span><br><span class="line">                    upper_count[idx] += <span class="number">1</span></span><br><span class="line">                </span><br><span class="line">                <span class="comment"># --- 2. 左指针收缩窗口 ---</span></span><br><span class="line">                <span class="keyword">while</span> unique_types &gt; k:</span><br><span class="line">                    char_l = s[left]</span><br><span class="line">                    <span class="keyword">if</span> <span class="string">&#x27;a&#x27;</span> &lt;= char_l &lt;= <span class="string">&#x27;z&#x27;</span>:</span><br><span class="line">                        idx = <span class="built_in">ord</span>(char_l) - <span class="built_in">ord</span>(<span class="string">&#x27;a&#x27;</span>)</span><br><span class="line">                        lower_count[idx] -= <span class="number">1</span></span><br><span class="line">                        <span class="keyword">if</span> lower_count[idx] == <span class="number">0</span> <span class="keyword">and</span> upper_count[idx] &gt; <span class="number">0</span>:</span><br><span class="line">                            nice_types -= <span class="number">1</span></span><br><span class="line">                        <span class="keyword">if</span> lower_count[idx] == <span class="number">0</span> <span class="keyword">and</span> upper_count[idx] == <span class="number">0</span>:</span><br><span class="line">                            unique_types -= <span class="number">1</span></span><br><span class="line">                    <span class="keyword">else</span>: <span class="comment"># 大写字母</span></span><br><span class="line">                        idx = <span class="built_in">ord</span>(char_l) - <span class="built_in">ord</span>(<span class="string">&#x27;A&#x27;</span>)</span><br><span class="line">                        upper_count[idx] -= <span class="number">1</span></span><br><span class="line">                        <span class="keyword">if</span> upper_count[idx] == <span class="number">0</span> <span class="keyword">and</span> lower_count[idx] &gt; <span class="number">0</span>:</span><br><span class="line">                            nice_types -= <span class="number">1</span></span><br><span class="line">                        <span class="keyword">if</span> lower_count[idx] == <span class="number">0</span> <span class="keyword">and</span> upper_count[idx] == <span class="number">0</span>:</span><br><span class="line">                            unique_types -= <span class="number">1</span></span><br><span class="line">                    left += <span class="number">1</span></span><br><span class="line"></span><br><span class="line">                <span class="comment"># --- 3. 更新结果 ---</span></span><br><span class="line">                <span class="keyword">if</span> unique_types == k <span class="keyword">and</span> nice_types == k:</span><br><span class="line">                    current_len = right - left + <span class="number">1</span></span><br><span class="line">                    <span class="keyword">if</span> current_len &gt; max_len:</span><br><span class="line">                        max_len = current_len</span><br><span class="line">                        result_start = left</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span> max_len == <span class="number">0</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">&quot;&quot;</span></span><br><span class="line">        <span class="keyword">return</span> s[result_start : result_start + max_len]</span><br></pre></td></tr></table></figure><h3 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h3><ul><li><strong>时间复杂度</strong>: O(C * N)，其中 C 是字符集的大小（这里是 26），N 是字符串 <code>s</code> 的长度。外层循环固定为 26 次，内部的滑动窗口逻辑中，<code>left</code> 和 <code>right</code> 指针都只遍历一次字符串。因此，总时间复杂度为 O(N)。</li><li><strong>空间复杂度</strong>: O(C)。我们使用了几个固定大小的数组（<code>lower_count</code>, <code>upper_count</code>）来存储状态，空间是常数级别的。</li></ul><h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>本题是滑动窗口技巧的一个精彩应用。当窗口需要满足的条件比较复杂、不单调时，可以尝试**“升维”**的思路：通过枚举窗口的某个关键属性（本题中是唯一字母类型的数量），将一个复杂问题分解为一系列具有更清晰约束的简单子问题，然后逐一用滑动窗口求解。这种“分类讨论 + 滑动窗口”的模式是解决困难字符串问题的一个有力武器。</p>]]></content>
+    <content type="html"><![CDATA[<blockquote class="blockquote-center">            <i class="fa fa-quote-left"></i>            <p>LeetCode 第 1763 题：<a href="https://leetcode.cn/problems/longest-nice-substring/description/">最长的美好子字符串</a>。<br>该题要求在字符串中寻找一个最长的子串且其中每个字母大小写必须同时存在。直接枚举所有子串的复杂度较高，我们可以通过枚举子串的“属性”，将问题转化为滑动窗口来高效求解。</p>            <i class="fa fa-quote-right"></i>          </blockquote><span id="more"></span><h3 id="问题解读"><a href="#问题解读" class="headerlink" title="问题解读"></a>问题解读</h3><p>题目定义了一个“美好字符串”：对于字符串中出现的任意一种字母，它的大写和小写形式必须同时存在。例如 <code>&quot;aAa&quot;</code> 是美好的，因为 <code>&#39;a&#39;</code> 和 <code>&#39;A&#39;</code> 都出现了。而 <code>&quot;abA&quot;</code> 不是美好的，因为 <code>&#39;b&#39;</code> 出现了但 <code>&#39;B&#39;</code> 没有。</p><p>我们的任务是，给定一个字符串 <code>s</code>，找到它最长的一个“美好子字符串”。如果长度相同，返回最先出现的那一个。</p><p>直接用暴力法（枚举所有子串 <code>s[i:j]</code> 并逐一检查）的时间复杂度会达到 O(N³)，对于 <code>N=100</code> 的限制虽然可行，但不够优雅。我们可以构思一个更高效的算法。</p><h3 id="核心思路：枚举字符类型的滑动窗口"><a href="#核心思路：枚举字符类型的滑动窗口" class="headerlink" title="核心思路：枚举字符类型的滑动窗口"></a>核心思路：枚举字符类型的滑动窗口</h3><p>一个常规的滑动窗口通常依赖于一个单调的性质（比如窗口内不同字符数不超过 <code>k</code>）。但“美好”这个性质并非单调的：给一个美好的子串 <code>&quot;aA&quot;</code> 添加一个字符 <code>&#39;b&#39;</code> 会使其变得不美好；给一个不美好的子串 <code>&quot;aAb&quot;</code> 添加 <code>&#39;B&#39;</code> 又可能使其变得美好。</p><p>这种性质的复杂性让我们很难用一个简单的规则来收缩窗口。此时，一个高级的技巧是**“枚举窗口属性”<strong>。与其让窗口自己寻找满足复杂条件的子串，不如我们</strong>指定窗口应该满足的某个简单属性**，然后用滑动窗口来寻找符合这个简单属性的最优解。</p><p>在这里，我们可以枚举美好子串中<strong>包含的唯一字母类型的数量</strong>，设为 <code>k</code>（例如，<code>&quot;aAZ&quot;</code> 包含 <code>&#39;a&#39;/&#39;A&#39;</code> 和 <code>&#39;z&#39;/&#39;Z&#39;</code> 两种类型，所以 <code>k=2</code>）。<code>k</code> 的取值范围是 1 到 26。</p><p>对于每一个固定的 <code>k</code>，问题就转化为：<strong>寻找一个最长的子字符串，它恰好包含 <code>k</code> 种字母类型，并且这 <code>k</code> 种类型都是“美好”的（即大小写齐全）。</strong></p><p>这个问题就非常适合用滑动窗口来解决了。窗口需要维护两个核心信息：</p><ol><li>当前窗口内有多少种唯一字母类型。</li><li>这其中，有多少种是“美好”的。</li></ol><p>当两个计数器都等于我们正在枚举的 <code>k</code> 时，就意味着我们找到了一个候选的子字符串。</p><h3 id="算法详解"><a href="#算法详解" class="headerlink" title="算法详解"></a>算法详解</h3><ol><li><p><strong>外层循环</strong>：我们用一个循环来枚举唯一字母类型的数量 <code>k</code>，从 1 遍历到 26。</p></li><li><p><strong>内层滑动窗口</strong>：对于每个 <code>k</code>，我们执行一次完整的滑动窗口遍历。</p><ul><li><strong>状态维护</strong>：我们需要 <code>lower_count</code> 和 <code>upper_count</code> 两个数组来记录窗口内26个字母大小写的频率。此外，还需要两个计数器：<code>unique_types</code> 记录窗口内唯一字母类型的总数，<code>nice_types</code> 记录大小写都存在的字母类型数。</li><li><strong>扩张窗口</strong>：<code>right</code> 指针向右移动，将新字符 <code>s[right]</code> 纳入窗口。相应地更新 <code>lower/upper_count</code> 数组，并根据新字符的加入，判断 <code>unique_types</code> 和 <code>nice_types</code> 是否需要增加。</li><li><strong>收缩窗口</strong>：扩张后，如果 <code>unique_types &gt; k</code>，说明当前窗口包含的字母类型太多了，不符合我们对 <code>k</code> 的设定。此时需要移动 <code>left</code> 指针向右，从窗口中移除 <code>s[left]</code>，并同步更新 <code>lower/upper_count</code> 和两个计数器。这个过程一直持续到 <code>unique_types &lt;= k</code> 为止。</li><li><strong>更新答案</strong>：当窗口收缩完毕后（也可能无需收缩），我们检查是否满足 <code>unique_types == k</code> 并且 <code>nice_types == k</code>。如果满足，说明当前窗口 <code>s[left:right+1]</code> 就是一个恰好包含 <code>k</code> 种美好字母类型的子串。我们用它的长度来更新全局的最大长度和起始位置。</li></ul></li><li><p><strong>返回结果</strong>：外层循环结束后，记录下的最长长度和起始位置对应的子串即为最终答案。</p></li></ol><h3 id="Python-代码实现"><a href="#Python-代码实现" class="headerlink" title="Python 代码实现"></a>Python 代码实现</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">longestNiceSubstring</span>(<span class="params">self, s: <span class="built_in">str</span></span>) -&gt; <span class="built_in">str</span>:</span><br><span class="line">        n = <span class="built_in">len</span>(s)</span><br><span class="line">        <span class="keyword">if</span> n &lt; <span class="number">2</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">&quot;&quot;</span></span><br><span class="line"></span><br><span class="line">        max_len = <span class="number">0</span></span><br><span class="line">        result_start = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># k: 枚举窗口中唯一字母类型的数量</span></span><br><span class="line">        <span class="keyword">for</span> k <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, <span class="number">27</span>):</span><br><span class="line">            left = <span class="number">0</span></span><br><span class="line">            lower_count = [<span class="number">0</span>] * <span class="number">26</span></span><br><span class="line">            upper_count = [<span class="number">0</span>] * <span class="number">26</span></span><br><span class="line">            unique_types = <span class="number">0</span></span><br><span class="line">            nice_types = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">            <span class="keyword">for</span> right <span class="keyword">in</span> <span class="built_in">range</span>(n):</span><br><span class="line">                <span class="comment"># --- 1. 右指针扩张窗口 ---</span></span><br><span class="line">                char_r = s[right]</span><br><span class="line">                <span class="keyword">if</span> <span class="string">&#x27;a&#x27;</span> &lt;= char_r &lt;= <span class="string">&#x27;z&#x27;</span>:</span><br><span class="line">                    idx = <span class="built_in">ord</span>(char_r) - <span class="built_in">ord</span>(<span class="string">&#x27;a&#x27;</span>)</span><br><span class="line">                    <span class="keyword">if</span> lower_count[idx] == <span class="number">0</span> <span class="keyword">and</span> upper_count[idx] == <span class="number">0</span>:</span><br><span class="line">                        unique_types += <span class="number">1</span></span><br><span class="line">                    <span class="keyword">if</span> lower_count[idx] == <span class="number">0</span> <span class="keyword">and</span> upper_count[idx] &gt; <span class="number">0</span>:</span><br><span class="line">                        nice_types += <span class="number">1</span></span><br><span class="line">                    lower_count[idx] += <span class="number">1</span></span><br><span class="line">                <span class="keyword">else</span>: <span class="comment"># 大写字母</span></span><br><span class="line">                    idx = <span class="built_in">ord</span>(char_r) - <span class="built_in">ord</span>(<span class="string">&#x27;A&#x27;</span>)</span><br><span class="line">                    <span class="keyword">if</span> lower_count[idx] == <span class="number">0</span> <span class="keyword">and</span> upper_count[idx] == <span class="number">0</span>:</span><br><span class="line">                        unique_types += <span class="number">1</span></span><br><span class="line">                    <span class="keyword">if</span> upper_count[idx] == <span class="number">0</span> <span class="keyword">and</span> lower_count[idx] &gt; <span class="number">0</span>:</span><br><span class="line">                        nice_types += <span class="number">1</span></span><br><span class="line">                    upper_count[idx] += <span class="number">1</span></span><br><span class="line">                </span><br><span class="line">                <span class="comment"># --- 2. 左指针收缩窗口 ---</span></span><br><span class="line">                <span class="keyword">while</span> unique_types &gt; k:</span><br><span class="line">                    char_l = s[left]</span><br><span class="line">                    <span class="keyword">if</span> <span class="string">&#x27;a&#x27;</span> &lt;= char_l &lt;= <span class="string">&#x27;z&#x27;</span>:</span><br><span class="line">                        idx = <span class="built_in">ord</span>(char_l) - <span class="built_in">ord</span>(<span class="string">&#x27;a&#x27;</span>)</span><br><span class="line">                        lower_count[idx] -= <span class="number">1</span></span><br><span class="line">                        <span class="keyword">if</span> lower_count[idx] == <span class="number">0</span> <span class="keyword">and</span> upper_count[idx] &gt; <span class="number">0</span>:</span><br><span class="line">                            nice_types -= <span class="number">1</span></span><br><span class="line">                        <span class="keyword">if</span> lower_count[idx] == <span class="number">0</span> <span class="keyword">and</span> upper_count[idx] == <span class="number">0</span>:</span><br><span class="line">                            unique_types -= <span class="number">1</span></span><br><span class="line">                    <span class="keyword">else</span>: <span class="comment"># 大写字母</span></span><br><span class="line">                        idx = <span class="built_in">ord</span>(char_l) - <span class="built_in">ord</span>(<span class="string">&#x27;A&#x27;</span>)</span><br><span class="line">                        upper_count[idx] -= <span class="number">1</span></span><br><span class="line">                        <span class="keyword">if</span> upper_count[idx] == <span class="number">0</span> <span class="keyword">and</span> lower_count[idx] &gt; <span class="number">0</span>:</span><br><span class="line">                            nice_types -= <span class="number">1</span></span><br><span class="line">                        <span class="keyword">if</span> lower_count[idx] == <span class="number">0</span> <span class="keyword">and</span> upper_count[idx] == <span class="number">0</span>:</span><br><span class="line">                            unique_types -= <span class="number">1</span></span><br><span class="line">                    left += <span class="number">1</span></span><br><span class="line"></span><br><span class="line">                <span class="comment"># --- 3. 更新结果 ---</span></span><br><span class="line">                <span class="keyword">if</span> unique_types == k <span class="keyword">and</span> nice_types == k:</span><br><span class="line">                    current_len = right - left + <span class="number">1</span></span><br><span class="line">                    <span class="keyword">if</span> current_len &gt; max_len:</span><br><span class="line">                        max_len = current_len</span><br><span class="line">                        result_start = left</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span> max_len == <span class="number">0</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">&quot;&quot;</span></span><br><span class="line">        <span class="keyword">return</span> s[result_start : result_start + max_len]</span><br></pre></td></tr></table></figure><h3 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h3><ul><li><strong>时间复杂度</strong>: O(C * N)，其中 C 是字符集的大小（这里是 26），N 是字符串 <code>s</code> 的长度。外层循环固定为 26 次，内部的滑动窗口逻辑中，<code>left</code> 和 <code>right</code> 指针都只遍历一次字符串。因此，总时间复杂度为 O(N)。</li><li><strong>空间复杂度</strong>: O(C)。我们使用了几个固定大小的数组（<code>lower_count</code>, <code>upper_count</code>）来存储状态，空间是常数级别的。</li></ul><h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>本题是滑动窗口技巧的一个精彩应用。当窗口需要满足的条件比较复杂、不单调时，可以尝试**“升维”**的思路：通过枚举窗口的某个关键属性（本题中是唯一字母类型的数量），将一个复杂问题分解为一系列具有更清晰约束的简单子问题，然后逐一用滑动窗口求解。这种“分类讨论 + 滑动窗口”的模式是解决困难字符串问题的一个有力武器。</p>]]></content>
     
     
     <summary type="html">&lt;blockquote class=&quot;blockquote-center&quot;&gt;
             &lt;i class=&quot;fa fa-quote-left&quot;&gt;&lt;/i&gt;
-            &lt;p&gt;LeetCode 第 1763 题：&lt;a href=&quot;https://leetcode.cn/problems/longest-nice-substring/description/&quot;&gt;最长的美好子字符串&lt;/a&gt;。&lt;br&gt;该题要求在字符串中寻找一个最长的子串，该子串中出现的每个字母，其大小写形式都必须同时存在。直接枚举所有子串的复杂度较高，但我们可以通过枚举子串的“属性”，将问题转化为一个巧妙的滑动窗口模型来高效求解。&lt;/p&gt;
+            &lt;p&gt;LeetCode 第 1763 题：&lt;a href=&quot;https://leetcode.cn/problems/longest-nice-substring/description/&quot;&gt;最长的美好子字符串&lt;/a&gt;。&lt;br&gt;该题要求在字符串中寻找一个最长的子串且其中每个字母大小写必须同时存在。直接枚举所有子串的复杂度较高，我们可以通过枚举子串的“属性”，将问题转化为滑动窗口来高效求解。&lt;/p&gt;
 
             &lt;i class=&quot;fa fa-quote-right&quot;&gt;&lt;/i&gt;
           &lt;/blockquote&gt;</summary>
@@ -120,11 +120,11 @@
     
     <category term="滑动窗口" scheme="http://github.com/tags/%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3/"/>
     
+    <category term="数组" scheme="http://github.com/tags/%E6%95%B0%E7%BB%84/"/>
+    
     <category term="数学" scheme="http://github.com/tags/%E6%95%B0%E5%AD%A6/"/>
     
     <category term="排序" scheme="http://github.com/tags/%E6%8E%92%E5%BA%8F/"/>
-    
-    <category term="数组" scheme="http://github.com/tags/%E6%95%B0%E7%BB%84/"/>
     
     <category term="第135场周赛" scheme="http://github.com/tags/%E7%AC%AC135%E5%9C%BA%E5%91%A8%E8%B5%9B/"/>
     
@@ -158,13 +158,13 @@
     
     <category term="滑动窗口" scheme="http://github.com/tags/%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3/"/>
     
-    <category term="二分查找" scheme="http://github.com/tags/%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE/"/>
-    
-    <category term="前缀和" scheme="http://github.com/tags/%E5%89%8D%E7%BC%80%E5%92%8C/"/>
+    <category term="数组" scheme="http://github.com/tags/%E6%95%B0%E7%BB%84/"/>
     
     <category term="排序" scheme="http://github.com/tags/%E6%8E%92%E5%BA%8F/"/>
     
-    <category term="数组" scheme="http://github.com/tags/%E6%95%B0%E7%BB%84/"/>
+    <category term="二分查找" scheme="http://github.com/tags/%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE/"/>
+    
+    <category term="前缀和" scheme="http://github.com/tags/%E5%89%8D%E7%BC%80%E5%92%8C/"/>
     
     <category term="第376场周赛" scheme="http://github.com/tags/%E7%AC%AC376%E5%9C%BA%E5%91%A8%E8%B5%9B/"/>
     
@@ -198,13 +198,13 @@
     
     <category term="滑动窗口" scheme="http://github.com/tags/%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3/"/>
     
-    <category term="二分查找" scheme="http://github.com/tags/%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE/"/>
-    
-    <category term="前缀和" scheme="http://github.com/tags/%E5%89%8D%E7%BC%80%E5%92%8C/"/>
+    <category term="数组" scheme="http://github.com/tags/%E6%95%B0%E7%BB%84/"/>
     
     <category term="排序" scheme="http://github.com/tags/%E6%8E%92%E5%BA%8F/"/>
     
-    <category term="数组" scheme="http://github.com/tags/%E6%95%B0%E7%BB%84/"/>
+    <category term="二分查找" scheme="http://github.com/tags/%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE/"/>
+    
+    <category term="前缀和" scheme="http://github.com/tags/%E5%89%8D%E7%BC%80%E5%92%8C/"/>
     
     <category term="贪心" scheme="http://github.com/tags/%E8%B4%AA%E5%BF%83/"/>
     
@@ -240,9 +240,9 @@
     
     <category term="滑动窗口" scheme="http://github.com/tags/%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3/"/>
     
-    <category term="数学" scheme="http://github.com/tags/%E6%95%B0%E5%AD%A6/"/>
-    
     <category term="数组" scheme="http://github.com/tags/%E6%95%B0%E7%BB%84/"/>
+    
+    <category term="数学" scheme="http://github.com/tags/%E6%95%B0%E5%AD%A6/"/>
     
     <category term="数论" scheme="http://github.com/tags/%E6%95%B0%E8%AE%BA/"/>
     
@@ -318,13 +318,13 @@
     
     <category term="滑动窗口" scheme="http://github.com/tags/%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3/"/>
     
-    <category term="几何" scheme="http://github.com/tags/%E5%87%A0%E4%BD%95/"/>
+    <category term="数组" scheme="http://github.com/tags/%E6%95%B0%E7%BB%84/"/>
     
     <category term="数学" scheme="http://github.com/tags/%E6%95%B0%E5%AD%A6/"/>
     
     <category term="排序" scheme="http://github.com/tags/%E6%8E%92%E5%BA%8F/"/>
     
-    <category term="数组" scheme="http://github.com/tags/%E6%95%B0%E7%BB%84/"/>
+    <category term="几何" scheme="http://github.com/tags/%E5%87%A0%E4%BD%95/"/>
     
     <category term="第209场周赛" scheme="http://github.com/tags/%E7%AC%AC209%E5%9C%BA%E5%91%A8%E8%B5%9B/"/>
     
@@ -358,11 +358,11 @@
     
     <category term="滑动窗口" scheme="http://github.com/tags/%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3/"/>
     
+    <category term="数组" scheme="http://github.com/tags/%E6%95%B0%E7%BB%84/"/>
+    
     <category term="二分查找" scheme="http://github.com/tags/%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE/"/>
     
     <category term="前缀和" scheme="http://github.com/tags/%E5%89%8D%E7%BC%80%E5%92%8C/"/>
-    
-    <category term="数组" scheme="http://github.com/tags/%E6%95%B0%E7%BB%84/"/>
     
     <category term="动态规划" scheme="http://github.com/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/"/>
     
@@ -398,11 +398,11 @@
     
     <category term="滑动窗口" scheme="http://github.com/tags/%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3/"/>
     
+    <category term="数组" scheme="http://github.com/tags/%E6%95%B0%E7%BB%84/"/>
+    
     <category term="二分查找" scheme="http://github.com/tags/%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE/"/>
     
     <category term="前缀和" scheme="http://github.com/tags/%E5%89%8D%E7%BC%80%E5%92%8C/"/>
-    
-    <category term="数组" scheme="http://github.com/tags/%E6%95%B0%E7%BB%84/"/>
     
     <category term="第 271 场周赛" scheme="http://github.com/tags/%E7%AC%AC-271-%E5%9C%BA%E5%91%A8%E8%B5%9B/"/>
     
@@ -436,13 +436,13 @@
     
     <category term="滑动窗口" scheme="http://github.com/tags/%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3/"/>
     
-    <category term="二分查找" scheme="http://github.com/tags/%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE/"/>
-    
-    <category term="前缀和" scheme="http://github.com/tags/%E5%89%8D%E7%BC%80%E5%92%8C/"/>
+    <category term="数组" scheme="http://github.com/tags/%E6%95%B0%E7%BB%84/"/>
     
     <category term="排序" scheme="http://github.com/tags/%E6%8E%92%E5%BA%8F/"/>
     
-    <category term="数组" scheme="http://github.com/tags/%E6%95%B0%E7%BB%84/"/>
+    <category term="二分查找" scheme="http://github.com/tags/%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE/"/>
+    
+    <category term="前缀和" scheme="http://github.com/tags/%E5%89%8D%E7%BC%80%E5%92%8C/"/>
     
     <category term="贪心" scheme="http://github.com/tags/%E8%B4%AA%E5%BF%83/"/>
     
@@ -512,13 +512,13 @@
     
     <category term="滑动窗口" scheme="http://github.com/tags/%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3/"/>
     
-    <category term="二分查找" scheme="http://github.com/tags/%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE/"/>
-    
-    <category term="前缀和" scheme="http://github.com/tags/%E5%89%8D%E7%BC%80%E5%92%8C/"/>
+    <category term="数组" scheme="http://github.com/tags/%E6%95%B0%E7%BB%84/"/>
     
     <category term="排序" scheme="http://github.com/tags/%E6%8E%92%E5%BA%8F/"/>
     
-    <category term="数组" scheme="http://github.com/tags/%E6%95%B0%E7%BB%84/"/>
+    <category term="二分查找" scheme="http://github.com/tags/%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE/"/>
+    
+    <category term="前缀和" scheme="http://github.com/tags/%E5%89%8D%E7%BC%80%E5%92%8C/"/>
     
     <category term="贪心" scheme="http://github.com/tags/%E8%B4%AA%E5%BF%83/"/>
     
@@ -590,11 +590,11 @@
     
     <category term="滑动窗口" scheme="http://github.com/tags/%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3/"/>
     
+    <category term="数组" scheme="http://github.com/tags/%E6%95%B0%E7%BB%84/"/>
+    
     <category term="二分查找" scheme="http://github.com/tags/%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE/"/>
     
     <category term="前缀和" scheme="http://github.com/tags/%E5%89%8D%E7%BC%80%E5%92%8C/"/>
-    
-    <category term="数组" scheme="http://github.com/tags/%E6%95%B0%E7%BB%84/"/>
     
     <category term="第215场周赛" scheme="http://github.com/tags/%E7%AC%AC215%E5%9C%BA%E5%91%A8%E8%B5%9B/"/>
     
@@ -706,9 +706,9 @@
     
     <category term="滑动窗口" scheme="http://github.com/tags/%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3/"/>
     
-    <category term="排序" scheme="http://github.com/tags/%E6%8E%92%E5%BA%8F/"/>
-    
     <category term="数组" scheme="http://github.com/tags/%E6%95%B0%E7%BB%84/"/>
+    
+    <category term="排序" scheme="http://github.com/tags/%E6%8E%92%E5%BA%8F/"/>
     
     <category term="第 162 场双周赛" scheme="http://github.com/tags/%E7%AC%AC-162-%E5%9C%BA%E5%8F%8C%E5%91%A8%E8%B5%9B/"/>
     
