@@ -1466,6 +1466,100 @@
       </tags>
   </entry>
   <entry>
+    <title>LeetCode 2904 | SW求解最短且字典序最小的美丽子串</title>
+    <url>//posts/leetcode-2904/</url>
+    <content><![CDATA[<blockquote class="blockquote-center">
+            <i class="fa fa-quote-left"></i>
+            <p>LeetCode 第 2904 题：<a href="https://leetcode.cn/problems/shortest-and-lexicographically-smallest-beautiful-string/description/">最短且字典序最小的美丽子字符串</a>。<br>该题要求在一个二进制字符串中，寻找一个包含 <code>k</code> 个 ‘1’ 的子串，这个子串需要满足两个条件：首先长度最短，其次在所有最短的子串中，它的字典序最小。</p>
+
+            <i class="fa fa-quote-right"></i>
+          </blockquote>
+<span id="more"></span>
+<h3 id="问题解读"><a href="#问题解读" class="headerlink" title="问题解读"></a>问题解读</h3><p>题目给了我们一个二进制字符串 <code>s</code> 和一个正整数 <code>k</code>。我们需要找到 <code>s</code> 的一个“美丽子字符串”。</p>
+<p>一个子字符串被称为“美丽”的，当且仅当它包含的 ‘1’ 的数量恰好为 <code>k</code>。</p>
+<p>我们的目标是：</p>
+<ol>
+<li>在所有“美丽子字符串”中，找到那些长度最短的。</li>
+<li>在所有这些最短的“美丽子字符串”中，找到字典序最小的那一个。</li>
+</ol>
+<p>如果不存在这样的子字符串，我们应该返回一个空字符串。</p>
+<p>举个例子，对于 <code>s = &quot;100011001&quot;</code>, <code>k = 3</code>：</p>
+<ul>
+<li>子字符串 <code>&quot;100011&quot;</code> 是美丽的（3 个 ‘1’），长度为 6。</li>
+<li>子字符串 <code>&quot;011001&quot;</code> 也是美丽的（3 个 ‘1’），长度为 6。</li>
+<li>子字符串 <code>&quot;11001&quot;</code> 还是美丽的（3 个 ‘1’），长度为 5。</li>
+<li>最短的美丽子字符串长度是 5。</li>
+<li>在所有长度为 5 的美丽子字符串中（这里只有一个 <code>&quot;11001&quot;</code>），字典序最小的就是 <code>&quot;11001&quot;</code>，因此它就是答案。</li>
+</ul>
+<h3 id="核心思路：不定长滑动窗口"><a href="#核心思路：不定长滑动窗口" class="headerlink" title="核心思路：不定长滑动窗口"></a>核心思路：不定长滑动窗口</h3><p>这类寻找满足特定条件的“最优”子字符串的问题，是滑动窗口算法的绝佳应用场景。我们可以维护一个窗口 <code>[left, right]</code>，它代表了我们正在考察的子字符串。</p>
+<p>我们的策略如下：</p>
+<ol>
+<li><p><strong>扩展窗口</strong>：我们不断地将 <code>right</code> 指针向右移动，以扩大窗口。每当一个新字符进入窗口时，我们更新窗口内 ‘1’ 的数量。</p>
+</li>
+<li><p><strong>收缩窗口</strong>：一旦窗口内 ‘1’ 的数量达到了 <code>k</code>，我们就找到了一个“美丽子字符串”的候选者。这时，我们不能停下，因为这个候选者不一定是最短的。</p>
+<ul>
+<li><strong>评估候选者</strong>：我们将当前窗口代表的子字符串与已找到的最佳答案进行比较。如果当前子串更短，或者长度相同但字典序更小，我们就更新答案。</li>
+<li><strong>启动收缩</strong>：为了寻找可能存在的、更短的美丽子字符串，我们必须从左侧收缩窗口。我们将 <code>left</code> 指针向右移动，并相应地更新 ‘1’ 的数量。这个收缩过程会一直持续，直到窗口不再满足 ‘1’ 的数量为 <code>k</code> 的条件，之后我们再继续扩展 <code>right</code> 指针。</li>
+</ul>
+</li>
+</ol>
+<p>通过这种“扩展-评估-收缩”的循环，我们能确保遍历所有可能的美丽子字符串，并最终找到最优解。</p>
+<h3 id="算法详解"><a href="#算法详解" class="headerlink" title="算法详解"></a>算法详解</h3><ol>
+<li><p><strong>初始化</strong>：</p>
+<ul>
+<li><code>min_len</code>：用于记录当前找到的最短美丽子串的长度，初始为无穷大。</li>
+<li><code>result</code>：用于存储最终答案，初始为空字符串 <code>&quot;&quot;</code>。</li>
+<li><code>left = 0</code>：滑动窗口的左边界。</li>
+<li><code>ones_count = 0</code>：当前滑动窗口内 ‘1’ 的数量。</li>
+</ul>
+</li>
+<li><p><strong>遍历与扩展</strong>：</p>
+<ul>
+<li>使用 <code>right</code> 指针从头到尾遍历字符串 <code>s</code>。</li>
+<li>当 <code>s[right]</code> 为 ‘1’ 时，<code>ones_count</code> 加 1。</li>
+</ul>
+</li>
+<li><p><strong>触发收缩与评估</strong>：</p>
+<ul>
+<li>当 <code>ones_count</code> 恰好等于 <code>k</code> 时，我们找到了一个美丽子字符串。此时，启动一个 <code>while</code> 循环，因为 <code>[left, right]</code> 是一个候选项，<code>[left+1, right]</code> 也可能是（如果 <code>s[left]</code> 是 ‘0’）。</li>
+<li><strong>在 <code>while (ones_count == k)</code> 循环内</strong>：<ol>
+<li>获取当前窗口的长度 <code>current_len = right - left + 1</code> 和子字符串 <code>current_substring = s[left:right+1]</code>。</li>
+<li><strong>比较与更新</strong>：<ul>
+<li>如果 <code>current_len &lt; min_len</code>，说明我们找到了一个更短的，直接更新 <code>min_len = current_len</code> 和 <code>result = current_substring</code>。</li>
+<li>如果 <code>current_len == min_len</code>，我们需要比较字典序。如果 <code>current_substring &lt; result</code>，则更新 <code>result = current_substring</code>。</li>
+</ul>
+</li>
+<li><strong>收缩</strong>：将 <code>left</code> 指针右移一位。如果被移出窗口的字符 <code>s[left]</code> 是 ‘1’，则将 <code>ones_count</code> 减 1。这一步可能会导致 <code>ones_count</code> 变为 <code>k-1</code>，从而结束 <code>while</code> 循环。</li>
+</ol>
+</li>
+</ul>
+</li>
+<li><p><strong>返回结果</strong>：</p>
+<ul>
+<li>主循环结束后，<code>result</code> 中存储的就是最终答案。如果从未找到过美丽子字符串，<code>result</code> 将保持其初始值 <code>&quot;&quot;</code>。</li>
+</ul>
+</li>
+</ol>
+<h3 id="Python-代码实现"><a href="#Python-代码实现" class="headerlink" title="Python 代码实现"></a>Python 代码实现</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">shortestBeautifulSubstring</span>(<span class="params">self, s: <span class="built_in">str</span>, k: <span class="built_in">int</span></span>) -&gt; <span class="built_in">str</span>:</span><br><span class="line">        <span class="comment"># 如果 s 中 &#x27;1&#x27; 的总数都小于 k，则不可能有美丽子字符串</span></span><br><span class="line">        <span class="keyword">if</span> s.count(<span class="string">&#x27;1&#x27;</span>) &lt; k:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">&quot;&quot;</span></span><br><span class="line"></span><br><span class="line">        n = <span class="built_in">len</span>(s)</span><br><span class="line">        min_len = <span class="built_in">float</span>(<span class="string">&#x27;inf&#x27;</span>)</span><br><span class="line">        result = <span class="string">&quot;&quot;</span></span><br><span class="line">        </span><br><span class="line">        left = <span class="number">0</span></span><br><span class="line">        ones_count = <span class="number">0</span></span><br><span class="line">        </span><br><span class="line">        <span class="keyword">for</span> right <span class="keyword">in</span> <span class="built_in">range</span>(n):</span><br><span class="line">            <span class="comment"># 扩展窗口</span></span><br><span class="line">            <span class="keyword">if</span> s[right] == <span class="string">&#x27;1&#x27;</span>:</span><br><span class="line">                ones_count += <span class="number">1</span></span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 当窗口内 &#x27;1&#x27; 的数量达到 k 时，开始评估和收缩</span></span><br><span class="line">            <span class="keyword">while</span> ones_count == k:</span><br><span class="line">                current_len = right - left + <span class="number">1</span></span><br><span class="line">                current_substring = s[left : right + <span class="number">1</span>]</span><br><span class="line">                </span><br><span class="line">                <span class="comment"># 评估：如果找到了更短的，或同样短但字典序更小的</span></span><br><span class="line">                <span class="keyword">if</span> current_len &lt; min_len:</span><br><span class="line">                    min_len = current_len</span><br><span class="line">                    result = current_substring</span><br><span class="line">                <span class="keyword">elif</span> current_len == min_len <span class="keyword">and</span> current_substring &lt; result:</span><br><span class="line">                    result = current_substring</span><br><span class="line">                </span><br><span class="line">                <span class="comment"># 收缩窗口</span></span><br><span class="line">                <span class="keyword">if</span> s[left] == <span class="string">&#x27;1&#x27;</span>:</span><br><span class="line">                    ones_count -= <span class="number">1</span></span><br><span class="line">                left += <span class="number">1</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> result</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h3><ul>
+<li><strong>时间复杂度</strong>: O(N)，其中 N 是字符串 <code>s</code> 的长度。虽然代码里有嵌套的 <code>while</code> 循环，但 <code>left</code> 和 <code>right</code> 两个指针都只从左到右单向移动一次，每个字符最多被访问两次（一次被 <code>right</code> 指针纳入，一次被 <code>left</code> 指针排除），因此总的时间复杂度是线性的。</li>
+<li><strong>空间复杂度</strong>: O(1)。我们只使用了常数个额外变量来存储窗口状态和结果。返回的字符串 <code>result</code> 的空间不算在额外空间复杂度内。</li>
+</ul>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>本题是滑动窗口思想的直接应用。解决此题的关键在于清晰地定义窗口的“合法”状态（<code>ones_count == k</code>），并在进入此状态时，不仅要与全局最优解进行比较，还要尝试通过收缩窗口来寻找一个可能更优的解。双重优化目标（长度优先，字典序其次）的逻辑判断是本题的核心细节。</p>
+]]></content>
+      <categories>
+        <category>算法题解</category>
+        <category>滑动窗口与双指针</category>
+        <category>不定长滑动窗口</category>
+      </categories>
+      <tags>
+        <tag>字符串</tag>
+        <tag>滑动窗口</tag>
+        <tag>第367场周赛</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>LeetCode 2953 | 分治+滑动窗口巧解“统计完全子字符串”</title>
     <url>//posts/leetcode-2953/</url>
     <content><![CDATA[<blockquote class="blockquote-center">
