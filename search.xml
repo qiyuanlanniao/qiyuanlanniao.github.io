@@ -2889,4 +2889,77 @@
         <tag>滑动窗口</tag>
       </tags>
   </entry>
+  <entry>
+    <title>LeetCode 930 | 滑动窗口求解“和相同的二元子数组”</title>
+    <url>//posts/leetcode-930/</url>
+    <content><![CDATA[<blockquote class="blockquote-center">
+            <i class="fa fa-quote-left"></i>
+            <p>LeetCode 第 930 题：<a href="https://leetcode.cn/problems/binary-subarrays-with-sum/">和相同的二元子数组</a>。<br>该题要求统计和为特定值的二元子数组个数。直接用滑动窗口处理“和恰好等于 goal”的条件，在有连续 0 的情况下会比较棘手。但如果我们换一个角度，问题就迎刃而解了。</p>
+
+            <i class="fa fa-quote-right"></i>
+          </blockquote>
+<span id="more"></span>
+<h3 id="问题解读"><a href="#问题解读" class="headerlink" title="问题解读"></a>问题解读</h3><p>题目给了我们一个只包含 0 和 1 的二元数组 <code>nums</code> 和一个整数 <code>goal</code>。我们需要统计出，有多少个<strong>连续子数组</strong>，其内部所有元素之和恰好等于 <code>goal</code>。</p>
+<p>举个例子，对于 <code>nums = [1,0,1,0,1]</code>, <code>goal = 2</code>：</p>
+<ul>
+<li>满足条件的子数组有 <code>[1,0,1]</code> (从索引0开始), <code>[1,0,1,0]</code> (从索引0开始), <code>[0,1,0,1]</code> (从索引1开始), <code>[1,0,1]</code> (从索引2开始)。等等，例子中的解释是 <code>[1,0,1]</code>, <code>[1,0,1]</code>, <code>[0,1,0,1]</code>。让我们重新看一下，<code>[1,0,1,0]</code> 的和也是 2。啊，示例的解释是 <code>[1,0,1]</code>、<code>[1,0,1,0]</code> 的和是2， <code>[0,1,0,1]</code> 的和是2，最后一个 <code>[1,0,1]</code> 是指从索引2开始的那个。所以总共有4个。</li>
+<li><code>[1,0,1]</code> (和为2)</li>
+<li><code>[1,0,1,0]</code> (和为2)</li>
+<li><code>[0,1,0,1]</code> (和为2)</li>
+<li><code>[1,0,1]</code> (从索引2开始，和为2)</li>
+<li>因此，最终输出是 4。</li>
+</ul>
+<p>直接去枚举所有子数组的复杂度是 O(N^2)，在 <code>3 * 10^4</code> 的数据规模下会超时，我们需要更高效的算法。</p>
+<h3 id="核心思路：巧妙转换为“最多为-K”"><a href="#核心思路：巧妙转换为“最多为-K”" class="headerlink" title="核心思路：巧妙转换为“最多为 K”"></a>核心思路：巧妙转换为“最多为 K”</h3><p>滑动窗口是解决子数组问题的利器。但如果我们尝试维护一个窗口，使其内部的和<strong>恰好</strong>等于 <code>goal</code>，会遇到麻烦。比如窗口 <code>[1,0,1]</code> 的和是 2，我们找到了一个解。当窗口向右扩展，加入一个 0 变成 <code>[1,0,1,0]</code>，和仍然是 2，这也是一个解。如果数组中有更多的连续 0，情况会变得更复杂，统计逻辑会很繁琐。</p>
+<p>解决这个问题的金钥匙是<strong>转换问题</strong>。与其求“和恰好为 goal”，我们可以求“和最多为 goal”的子数组个数，再减去“和最多为 goal-1”的子数组个数。它们的差值，正好就是“和恰好为 goal”的子数组个数。</p>
+<p><strong><code>count(sum == goal) = count(sum &lt;= goal) - count(sum &lt;= goal - 1)</code></strong></p>
+<p>而求解“和最多为 k”的子数组个数，是滑动窗口的经典应用场景，逻辑非常清晰。</p>
+<p>我们可以实现一个辅助函数 <code>atMost(k)</code>，用滑动窗口计算和小于等于 <code>k</code> 的子数组数量。</p>
+<h3 id="算法详解"><a href="#算法详解" class="headerlink" title="算法详解"></a>算法详解</h3><ol>
+<li><p><strong>实现 <code>atMost(k)</code> 辅助函数</strong></p>
+<ul>
+<li>我们使用 <code>left</code> 和 <code>right</code> 两个指针来定义一个滑动窗口 <code>[left, right]</code>。</li>
+<li>初始化 <code>left = 0</code>, <code>current_sum = 0</code>, <code>count = 0</code>。</li>
+<li><code>right</code> 指针从左到右遍历整个数组，不断扩大窗口。</li>
+<li>每当 <code>right</code> 移动一步，将 <code>nums[right]</code> 加入 <code>current_sum</code>。</li>
+<li>检查 <code>current_sum</code> 是否大于 <code>k</code>。如果大于，就说明窗口需要收缩。我们不断地将 <code>left</code> 指针右移，并从 <code>current_sum</code> 中减去 <code>nums[left]</code>，直到 <code>current_sum &lt;= k</code> 为止。</li>
+<li>在任意一步，当窗口 <code>[left, right]</code> 满足 <code>sum &lt;= k</code> 时，所有以 <code>right</code> 为右端点，且左端点在 <code>[left, right]</code> 区间内的子数组，它们的和也都小于等于 <code>k</code>。这样的子数组共有 <code>right - left + 1</code> 个。我们将这个数目累加到总数 <code>count</code> 中。</li>
+<li><code>right</code> 遍历结束后，返回 <code>count</code>。</li>
+</ul>
+</li>
+<li><p><strong>计算最终结果</strong></p>
+<ul>
+<li>调用我们写好的辅助函数，分别计算 <code>atMost(goal)</code> 和 <code>atMost(goal - 1)</code>。</li>
+<li>最终的结果就是 <code>atMost(goal) - atMost(goal - 1)</code>。</li>
+</ul>
+</li>
+</ol>
+<h3 id="Python-代码实现"><a href="#Python-代码实现" class="headerlink" title="Python 代码实现"></a>Python 代码实现</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> typing <span class="keyword">import</span> <span class="type">List</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">numSubarraysWithSum</span>(<span class="params">self, nums: <span class="type">List</span>[<span class="built_in">int</span>], goal: <span class="built_in">int</span></span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">def</span> <span class="title function_">atMost</span>(<span class="params">k: <span class="built_in">int</span></span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">            <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">            一个辅助函数，用来计算和最多为 k 的子数组数量。</span></span><br><span class="line"><span class="string">            &quot;&quot;&quot;</span></span><br><span class="line">            <span class="keyword">if</span> k &lt; <span class="number">0</span>:</span><br><span class="line">                <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">            </span><br><span class="line">            left, current_sum, count = <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span></span><br><span class="line">            <span class="keyword">for</span> right <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(nums)):</span><br><span class="line">                current_sum += nums[right]</span><br><span class="line">                </span><br><span class="line">                <span class="comment"># 如果当前窗口的和大于 k，则从左边收缩窗口</span></span><br><span class="line">                <span class="keyword">while</span> current_sum &gt; k:</span><br><span class="line">                    current_sum -= nums[left]</span><br><span class="line">                    left += <span class="number">1</span></span><br><span class="line">                </span><br><span class="line">                <span class="comment"># 以 right 为右端点的、和小于等于 k 的子数组个数为 right - left + 1</span></span><br><span class="line">                count += (right - left + <span class="number">1</span>)</span><br><span class="line">                </span><br><span class="line">            <span class="keyword">return</span> count</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 原问题答案 = atMost(goal) - atMost(goal - 1)</span></span><br><span class="line">        <span class="keyword">return</span> atMost(goal) - atMost(goal - <span class="number">1</span>)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h3><ul>
+<li><strong>时间复杂度</strong>: O(N)。其中 N 是 <code>nums</code> 的长度。<code>atMost</code> 函数中的 <code>left</code> 和 <code>right</code> 指针都只会从头到尾移动一次，因此是 O(N) 的。我们调用了两次该函数，所以总时间复杂度是 O(N) + O(N) &#x3D; O(N)。</li>
+<li><strong>空间复杂度</strong>: O(1)。我们只使用了常数个额外变量。</li>
+</ul>
+<h3 id="补充：前缀和-哈希表"><a href="#补充：前缀和-哈希表" class="headerlink" title="补充：前缀和 + 哈希表"></a>补充：前缀和 + 哈希表</h3><p>本题还有另一种非常经典的解法：前缀和 + 哈希表。<br>思路是：</p>
+<ol>
+<li>我们要求的是满足 <code>sum(nums[i:j+1]) == goal</code> 的 <code>(i, j)</code> 对的数量。</li>
+<li>使用前缀和 <code>prefix_sum</code>，这个条件可以改写为 <code>prefix_sum[j] - prefix_sum[i-1] == goal</code>。</li>
+<li>进一步变形得到 <code>prefix_sum[i-1] == prefix_sum[j] - goal</code>。</li>
+<li>于是，我们可以遍历数组，在计算出每个位置 <code>j</code> 的前缀和 <code>prefix_sum[j]</code> 的同时，去一个哈希表中查找，之前出现过多少次值为 <code>prefix_sum[j] - goal</code> 的前缀和。将这个次数累加到结果中，然后将当前的前缀和 <code>prefix_sum[j]</code> 存入哈希表。<br>这种方法的时间和空间复杂度分别为 O(N) 和 O(N)。</li>
+</ol>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>本题展示了解决“恰好为 K”这类计数问题的强大技巧——将其转化为两个“最多为 K”问题的差。这个思想不仅适用于滑动窗口，也适用于其他许多算法场景。它能将一个逻辑复杂的计数问题，分解为两个逻辑清晰的子问题，从而大大简化代码的实现难度和出错率，是算法工具箱中非常实用的一招。</p>
+]]></content>
+      <categories>
+        <category>算法题解</category>
+        <category>滑动窗口与双指针</category>
+        <category>不定场滑动窗口</category>
+      </categories>
+      <tags>
+        <tag>哈希表</tag>
+        <tag>滑动窗口</tag>
+        <tag>数组</tag>
+        <tag>前缀和</tag>
+        <tag>第108场周赛</tag>
+      </tags>
+  </entry>
 </search>
