@@ -2219,7 +2219,7 @@
     <url>//posts/leetcode-3306/</url>
     <content><![CDATA[<blockquote class="blockquote-center">
             <i class="fa fa-quote-left"></i>
-            <p>LeetCode 第 3306 题：<a href="https://leetcode.cn/problems/count-of-substrings-containing-every-vowel-and-k-consonants-ii/description/">元音辅音字符串计数 II</a>。<br>这道题要求我们统计一个字符串中，满足“包含所有五种元音”并且“恰好包含 k 个辅音”的子字符串数量。当问题包含“恰好”这类精确的限制时，一个非常强大的思路是将其转化为更易于处理的“至多”问题。</p>
+            <p>LeetCode 第 3306 题：<a href="https://leetcode.cn/problems/count-of-substrings-containing-every-vowel-and-k-consonants-ii/description/">元音辅音字符串计数 II</a>。<br>这道题要求我们统计一个字符串中，满足“包含所有五种元音”并且“恰好包含 k 个辅音”的子字符串数量。这类问题的思路之一是将其转化为更易于处理的“至多”问题。</p>
 
             <i class="fa fa-quote-right"></i>
           </blockquote>
