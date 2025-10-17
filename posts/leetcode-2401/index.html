@@ -20,25 +20,23 @@
     var CONFIG = {"hostname":"github.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"valine","storage":true,"lazyload":false,"nav":null,"activeClass":"valine"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="LeetCode 第 2968 题：执行操作使频率分数最大。该题要求我们通过对数组元素进行有限次数的增减操作，来最大化某个元素的出现频率。问题的核心在于，要让一组数字变得相同，最经济的方式是什么？答案指向了它们的中位数。">
+  <meta name="description" content="LeetCode 第 2401 题：最长优雅子数组。该题要求寻找一个最长的子数组，其中任意两个元素的按位与（AND）都为 0。这是一个非常适合使用滑动窗口解决的问题，关键在于如何高效地维护窗口的“优雅”属性。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="LeetCode 2968 | 滑动窗口求解“执行操作使频率分数最大”">
-<meta property="og:url" content="http://github.com/posts/leetcode-2968/index.html">
+<meta property="og:title" content="LeetCode 2401 | 滑动窗口求解“最长优雅子数组”">
+<meta property="og:url" content="http://github.com/posts/leetcode-2401/index.html">
 <meta property="og:site_name" content="Changan&#39;s Blog">
-<meta property="og:description" content="LeetCode 第 2968 题：执行操作使频率分数最大。该题要求我们通过对数组元素进行有限次数的增减操作，来最大化某个元素的出现频率。问题的核心在于，要让一组数字变得相同，最经济的方式是什么？答案指向了它们的中位数。">
+<meta property="og:description" content="LeetCode 第 2401 题：最长优雅子数组。该题要求寻找一个最长的子数组，其中任意两个元素的按位与（AND）都为 0。这是一个非常适合使用滑动窗口解决的问题，关键在于如何高效地维护窗口的“优雅”属性。">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2025-10-07T02:05:00.000Z">
-<meta property="article:modified_time" content="2025-10-07T02:05:00.000Z">
+<meta property="article:published_time" content="2025-10-17T02:21:00.000Z">
+<meta property="article:modified_time" content="2025-10-17T02:21:00.000Z">
 <meta property="article:author" content="Changan">
+<meta property="article:tag" content="位运算">
 <meta property="article:tag" content="滑动窗口">
 <meta property="article:tag" content="数组">
-<meta property="article:tag" content="排序">
-<meta property="article:tag" content="二分查找">
-<meta property="article:tag" content="前缀和">
-<meta property="article:tag" content="第376场周赛">
+<meta property="article:tag" content="第309场周赛">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="http://github.com/posts/leetcode-2968/">
+<link rel="canonical" href="http://github.com/posts/leetcode-2401/">
 
 
 <script id="page-configurations">
@@ -51,7 +49,7 @@
   };
 </script>
 
-  <title>LeetCode 2968 | 滑动窗口求解“执行操作使频率分数最大” | Changan's Blog</title>
+  <title>LeetCode 2401 | 滑动窗口求解“最长优雅子数组” | Changan's Blog</title>
   
 
 
@@ -201,7 +199,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://github.com/posts/leetcode-2968/">
+    <link itemprop="mainEntityOfPage" href="http://github.com/posts/leetcode-2401/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -214,7 +212,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          LeetCode 2968 | 滑动窗口求解“执行操作使频率分数最大”
+          LeetCode 2401 | 滑动窗口求解“最长优雅子数组”
         </h1>
 
         <div class="post-meta">
@@ -224,7 +222,7 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2025-10-07 10:05:00" itemprop="dateCreated datePublished" datetime="2025-10-07T10:05:00+08:00">2025-10-07</time>
+              <time title="创建时间：2025-10-17 10:21:00" itemprop="dateCreated datePublished" datetime="2025-10-17T10:21:00+08:00">2025-10-17</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -260,8 +258,8 @@
       </span>
       <span class="post-meta-item-text">Valine：</span>
     
-    <a title="valine" href="/posts/leetcode-2968/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/posts/leetcode-2968/" itemprop="commentCount"></span>
+    <a title="valine" href="/posts/leetcode-2401/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/posts/leetcode-2401/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -278,72 +276,80 @@
       
         <blockquote class="blockquote-center">
             <i class="fa fa-quote-left"></i>
-            <p>LeetCode 第 2968 题：<a target="_blank" rel="noopener" href="https://leetcode.cn/problems/apply-operations-to-maximize-frequency-score/description/">执行操作使频率分数最大</a>。<br>该题要求我们通过对数组元素进行有限次数的增减操作，来最大化某个元素的出现频率。问题的核心在于，要让一组数字变得相同，最经济的方式是什么？答案指向了它们的中位数。</p>
+            <p>LeetCode 第 2401 题：<a target="_blank" rel="noopener" href="https://leetcode.cn/problems/longest-nice-subarray/description/">最长优雅子数组</a>。<br>该题要求寻找一个最长的子数组，其中任意两个元素的按位与（AND）都为 0。这是一个非常适合使用滑动窗口解决的问题，关键在于如何高效地维护窗口的“优雅”属性。</p>
 
             <i class="fa fa-quote-right"></i>
           </blockquote>
 <span id="more"></span>
-<h3 id="问题解读"><a href="#问题解读" class="headerlink" title="问题解读"></a>问题解读</h3><p>题目给了我们一个整数数组 <code>nums</code> 和一个预算 <code>k</code>。我们可以执行的操作是：选择任意一个元素 <code>nums[i]</code>，将其增加或减少 1。每次操作消耗 1。我们的总消耗不能超过 <code>k</code>。</p>
-<p>目标是最大化操作后数组中某个数出现的次数（即“频率分数”）。</p>
-<p>举个例子，对于 <code>nums = [1,2,6,4]</code>, <code>k = 3</code>：</p>
+<h3 id="问题解读"><a href="#问题解读" class="headerlink" title="问题解读"></a>问题解读</h3><p>题目给了我们一个正整数组成的数组 <code>nums</code>，需要我们找到一个<strong>最长</strong>的<strong>连续子数组</strong>，这个子数组被称为“优雅的”。</p>
+<p>一个子数组是“优雅的”，当且仅当其中任意两个不同位置的数字，它们的按位与（AND）运算结果都等于 0。这意味着，在一个优雅子数组中，所有数字的二进制表示里，任意一个为 ‘1’ 的 bit 位，在其他所有数字的对应 bit 位上都必须是 ‘0’。</p>
+<p>举个例子，对于 <code>nums = [1,3,8,48,10]</code>：</p>
 <ul>
-<li>我们的目标是，用不超过 3 的总代价，让尽可能多的数字变成同一个数。</li>
-<li>比如，我们可以选择让一部分数字都变成 2。<ul>
-<li><code>1</code> 变成 <code>2</code>，代价是 <code>|2-1|=1</code>。</li>
-<li><code>4</code> 变成 <code>2</code>，代价是 <code>|2-4|=2</code>。</li>
-<li>总代价是 <code>1 + 2 = 3</code>，正好在预算内。</li>
-<li>操作后数组可以是 <code>[2,2,6,2]</code>。数字 <code>2</code> 出现了 3 次。</li>
+<li>我们来看子数组 <code>[3, 8, 48]</code>：<ul>
+<li>3 的二进制是 <code>00011</code></li>
+<li>8 的二进制是 <code>01000</code></li>
+<li>48 的二进制是 <code>110000</code></li>
 </ul>
 </li>
-<li>我们可以达到的最大频率就是 3。</li>
+<li>检查任意一对：<ul>
+<li><code>3 &amp; 8</code> &#x3D; <code>00011 &amp; 01000</code> &#x3D; <code>0</code></li>
+<li><code>3 &amp; 48</code> &#x3D; <code>00011 &amp; 110000</code> &#x3D; <code>0</code></li>
+<li><code>8 &amp; 48</code> &#x3D; <code>01000 &amp; 110000</code> &#x3D; <code>0</code></li>
 </ul>
-<p>直接枚举最终要变成哪个数，以及选择哪些原始数字来变成它，组合非常多，复杂度会爆炸。我们需要一个更系统性的方法。</p>
-<h3 id="核心思路：排序-滑动窗口"><a href="#核心思路：排序-滑动窗口" class="headerlink" title="核心思路：排序 + 滑动窗口"></a>核心思路：排序 + 滑动窗口</h3><p>为了让最终的频率分数为 <code>m</code>，我们必须选择 <code>m</code> 个原始数字，并将它们全部变成同一个目标值 <code>t</code>。我们的策略应该是：</p>
+</li>
+<li>所有配对的按位与结果都为 0，所以 <code>[3, 8, 48]</code> 是一个优雅子数组，长度为 3。题目要求我们返回这个最长的长度。</li>
+</ul>
+<p>如果用暴力法枚举所有子数组，再对子数组里的每一对数字进行检查，时间复杂度会非常高，无法通过。我们需要一种更高效的方法。</p>
+<h3 id="核心思路：滑动窗口与位运算"><a href="#核心思路：滑动窗口与位运算" class="headerlink" title="核心思路：滑动窗口与位运算"></a>核心思路：滑动窗口与位运算</h3><p>这道题的“连续子数组”和“最长”两个关键词强烈地指向了<strong>滑动窗口</strong>算法。我们可以维护一个窗口 <code>[l, r]</code>，确保这个窗口内的子数组始终是“优雅的”，然后不断尝试扩大这个窗口，并记录其最大长度。</p>
+<p>问题的关键在于：当窗口右边界 <code>r</code> 纳入一个新元素 <code>nums[r]</code> 时，我们如何快速判断窗口 <code>[l, r]</code> 是否仍然优雅？</p>
+<p>如果逐一检查 <code>nums[r]</code> 与窗口内 <code>nums[l]</code> 到 <code>nums[r-1]</code> 的每一个数，效率依然很低。这里有一个重要的转换：<strong>一个子数组是优雅的，等价于这个子数组中所有元素的按位或（OR）结果等于它们的按位异或（XOR）结果，也等价于所有元素的按位或（OR）结果等于它们的和</strong>。</p>
+<p>一个更直接的判断方法是：如果我们将窗口内已有元素 <code>nums[l...r-1]</code> 的所有 bit 位 ‘1’ 合并成一个集合（通过按位或运算），那么新元素 <code>nums[r]</code> 要能被加入窗口，当且仅当 <code>nums[r]</code> 的所有 bit 位 ‘1’ 在这个集合中都没有出现过。</p>
+<p>这可以用一个简单的位运算来检查：<br><code>(窗口内所有元素的 OR 值) &amp; (新元素 nums[r]) == 0</code></p>
+<p>基于这个思想，我们的滑动窗口策略就变得清晰了：</p>
 <ol>
-<li><p><strong>选择哪 <code>m</code> 个数？</strong><br>直觉上，为了让操作总代价最小，我们应该选择那些本身就比较接近的数字。将数组排序后，这些数字会形成一个连续的子数组。因此，我们的问题转化为了在<strong>排序后</strong>的数组上寻找一个子数组。</p>
+<li>维护一个变量 <code>or_sum</code>，它存储了当前窗口 <code>[l, r]</code> 内所有数字的按位或（OR）结果。</li>
+<li>当右指针 <code>r</code> 向右移动，我们考虑加入新元素 <code>x = nums[r]</code>。</li>
+<li>我们检查 <code>or_sum &amp; x</code> 是否为 0。<ul>
+<li>如果不为 0，说明 <code>x</code> 的某个 bit 位在 <code>or_sum</code> 中已经存在，产生了冲突。此时，我们需要从左边收缩窗口，即<code>l++</code>。在收缩时，需要将 <code>nums[l]</code> 的影响从 <code>or_sum</code> 中移除。因为优雅子数组中所有数的 bit 位都不同，OR 和 XOR 的效果是一样的，所以我们可以通过 <code>or_sum ^= nums[l]</code> 来移除 <code>nums[l]</code> 的 bit 位。我们重复此过程，直到 <code>or_sum &amp; x</code> 等于 0 为止。</li>
+<li>如果为 0（或者经过收缩后变为 0），说明 <code>x</code> 可以安全地加入窗口。我们更新 <code>or_sum</code>，<code>or_sum |= x</code>，将 <code>x</code> 的 bit 位合并进来。</li>
+</ul>
 </li>
-<li><p><strong>目标值 <code>t</code> 应该是什么？</strong><br>对于一个给定的子数组（比如 <code>[a, b, c, d]</code>），要将它们全部变成同一个值 <code>t</code>，总代价为 <code>|a-t| + |b-t| + |c-t| + |d-t|</code>。这是一个经典的数学问题：要使绝对差之和最小，目标值 <code>t</code> 必须是这个子数组的<strong>中位数</strong>。</p>
-</li>
+<li>每一次成功扩大窗口后，我们用当前的窗口长度 <code>r - l + 1</code> 来更新最终答案。</li>
 </ol>
-<p>结合这两点，问题豁然开朗：<br><strong>问题转化为：在排序后的 <code>nums</code> 数组中，找到一个最长的连续子数组 <code>nums[left...right]</code>，使得将该子数组中的所有元素都变成其中位数 <code>nums[(left+right)//2]</code> 的总代价不超过 <code>k</code>。</strong></p>
-<p>这个子数组的长度，就是我们能获得的最大频率分数。</p>
-<p>这完美地契合了<strong>不定长滑动窗口</strong>的模型。我们可以用 <code>[left, right]</code> 来表示我们正在考虑的子数组。</p>
-<ul>
-<li>我们不断向右扩展窗口的右边界 <code>right</code>。</li>
-<li>同时计算将窗口内所有元素统一到其中位数的代价。</li>
-<li>如果代价超过了预算 <code>k</code>，我们就从左边收缩窗口，即增大 <code>left</code>，直到代价重新回到预算内。</li>
-<li>在这个过程中，我们记录下窗口的最大长度 <code>right - left + 1</code>，它就是最终的答案。</li>
-</ul>
 <h3 id="算法详解"><a href="#算法详解" class="headerlink" title="算法详解"></a>算法详解</h3><ol>
-<li><p><strong>排序</strong><br>首先对 <code>nums</code> 数组进行升序排序。这是后续所有步骤的基础。</p>
-</li>
-<li><p><strong>滑动窗口</strong></p>
+<li><p><strong>初始化</strong>:</p>
 <ul>
-<li>初始化窗口的左右边界 <code>left = 0</code>，<code>right = 0</code>。</li>
-<li>用一个变量 <code>s</code> 记录当前窗口 <code>[left, right]</code> 内的元素统一到其中位数的总代价。</li>
-<li>遍历 <code>right</code> 从 <code>0</code> 到 <code>n-1</code>，不断扩大窗口：<br>a.  当 <code>right</code> 指向新元素 <code>x</code> (<code>nums[right]</code>) 时，我们计算将这个新元素加入窗口后，新的总代价。<br>b.  代价 <code>s</code> 的更新是本题的巧妙之处。可以证明，当窗口从 <code>[left, right-1]</code> 扩展到 <code>[left, right]</code> 时，总代价的变化可以通过一个简单的公式计算。同样，当窗口从 <code>[left, right]</code> 收缩到 <code>[left+1, right]</code> 时，代价的变化也有规律。<br>c.  判断当前的总代价 <code>s</code> 是否大于 <code>k</code>。<br>d.  如果 <code>s &gt; k</code>，说明当前窗口过长，成本超支。我们需要收缩窗口，将 <code>left</code> 指针右移，并从 <code>s</code> 中减去 <code>nums[left]</code> 贡献的成本。持续这个过程，直到 <code>s &lt;= k</code>。<br>e.  在每一次窗口调整后，当前窗口 <code>[left, right]</code> 都是一个有效的方案，其长度 <code>right - left + 1</code> 是一个可能的频率分数。我们用它来更新全局最大值 <code>ans</code>。</li>
+<li><code>ans = 0</code>: 存储最长优雅子数组的长度。</li>
+<li><code>l = 0</code>: 滑动窗口的左边界。</li>
+<li><code>or_sum = 0</code> (在代码中用 <code>_</code> 表示): 存储当前窗口内所有元素的按位或结果。</li>
 </ul>
 </li>
-<li><p><strong>返回结果</strong></p>
+<li><p><strong>遍历与窗口移动</strong>:</p>
+<ul>
+<li>使用 <code>for</code> 循环，让右边界 <code>r</code> 从 0 遍历到数组末尾，<code>x</code> 为当前元素 <code>nums[r]</code>。</li>
+<li><strong>检查冲突与收缩窗口</strong>：用一个 <code>while</code> 循环检查 <code>(or_sum &amp; x) != 0</code>。只要存在冲突：<ul>
+<li>从 <code>or_sum</code> 中移除最左侧元素 <code>nums[l]</code> 的影响：<code>or_sum ^= nums[l]</code>。</li>
+<li>将左边界右移：<code>l += 1</code>。</li>
+</ul>
+</li>
+<li><strong>扩大窗口</strong>：<code>while</code> 循环结束后，说明冲突已解决，新元素 <code>x</code> 可以加入。更新 <code>or_sum</code>：<code>or_sum |= x</code>。</li>
+<li><strong>更新答案</strong>：此时的窗口 <code>[l, r]</code> 是优雅的，其长度为 <code>r - l + 1</code>。更新 <code>ans = max(ans, r - l + 1)</code>。</li>
+</ul>
+</li>
+<li><p><strong>返回结果</strong>:</p>
 <ul>
 <li>遍历结束后，<code>ans</code> 即为所求。</li>
 </ul>
 </li>
 </ol>
-<p>这个算法的关键在于如何高效地更新代价 <code>s</code>。虽然可以通过前缀和在 O(1) 时间内计算任意窗口的代价，但给出的代码采用了更精妙的增量更新方式，省去了前缀和数组的空间。</p>
-<p>让我们来理解一下代码中的代价更新逻辑：</p>
-<ul>
-<li><code>s += x - nums[(left + right) // 2]</code>：当窗口向右扩大，加入 <code>x = nums[right]</code> 时，新的中位数是 <code>m_new = nums[(left + right) // 2]</code>。<code>s</code> 的增量被计算为 <code>x - m_new</code>。</li>
-<li><code>s += nums[left] - nums[(left + right + 1) // 2]</code>：当窗口从左边收缩，移除 <code>nums[left]</code> 时，新窗口 <code>[left+1, right]</code> 的中位数是 <code>m&#39;_new = nums[(left + right + 1) // 2]</code>。<code>s</code> 的减量被计算为 <code>m&#39;_new - nums[left]</code>。</li>
-</ul>
-<p>这些看似简单的更新，其背后是利用了中位数变化的规律，巧妙地对总代价进行了调整，从而避免了每次都重新计算整个窗口的成本。</p>
-<h3 id="Python-代码实现"><a href="#Python-代码实现" class="headerlink" title="Python 代码实现"></a>Python 代码实现</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> typing <span class="keyword">import</span> <span class="type">List</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">maxFrequencyScore</span>(<span class="params">self, nums: <span class="type">List</span>[<span class="built_in">int</span>], k: <span class="built_in">int</span></span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        <span class="comment"># 步骤 1: 排序</span></span><br><span class="line">        nums.sort()</span><br><span class="line">        ans = <span class="number">0</span></span><br><span class="line">        left = <span class="number">0</span></span><br><span class="line">        <span class="comment"># s 是窗口内元素与窗口中位数的绝对差之和，即总代价</span></span><br><span class="line">        s = <span class="number">0</span>  </span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 步骤 2: 滑动窗口</span></span><br><span class="line">        <span class="keyword">for</span> right, x <span class="keyword">in</span> <span class="built_in">enumerate</span>(nums):</span><br><span class="line">            <span class="comment"># 扩大窗口：加入 nums[right]</span></span><br><span class="line">            <span class="comment"># 计算并累加新窗口的代价</span></span><br><span class="line">            <span class="comment"># m_new 是 [left...right] 的中位数</span></span><br><span class="line">            m_new = nums[(left + right) // <span class="number">2</span>]</span><br><span class="line">            s += x - m_new</span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 如果代价超支，收缩窗口</span></span><br><span class="line">            <span class="keyword">while</span> s &gt; k:</span><br><span class="line">                <span class="comment"># m_after_shrink 是 [left+1...right] 的中位数</span></span><br><span class="line">                m_after_shrink = nums[(left + right + <span class="number">1</span>) // <span class="number">2</span>]</span><br><span class="line">                <span class="comment"># 从总代价 s 中减去移除 nums[left] 带来的变化</span></span><br><span class="line">                s -= (m_after_shrink - nums[left])</span><br><span class="line">                left += <span class="number">1</span></span><br><span class="line">                </span><br><span class="line">            <span class="comment"># 更新最大频率分数（即最大有效窗口长度）</span></span><br><span class="line">            ans = <span class="built_in">max</span>(ans, right - left + <span class="number">1</span>)</span><br><span class="line">            </span><br><span class="line">        <span class="keyword">return</span> ans</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h3 id="Python-代码实现"><a href="#Python-代码实现" class="headerlink" title="Python 代码实现"></a>Python 代码实现</h3><p>下面是题目给出的 Python 代码，逻辑清晰地实现了上述思路。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> typing <span class="keyword">import</span> <span class="type">List</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">longestNiceSubarray</span>(<span class="params">self, nums: <span class="type">List</span>[<span class="built_in">int</span>]</span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        ans = l = _ = <span class="number">0</span> <span class="comment"># _ 用来存储窗口内元素的按位或(OR)结果</span></span><br><span class="line">        <span class="keyword">for</span> r,x <span class="keyword">in</span> <span class="built_in">enumerate</span>(nums):</span><br><span class="line">            <span class="comment"># 当新元素 x 与窗口内已有元素的 OR 结果有重叠的 bit 位时</span></span><br><span class="line">            <span class="keyword">while</span> _ &amp; x:</span><br><span class="line">                <span class="comment"># 从窗口左侧移出元素 nums[l]</span></span><br><span class="line">                <span class="comment"># 因为在优雅子数组中，OR 和 XOR 效果相同，所以用 XOR 移除</span></span><br><span class="line">                _ ^= nums[l]</span><br><span class="line">                l += <span class="number">1</span></span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 将新元素 x 的 bit 位加入到集合中</span></span><br><span class="line">            _ |= x</span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 更新最长长度</span></span><br><span class="line">            ans = <span class="built_in">max</span>(ans,r-l+<span class="number">1</span>)</span><br><span class="line">            </span><br><span class="line">        <span class="keyword">return</span> ans</span><br></pre></td></tr></table></figure>
 
 <h3 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h3><ul>
-<li><strong>时间复杂度</strong>: O(N log N)。其中 N 是 <code>nums</code> 的长度。排序的复杂度是 O(N log N)，后续的滑动窗口遍历中，<code>left</code> 和 <code>right</code> 指针都只单向移动 N 次，所以是 O(N)。总的瓶颈在排序。</li>
-<li><strong>空间复杂度</strong>: O(1) 或 O(log N) 或 O(N)。这取决于排序算法使用的额外空间。如果我们忽略排序所用的空间，则算法本身是 O(1)。</li>
+<li><strong>时间复杂度</strong>: O(N)。其中 N 是 <code>nums</code> 的长度。虽然代码中有 <code>while</code> 循环嵌套在 <code>for</code> 循环中，但左右两个指针 <code>l</code> 和 <code>r</code> 都始终只向右移动，不回退。每个元素最多被右指针访问一次，被左指针访问一次。因此，总的时间复杂度是线性的。</li>
+<li><strong>空间复杂度</strong>: O(1)。我们只使用了几个额外的变量 (<code>ans</code>, <code>l</code>, <code>_</code>)，占用的空间是常数级别的。</li>
 </ul>
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>本题是一个将实际问题转化为标准算法模型的绝佳例子。通过两个关键的洞察——“选择排序后连续的子数组代价更小”和“目标值应为子数组的中位数”，我们将一个看似复杂的组合问题，成功转换为了一个可以在排序数组上用滑动窗口高效求解的问题。代码中对窗口代价 <code>s</code> 的精妙增量更新，是该解法在实现层面的点睛之笔，值得细细品味。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>本题巧妙地将一个看似复杂的子数组性质判断问题，通过<strong>位运算</strong>的洞察，转化成了一个可以在 O(1) 时间内完成的状态检查。这使得标准的<strong>滑动窗口</strong>算法得以高效应用。它是一个很好的例子，展示了如何利用问题的数学或逻辑特性来优化算法，将一个暴力解法可能会达到 O(N³) 的问题，降维到 O(N) 解决。</p>
 
     </div>
 
@@ -372,12 +378,10 @@
 
       <footer class="post-footer">
           <div class="post-tags">
+              <a href="/tags/%E4%BD%8D%E8%BF%90%E7%AE%97/" rel="tag"># 位运算</a>
               <a href="/tags/%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3/" rel="tag"># 滑动窗口</a>
               <a href="/tags/%E6%95%B0%E7%BB%84/" rel="tag"># 数组</a>
-              <a href="/tags/%E6%8E%92%E5%BA%8F/" rel="tag"># 排序</a>
-              <a href="/tags/%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE/" rel="tag"># 二分查找</a>
-              <a href="/tags/%E5%89%8D%E7%BC%80%E5%92%8C/" rel="tag"># 前缀和</a>
-              <a href="/tags/%E7%AC%AC376%E5%9C%BA%E5%91%A8%E8%B5%9B/" rel="tag"># 第376场周赛</a>
+              <a href="/tags/%E7%AC%AC309%E5%9C%BA%E5%91%A8%E8%B5%9B/" rel="tag"># 第309场周赛</a>
           </div>
 
         
@@ -386,13 +390,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/posts/leetcode-3413/" rel="prev" title="LeetCode 3413 | 滑动窗口巧解“收集连续K个袋子”">
-      <i class="fa fa-chevron-left"></i> LeetCode 3413 | 滑动窗口巧解“收集连续K个袋子”
+    <a href="/posts/leetcode-3306/" rel="prev" title="LeetCode 3306 | 滑动窗口精解“元音辅音字符串计数 II”">
+      <i class="fa fa-chevron-left"></i> LeetCode 3306 | 滑动窗口精解“元音辅音字符串计数 II”
     </a></div>
-      <div class="post-nav-item">
-    <a href="/posts/leetcode-1040/" rel="next" title="LeetCode 1040 | SW脑筋急转弯求解“移动石子直到连续 II”">
-      LeetCode 1040 | SW脑筋急转弯求解“移动石子直到连续 II” <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -452,7 +453,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E8%A7%A3%E8%AF%BB"><span class="nav-number">1.</span> <span class="nav-text">问题解读</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E6%80%9D%E8%B7%AF%EF%BC%9A%E6%8E%92%E5%BA%8F-%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3"><span class="nav-number">2.</span> <span class="nav-text">核心思路：排序 + 滑动窗口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E8%AF%A6%E8%A7%A3"><span class="nav-number">3.</span> <span class="nav-text">算法详解</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Python-%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0"><span class="nav-number">4.</span> <span class="nav-text">Python 代码实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%8D%E6%9D%82%E5%BA%A6%E5%88%86%E6%9E%90"><span class="nav-number">5.</span> <span class="nav-text">复杂度分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">6.</span> <span class="nav-text">总结</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E8%A7%A3%E8%AF%BB"><span class="nav-number">1.</span> <span class="nav-text">问题解读</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E6%80%9D%E8%B7%AF%EF%BC%9A%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%E4%B8%8E%E4%BD%8D%E8%BF%90%E7%AE%97"><span class="nav-number">2.</span> <span class="nav-text">核心思路：滑动窗口与位运算</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E8%AF%A6%E8%A7%A3"><span class="nav-number">3.</span> <span class="nav-text">算法详解</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Python-%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0"><span class="nav-number">4.</span> <span class="nav-text">Python 代码实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%8D%E6%9D%82%E5%BA%A6%E5%88%86%E6%9E%90"><span class="nav-number">5.</span> <span class="nav-text">复杂度分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">6.</span> <span class="nav-text">总结</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 

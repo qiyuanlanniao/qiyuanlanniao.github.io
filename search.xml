@@ -1227,6 +1227,98 @@
       </tags>
   </entry>
   <entry>
+    <title>LeetCode 2401 | 滑动窗口求解“最长优雅子数组”</title>
+    <url>//posts/leetcode-2401/</url>
+    <content><![CDATA[<blockquote class="blockquote-center">
+            <i class="fa fa-quote-left"></i>
+            <p>LeetCode 第 2401 题：<a href="https://leetcode.cn/problems/longest-nice-subarray/description/">最长优雅子数组</a>。<br>该题要求寻找一个最长的子数组，其中任意两个元素的按位与（AND）都为 0。这是一个非常适合使用滑动窗口解决的问题，关键在于如何高效地维护窗口的“优雅”属性。</p>
+
+            <i class="fa fa-quote-right"></i>
+          </blockquote>
+<span id="more"></span>
+<h3 id="问题解读"><a href="#问题解读" class="headerlink" title="问题解读"></a>问题解读</h3><p>题目给了我们一个正整数组成的数组 <code>nums</code>，需要我们找到一个<strong>最长</strong>的<strong>连续子数组</strong>，这个子数组被称为“优雅的”。</p>
+<p>一个子数组是“优雅的”，当且仅当其中任意两个不同位置的数字，它们的按位与（AND）运算结果都等于 0。这意味着，在一个优雅子数组中，所有数字的二进制表示里，任意一个为 ‘1’ 的 bit 位，在其他所有数字的对应 bit 位上都必须是 ‘0’。</p>
+<p>举个例子，对于 <code>nums = [1,3,8,48,10]</code>：</p>
+<ul>
+<li>我们来看子数组 <code>[3, 8, 48]</code>：<ul>
+<li>3 的二进制是 <code>00011</code></li>
+<li>8 的二进制是 <code>01000</code></li>
+<li>48 的二进制是 <code>110000</code></li>
+</ul>
+</li>
+<li>检查任意一对：<ul>
+<li><code>3 &amp; 8</code> &#x3D; <code>00011 &amp; 01000</code> &#x3D; <code>0</code></li>
+<li><code>3 &amp; 48</code> &#x3D; <code>00011 &amp; 110000</code> &#x3D; <code>0</code></li>
+<li><code>8 &amp; 48</code> &#x3D; <code>01000 &amp; 110000</code> &#x3D; <code>0</code></li>
+</ul>
+</li>
+<li>所有配对的按位与结果都为 0，所以 <code>[3, 8, 48]</code> 是一个优雅子数组，长度为 3。题目要求我们返回这个最长的长度。</li>
+</ul>
+<p>如果用暴力法枚举所有子数组，再对子数组里的每一对数字进行检查，时间复杂度会非常高，无法通过。我们需要一种更高效的方法。</p>
+<h3 id="核心思路：滑动窗口与位运算"><a href="#核心思路：滑动窗口与位运算" class="headerlink" title="核心思路：滑动窗口与位运算"></a>核心思路：滑动窗口与位运算</h3><p>这道题的“连续子数组”和“最长”两个关键词强烈地指向了<strong>滑动窗口</strong>算法。我们可以维护一个窗口 <code>[l, r]</code>，确保这个窗口内的子数组始终是“优雅的”，然后不断尝试扩大这个窗口，并记录其最大长度。</p>
+<p>问题的关键在于：当窗口右边界 <code>r</code> 纳入一个新元素 <code>nums[r]</code> 时，我们如何快速判断窗口 <code>[l, r]</code> 是否仍然优雅？</p>
+<p>如果逐一检查 <code>nums[r]</code> 与窗口内 <code>nums[l]</code> 到 <code>nums[r-1]</code> 的每一个数，效率依然很低。这里有一个重要的转换：<strong>一个子数组是优雅的，等价于这个子数组中所有元素的按位或（OR）结果等于它们的按位异或（XOR）结果，也等价于所有元素的按位或（OR）结果等于它们的和</strong>。</p>
+<p>一个更直接的判断方法是：如果我们将窗口内已有元素 <code>nums[l...r-1]</code> 的所有 bit 位 ‘1’ 合并成一个集合（通过按位或运算），那么新元素 <code>nums[r]</code> 要能被加入窗口，当且仅当 <code>nums[r]</code> 的所有 bit 位 ‘1’ 在这个集合中都没有出现过。</p>
+<p>这可以用一个简单的位运算来检查：<br><code>(窗口内所有元素的 OR 值) &amp; (新元素 nums[r]) == 0</code></p>
+<p>基于这个思想，我们的滑动窗口策略就变得清晰了：</p>
+<ol>
+<li>维护一个变量 <code>or_sum</code>，它存储了当前窗口 <code>[l, r]</code> 内所有数字的按位或（OR）结果。</li>
+<li>当右指针 <code>r</code> 向右移动，我们考虑加入新元素 <code>x = nums[r]</code>。</li>
+<li>我们检查 <code>or_sum &amp; x</code> 是否为 0。<ul>
+<li>如果不为 0，说明 <code>x</code> 的某个 bit 位在 <code>or_sum</code> 中已经存在，产生了冲突。此时，我们需要从左边收缩窗口，即<code>l++</code>。在收缩时，需要将 <code>nums[l]</code> 的影响从 <code>or_sum</code> 中移除。因为优雅子数组中所有数的 bit 位都不同，OR 和 XOR 的效果是一样的，所以我们可以通过 <code>or_sum ^= nums[l]</code> 来移除 <code>nums[l]</code> 的 bit 位。我们重复此过程，直到 <code>or_sum &amp; x</code> 等于 0 为止。</li>
+<li>如果为 0（或者经过收缩后变为 0），说明 <code>x</code> 可以安全地加入窗口。我们更新 <code>or_sum</code>，<code>or_sum |= x</code>，将 <code>x</code> 的 bit 位合并进来。</li>
+</ul>
+</li>
+<li>每一次成功扩大窗口后，我们用当前的窗口长度 <code>r - l + 1</code> 来更新最终答案。</li>
+</ol>
+<h3 id="算法详解"><a href="#算法详解" class="headerlink" title="算法详解"></a>算法详解</h3><ol>
+<li><p><strong>初始化</strong>:</p>
+<ul>
+<li><code>ans = 0</code>: 存储最长优雅子数组的长度。</li>
+<li><code>l = 0</code>: 滑动窗口的左边界。</li>
+<li><code>or_sum = 0</code> (在代码中用 <code>_</code> 表示): 存储当前窗口内所有元素的按位或结果。</li>
+</ul>
+</li>
+<li><p><strong>遍历与窗口移动</strong>:</p>
+<ul>
+<li>使用 <code>for</code> 循环，让右边界 <code>r</code> 从 0 遍历到数组末尾，<code>x</code> 为当前元素 <code>nums[r]</code>。</li>
+<li><strong>检查冲突与收缩窗口</strong>：用一个 <code>while</code> 循环检查 <code>(or_sum &amp; x) != 0</code>。只要存在冲突：<ul>
+<li>从 <code>or_sum</code> 中移除最左侧元素 <code>nums[l]</code> 的影响：<code>or_sum ^= nums[l]</code>。</li>
+<li>将左边界右移：<code>l += 1</code>。</li>
+</ul>
+</li>
+<li><strong>扩大窗口</strong>：<code>while</code> 循环结束后，说明冲突已解决，新元素 <code>x</code> 可以加入。更新 <code>or_sum</code>：<code>or_sum |= x</code>。</li>
+<li><strong>更新答案</strong>：此时的窗口 <code>[l, r]</code> 是优雅的，其长度为 <code>r - l + 1</code>。更新 <code>ans = max(ans, r - l + 1)</code>。</li>
+</ul>
+</li>
+<li><p><strong>返回结果</strong>:</p>
+<ul>
+<li>遍历结束后，<code>ans</code> 即为所求。</li>
+</ul>
+</li>
+</ol>
+<h3 id="Python-代码实现"><a href="#Python-代码实现" class="headerlink" title="Python 代码实现"></a>Python 代码实现</h3><p>下面是题目给出的 Python 代码，逻辑清晰地实现了上述思路。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> typing <span class="keyword">import</span> <span class="type">List</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">longestNiceSubarray</span>(<span class="params">self, nums: <span class="type">List</span>[<span class="built_in">int</span>]</span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        ans = l = _ = <span class="number">0</span> <span class="comment"># _ 用来存储窗口内元素的按位或(OR)结果</span></span><br><span class="line">        <span class="keyword">for</span> r,x <span class="keyword">in</span> <span class="built_in">enumerate</span>(nums):</span><br><span class="line">            <span class="comment"># 当新元素 x 与窗口内已有元素的 OR 结果有重叠的 bit 位时</span></span><br><span class="line">            <span class="keyword">while</span> _ &amp; x:</span><br><span class="line">                <span class="comment"># 从窗口左侧移出元素 nums[l]</span></span><br><span class="line">                <span class="comment"># 因为在优雅子数组中，OR 和 XOR 效果相同，所以用 XOR 移除</span></span><br><span class="line">                _ ^= nums[l]</span><br><span class="line">                l += <span class="number">1</span></span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 将新元素 x 的 bit 位加入到集合中</span></span><br><span class="line">            _ |= x</span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 更新最长长度</span></span><br><span class="line">            ans = <span class="built_in">max</span>(ans,r-l+<span class="number">1</span>)</span><br><span class="line">            </span><br><span class="line">        <span class="keyword">return</span> ans</span><br></pre></td></tr></table></figure>
+
+<h3 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h3><ul>
+<li><strong>时间复杂度</strong>: O(N)。其中 N 是 <code>nums</code> 的长度。虽然代码中有 <code>while</code> 循环嵌套在 <code>for</code> 循环中，但左右两个指针 <code>l</code> 和 <code>r</code> 都始终只向右移动，不回退。每个元素最多被右指针访问一次，被左指针访问一次。因此，总的时间复杂度是线性的。</li>
+<li><strong>空间复杂度</strong>: O(1)。我们只使用了几个额外的变量 (<code>ans</code>, <code>l</code>, <code>_</code>)，占用的空间是常数级别的。</li>
+</ul>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>本题巧妙地将一个看似复杂的子数组性质判断问题，通过<strong>位运算</strong>的洞察，转化成了一个可以在 O(1) 时间内完成的状态检查。这使得标准的<strong>滑动窗口</strong>算法得以高效应用。它是一个很好的例子，展示了如何利用问题的数学或逻辑特性来优化算法，将一个暴力解法可能会达到 O(N³) 的问题，降维到 O(N) 解决。</p>
+]]></content>
+      <categories>
+        <category>算法题解</category>
+        <category>滑动窗口与双指针</category>
+        <category>不定长滑动窗口</category>
+      </categories>
+      <tags>
+        <tag>位运算</tag>
+        <tag>滑动窗口</tag>
+        <tag>数组</tag>
+        <tag>第309场周赛</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>LeetCode 2516 | 滑动窗口与逆向思维：求解“每种字符至少取 K 个”</title>
     <url>//posts/leetcode-2516/</url>
     <content><![CDATA[<blockquote class="blockquote-center">
