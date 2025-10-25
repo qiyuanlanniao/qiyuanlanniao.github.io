@@ -759,113 +759,6 @@
       </tags>
   </entry>
   <entry>
-    <title>LeetCode 1283 | 二分查找解决“使结果不超过阈值的最小除数”</title>
-    <url>//posts/leetcode-1283/</url>
-    <content><![CDATA[<blockquote class="blockquote-center">
-            <i class="fa fa-quote-left"></i>
-            <p>LeetCode 第 1283 题：<a href="https://leetcode.cn/problems/find-the-smallest-divisor-given-a-threshold/description/">使结果不超过阈值的最小除数</a>。<br>本题的核心在于识别出“除数”与“结果和”之间的单调性，从而将问题转化为一个经典的“在答案空间上进行二分查找”的场景。</p>
-
-            <i class="fa fa-quote-right"></i>
-          </blockquote>
-<span id="more"></span>
-<h3 id="问题解读"><a href="#问题解读" class="headerlink" title="问题解读"></a>问题解读</h3><p>题目要求我们寻找一个<strong>最小的正整数除数</strong>，用这个除数去除数组 <code>nums</code> 中的每个元素，并将所有结果<strong>向上取整</strong>后求和。最终，这个和必须小于或等于给定的 <code>threshold</code>。</p>
-<p>关键点在于“向上取整”。例如，<code>7 / 3 = 2.33...</code>，向上取整后是 <code>3</code>；<code>10 / 2 = 5</code>，向上取整后还是 <code>5</code>。</p>
-<p>我们来看一个例子：<code>nums = [1,2,5,9], threshold = 6</code>。</p>
-<ul>
-<li>如果选择除数为 1，和为 <code>ceil(1/1) + ceil(2/1) + ceil(5/1) + ceil(9/1) = 1 + 2 + 5 + 9 = 17</code>。<code>17 &gt; 6</code>，不满足条件。</li>
-<li>如果选择除数为 4，和为 <code>ceil(1/4) + ceil(2/4) + ceil(5/4) + ceil(9/4) = 1 + 1 + 2 + 3 = 7</code>。<code>7 &gt; 6</code>，不满足条件。</li>
-<li>如果选择除数为 5，和为 <code>ceil(1/5) + ceil(2/5) + ceil(5/5) + ceil(9/5) = 1 + 1 + 1 + 2 = 5</code>。<code>5 &lt;= 6</code>，满足条件。</li>
-</ul>
-<p>我们找到了一个满足条件的除数 <code>5</code>。但题目要求的是<strong>最小</strong>的那个。我们可以继续验证，发现除数 <code>4</code> 不满足条件，因此 <code>5</code> 就是我们要找的最小除数。</p>
-<h3 id="核心思路：在答案上进行二分查找"><a href="#核心思路：在答案上进行二分查找" class="headerlink" title="核心思路：在答案上进行二分查找"></a>核心思路：在答案上进行二分查找</h3><p>一个朴素的想法是，从除数 <code>d = 1</code> 开始，逐个向上尝试，计算每次的和，直到找到第一个满足 <code>sum &lt;= threshold</code> 的除数。然而，<code>nums</code> 中的元素最大可达 <code>10^6</code>，这意味着除数的取值范围也可能很大，线性遍历非常耗时，可能会超时。</p>
-<p>这时，我们需要观察问题是否存在某种<strong>单调性</strong>。</p>
-<ul>
-<li>当<strong>除数增大</strong>时，数组中每个元素 <code>num / divisor</code> 的结果会减小或不变。</li>
-<li>因此，所有结果向上取整后的<strong>总和也会减小或不变</strong>。</li>
-</ul>
-<p>这种“除数”与“总和”之间的单调递减关系，是使用<strong>二分查找</strong>的绝佳信号。我们可以对<strong>答案（也就是除数）本身</strong>进行二分查找。</p>
-<ol>
-<li><p><strong>确定搜索范围</strong>：</p>
-<ul>
-<li>除数最小也得是 <code>1</code>，这是我们的左边界。</li>
-<li>除数最大是多少呢？如果除数等于 <code>max(nums)</code>，那么每个数相除的结果向上取整后不是 <code>1</code> 就是 <code>0</code>（正整数没有0），所以和最大是 <code>len(nums)</code>。如果除数比 <code>max(nums)</code> 还大，和依然是 <code>len(nums)</code>。因此，将搜索范围的右边界设为 <code>max(nums)</code> 是一个合理的上界。</li>
-</ul>
-</li>
-<li><p><strong>二分过程</strong>：</p>
-<ul>
-<li>取搜索范围 <code>[left, right]</code> 的中间值 <code>mid</code> 作为候选的除数。</li>
-<li>计算当除数为 <code>mid</code> 时的总和。</li>
-<li>如果 <code>sum &lt;= threshold</code>，说明 <code>mid</code> 是一个<strong>可能</strong>的解，但我们想找更小的，所以我们尝试在 <code>[left, mid]</code> 这个更小的区间里继续寻找。</li>
-<li>如果 <code>sum &gt; threshold</code>，说明 <code>mid</code> 这个除数太小了，导致和超标了。我们需要一个更大的除数，所以在 <code>[mid + 1, right]</code> 区间里继续寻找。</li>
-</ul>
-</li>
-</ol>
-<p>通过不断缩小搜索范围，我们最终可以锁定满足条件的最小除数。</p>
-<h3 id="算法详解"><a href="#算法详解" class="headerlink" title="算法详解"></a>算法详解</h3><ol>
-<li><p><strong>确定二分边界</strong></p>
-<ul>
-<li>左边界 <code>l</code>：最小可能的除数是 <code>1</code>。</li>
-<li>右边界 <code>r</code>：最大可能的除数是 <code>max(nums)</code>。</li>
-<li><em>注意</em>：代码实现中 <code>l</code> 从 <code>0</code> 开始，但因为 <code>mid</code> 的计算和 <code>l</code> 的更新方式，<code>mid</code> 永远不会是 <code>0</code>，不影响结果。</li>
-</ul>
-</li>
-<li><p><strong>编写 <code>check</code> 函数（求和逻辑）</strong></p>
-<ul>
-<li>这是二分查找的核心判断条件。给定一个除数 <code>d</code>，我们需要计算 <code>sum(ceil(x/d) for x in nums)</code>。</li>
-<li>在整数运算中，<code>ceil(x/d)</code> 有一个巧妙的等价转换：<code>(x + d - 1) // d</code>。</li>
-<li>代码中使用了另一个更精妙的转换：<code>ceil(x/d) = (x - 1) // d + 1</code>。</li>
-<li>因此，<code>sum(ceil(x/d))</code> 等于 <code>sum((x - 1) // d + 1)</code>，进一步等于 <code>sum((x - 1) // d) + len(nums)</code>。</li>
-<li>所以，判断条件 <code>sum(ceil(x/d)) &lt;= threshold</code> 就等价于 <code>sum((x - 1) // d) + len(nums) &lt;= threshold</code>，即 <code>sum((x - 1) // d) &lt;= threshold - len(nums)</code>。这正是代码中所使用的判断逻辑，它通过预先减掉 <code>len(nums)</code> 使得循环内的计算更简洁。</li>
-</ul>
-</li>
-<li><p><strong>循环二分</strong></p>
-<ul>
-<li>采用 <code>while l + 1 &lt; r</code> 的二分模板。这个模板的循环终止条件是 <code>l</code> 和 <code>r</code> 相邻。</li>
-<li>在循环中，计算 <code>mid = (l + r) // 2</code>。</li>
-<li>如果 <code>mid</code> 满足条件（和小于等于阈值），说明 <code>mid</code> 是一个潜在的答案，或者还有更小的答案。我们将上界收缩到 <code>mid</code>，即 <code>r = mid</code>，去左半边寻找更优解。</li>
-<li>如果 <code>mid</code> 不满足条件，说明 <code>mid</code> 太小了，必须选择一个更大的除数。我们将下界提升到 <code>mid</code>，即 <code>l = mid</code>，去右半边寻找解。</li>
-<li>循环结束后，<code>r</code> 就指向了满足条件的最小除数。</li>
-</ul>
-</li>
-</ol>
-<h3 id="Python-代码实现"><a href="#Python-代码实现" class="headerlink" title="Python 代码实现"></a>Python 代码实现</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> typing <span class="keyword">import</span> <span class="type">List</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">smallestDivisor</span>(<span class="params">self, nums: <span class="type">List</span>[<span class="built_in">int</span>], threshold: <span class="built_in">int</span></span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        <span class="comment"># 步骤 1: 确定二分查找的边界</span></span><br><span class="line">        <span class="comment"># 左边界 l 可以从 0 或 1 开始，因为除数最小为 1。</span></span><br><span class="line">        <span class="comment"># 右边界 r 是数组中的最大值，更大的除数不会产生更小的和。</span></span><br><span class="line">        l, r = <span class="number">0</span>, <span class="built_in">max</span>(nums)</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 步骤 3: 循环二分</span></span><br><span class="line">        <span class="comment"># 采用 l + 1 &lt; r 的模板，循环直到 l 和 r 相邻</span></span><br><span class="line">        <span class="keyword">while</span> l + <span class="number">1</span> &lt; r:</span><br><span class="line">            mid = (l + r) // <span class="number">2</span></span><br><span class="line">            <span class="comment"># 防止除以 0 的情况</span></span><br><span class="line">            <span class="keyword">if</span> mid == <span class="number">0</span>:</span><br><span class="line">                l = mid</span><br><span class="line">                <span class="keyword">continue</span></span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 步骤 2: check 函数逻辑</span></span><br><span class="line">            <span class="comment"># 计算以 mid 为除数时的总和</span></span><br><span class="line">            <span class="comment"># ceil(x/mid) 等价于 (x-1)//mid + 1</span></span><br><span class="line">            <span class="comment"># sum((x-1)//mid + 1) &lt;= threshold 变形为:</span></span><br><span class="line">            <span class="comment"># sum((x-1)//mid) &lt;= threshold - len(nums)</span></span><br><span class="line">            current_sum = <span class="built_in">sum</span>((x - <span class="number">1</span>) // mid <span class="keyword">for</span> x <span class="keyword">in</span> nums)</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">if</span> current_sum &lt;= threshold - <span class="built_in">len</span>(nums):</span><br><span class="line">                <span class="comment"># 如果和满足条件，说明 mid 是一个可能的解</span></span><br><span class="line">                <span class="comment"># 我们尝试寻找更小的解，所以收缩上界</span></span><br><span class="line">                r = mid</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="comment"># 如果和不满足条件，说明 mid 太小了</span></span><br><span class="line">                <span class="comment"># 我们需要更大的除数，所以收缩下界</span></span><br><span class="line">                l = mid</span><br><span class="line">                </span><br><span class="line">        <span class="comment"># 循环结束时, r 是满足条件的最小除数</span></span><br><span class="line">        <span class="keyword">return</span> r</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h3 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h3><ul>
-<li><p><strong>时间复杂度</strong>: O(N * log K)</p>
-<ul>
-<li>其中 <code>N</code> 是数组 <code>nums</code> 的长度，<code>K</code> 是 <code>nums</code> 数组中的最大值。</li>
-<li>二分查找的搜索空间大小为 <code>K</code>，因此二分过程需要进行 O(log K) 次迭代。</li>
-<li>在每一次迭代中，我们都需要遍历整个 <code>nums</code> 数组来计算总和，这个操作的复杂度是 O(N)。</li>
-<li>因此，总的时间复杂度是 O(N * log K)。</li>
-</ul>
-</li>
-<li><p><strong>空间复杂度</strong>: O(1)</p>
-<ul>
-<li>算法在执行过程中只使用了有限的几个变量（如 <code>l</code>, <code>r</code>, <code>mid</code>, <code>current_sum</code>），没有使用额外的、与输入规模相关的存储空间。</li>
-</ul>
-</li>
-</ul>
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>本题是二分查找思想的一个典型应用，但它并非直接在输入数组上进行查找，而是在**可能解的范围（答案空间）**上进行查找。解决这类问题的关键在于：</p>
-<ol>
-<li>分析问题，发现输入与输出之间的单调关系。</li>
-<li>确定这个单调关系的定义域，即二分查找的上下边界。</li>
-<li>将原问题转化为一个“判定问题”（Check 函数）：给定一个候选解 <code>mid</code>，能否在 O(N) 时间内判断它是否满足条件？</li>
-</ol>
-<p>一旦这三步完成，就可以套用二分查找模板来高效地解决问题，将时间复杂度从可能的 O(N<em>K) 优化到 O(N</em>log K)。</p>
-]]></content>
-      <categories>
-        <category>算法题解</category>
-        <category>二分算法</category>
-        <category>二分答案</category>
-        <category>求最小</category>
-      </categories>
-      <tags>
-        <tag>数组</tag>
-        <tag>二分查找</tag>
-        <tag>第166场周赛</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>LeetCode 1287 | 有序数组中出现次数超过四分之一的元素</title>
     <url>//posts/leetcode-1287/</url>
     <content><![CDATA[<blockquote class="blockquote-center">
@@ -1039,6 +932,113 @@
         <tag>排序</tag>
         <tag>几何</tag>
         <tag>第209场周赛</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>LeetCode 1283 | 二分查找解决“使结果不超过阈值的最小除数”</title>
+    <url>//posts/leetcode-1283/</url>
+    <content><![CDATA[<blockquote class="blockquote-center">
+            <i class="fa fa-quote-left"></i>
+            <p>LeetCode 第 1283 题：<a href="https://leetcode.cn/problems/find-the-smallest-divisor-given-a-threshold/description/">使结果不超过阈值的最小除数</a>。<br>本题的核心在于识别出“除数”与“结果和”之间的单调性，从而将问题转化为一个经典的“在答案空间上进行二分查找”的场景。</p>
+
+            <i class="fa fa-quote-right"></i>
+          </blockquote>
+<span id="more"></span>
+<h3 id="问题解读"><a href="#问题解读" class="headerlink" title="问题解读"></a>问题解读</h3><p>题目要求我们寻找一个<strong>最小的正整数除数</strong>，用这个除数去除数组 <code>nums</code> 中的每个元素，并将所有结果<strong>向上取整</strong>后求和。最终，这个和必须小于或等于给定的 <code>threshold</code>。</p>
+<p>关键点在于“向上取整”。例如，<code>7 / 3 = 2.33...</code>，向上取整后是 <code>3</code>；<code>10 / 2 = 5</code>，向上取整后还是 <code>5</code>。</p>
+<p>我们来看一个例子：<code>nums = [1,2,5,9], threshold = 6</code>。</p>
+<ul>
+<li>如果选择除数为 1，和为 <code>ceil(1/1) + ceil(2/1) + ceil(5/1) + ceil(9/1) = 1 + 2 + 5 + 9 = 17</code>。<code>17 &gt; 6</code>，不满足条件。</li>
+<li>如果选择除数为 4，和为 <code>ceil(1/4) + ceil(2/4) + ceil(5/4) + ceil(9/4) = 1 + 1 + 2 + 3 = 7</code>。<code>7 &gt; 6</code>，不满足条件。</li>
+<li>如果选择除数为 5，和为 <code>ceil(1/5) + ceil(2/5) + ceil(5/5) + ceil(9/5) = 1 + 1 + 1 + 2 = 5</code>。<code>5 &lt;= 6</code>，满足条件。</li>
+</ul>
+<p>我们找到了一个满足条件的除数 <code>5</code>。但题目要求的是<strong>最小</strong>的那个。我们可以继续验证，发现除数 <code>4</code> 不满足条件，因此 <code>5</code> 就是我们要找的最小除数。</p>
+<h3 id="核心思路：在答案上进行二分查找"><a href="#核心思路：在答案上进行二分查找" class="headerlink" title="核心思路：在答案上进行二分查找"></a>核心思路：在答案上进行二分查找</h3><p>一个朴素的想法是，从除数 <code>d = 1</code> 开始，逐个向上尝试，计算每次的和，直到找到第一个满足 <code>sum &lt;= threshold</code> 的除数。然而，<code>nums</code> 中的元素最大可达 <code>10^6</code>，这意味着除数的取值范围也可能很大，线性遍历非常耗时，可能会超时。</p>
+<p>这时，我们需要观察问题是否存在某种<strong>单调性</strong>。</p>
+<ul>
+<li>当<strong>除数增大</strong>时，数组中每个元素 <code>num / divisor</code> 的结果会减小或不变。</li>
+<li>因此，所有结果向上取整后的<strong>总和也会减小或不变</strong>。</li>
+</ul>
+<p>这种“除数”与“总和”之间的单调递减关系，是使用<strong>二分查找</strong>的绝佳信号。我们可以对<strong>答案（也就是除数）本身</strong>进行二分查找。</p>
+<ol>
+<li><p><strong>确定搜索范围</strong>：</p>
+<ul>
+<li>除数最小也得是 <code>1</code>，这是我们的左边界。</li>
+<li>除数最大是多少呢？如果除数等于 <code>max(nums)</code>，那么每个数相除的结果向上取整后不是 <code>1</code> 就是 <code>0</code>（正整数没有0），所以和最大是 <code>len(nums)</code>。如果除数比 <code>max(nums)</code> 还大，和依然是 <code>len(nums)</code>。因此，将搜索范围的右边界设为 <code>max(nums)</code> 是一个合理的上界。</li>
+</ul>
+</li>
+<li><p><strong>二分过程</strong>：</p>
+<ul>
+<li>取搜索范围 <code>[left, right]</code> 的中间值 <code>mid</code> 作为候选的除数。</li>
+<li>计算当除数为 <code>mid</code> 时的总和。</li>
+<li>如果 <code>sum &lt;= threshold</code>，说明 <code>mid</code> 是一个<strong>可能</strong>的解，但我们想找更小的，所以我们尝试在 <code>[left, mid]</code> 这个更小的区间里继续寻找。</li>
+<li>如果 <code>sum &gt; threshold</code>，说明 <code>mid</code> 这个除数太小了，导致和超标了。我们需要一个更大的除数，所以在 <code>[mid + 1, right]</code> 区间里继续寻找。</li>
+</ul>
+</li>
+</ol>
+<p>通过不断缩小搜索范围，我们最终可以锁定满足条件的最小除数。</p>
+<h3 id="算法详解"><a href="#算法详解" class="headerlink" title="算法详解"></a>算法详解</h3><ol>
+<li><p><strong>确定二分边界</strong></p>
+<ul>
+<li>左边界 <code>l</code>：最小可能的除数是 <code>1</code>。</li>
+<li>右边界 <code>r</code>：最大可能的除数是 <code>max(nums)</code>。</li>
+<li><em>注意</em>：代码实现中 <code>l</code> 从 <code>0</code> 开始，但因为 <code>mid</code> 的计算和 <code>l</code> 的更新方式，<code>mid</code> 永远不会是 <code>0</code>，不影响结果。</li>
+</ul>
+</li>
+<li><p><strong>编写 <code>check</code> 函数（求和逻辑）</strong></p>
+<ul>
+<li>这是二分查找的核心判断条件。给定一个除数 <code>d</code>，我们需要计算 <code>sum(ceil(x/d) for x in nums)</code>。</li>
+<li>在整数运算中，<code>ceil(x/d)</code> 有一个巧妙的等价转换：<code>(x + d - 1) // d</code>。</li>
+<li>代码中使用了另一个更精妙的转换：<code>ceil(x/d) = (x - 1) // d + 1</code>。</li>
+<li>因此，<code>sum(ceil(x/d))</code> 等于 <code>sum((x - 1) // d + 1)</code>，进一步等于 <code>sum((x - 1) // d) + len(nums)</code>。</li>
+<li>所以，判断条件 <code>sum(ceil(x/d)) &lt;= threshold</code> 就等价于 <code>sum((x - 1) // d) + len(nums) &lt;= threshold</code>，即 <code>sum((x - 1) // d) &lt;= threshold - len(nums)</code>。这正是代码中所使用的判断逻辑，它通过预先减掉 <code>len(nums)</code> 使得循环内的计算更简洁。</li>
+</ul>
+</li>
+<li><p><strong>循环二分</strong></p>
+<ul>
+<li>采用 <code>while l + 1 &lt; r</code> 的二分模板。这个模板的循环终止条件是 <code>l</code> 和 <code>r</code> 相邻。</li>
+<li>在循环中，计算 <code>mid = (l + r) // 2</code>。</li>
+<li>如果 <code>mid</code> 满足条件（和小于等于阈值），说明 <code>mid</code> 是一个潜在的答案，或者还有更小的答案。我们将上界收缩到 <code>mid</code>，即 <code>r = mid</code>，去左半边寻找更优解。</li>
+<li>如果 <code>mid</code> 不满足条件，说明 <code>mid</code> 太小了，必须选择一个更大的除数。我们将下界提升到 <code>mid</code>，即 <code>l = mid</code>，去右半边寻找解。</li>
+<li>循环结束后，<code>r</code> 就指向了满足条件的最小除数。</li>
+</ul>
+</li>
+</ol>
+<h3 id="Python-代码实现"><a href="#Python-代码实现" class="headerlink" title="Python 代码实现"></a>Python 代码实现</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> typing <span class="keyword">import</span> <span class="type">List</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">smallestDivisor</span>(<span class="params">self, nums: <span class="type">List</span>[<span class="built_in">int</span>], threshold: <span class="built_in">int</span></span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        <span class="comment"># 步骤 1: 确定二分查找的边界</span></span><br><span class="line">        <span class="comment"># 左边界 l 可以从 0 或 1 开始，因为除数最小为 1。</span></span><br><span class="line">        <span class="comment"># 右边界 r 是数组中的最大值，更大的除数不会产生更小的和。</span></span><br><span class="line">        l, r = <span class="number">0</span>, <span class="built_in">max</span>(nums)</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 步骤 3: 循环二分</span></span><br><span class="line">        <span class="comment"># 采用 l + 1 &lt; r 的模板，循环直到 l 和 r 相邻</span></span><br><span class="line">        <span class="keyword">while</span> l + <span class="number">1</span> &lt; r:</span><br><span class="line">            mid = (l + r) // <span class="number">2</span></span><br><span class="line">            <span class="comment"># 防止除以 0 的情况</span></span><br><span class="line">            <span class="keyword">if</span> mid == <span class="number">0</span>:</span><br><span class="line">                l = mid</span><br><span class="line">                <span class="keyword">continue</span></span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 步骤 2: check 函数逻辑</span></span><br><span class="line">            <span class="comment"># 计算以 mid 为除数时的总和</span></span><br><span class="line">            <span class="comment"># ceil(x/mid) 等价于 (x-1)//mid + 1</span></span><br><span class="line">            <span class="comment"># sum((x-1)//mid + 1) &lt;= threshold 变形为:</span></span><br><span class="line">            <span class="comment"># sum((x-1)//mid) &lt;= threshold - len(nums)</span></span><br><span class="line">            current_sum = <span class="built_in">sum</span>((x - <span class="number">1</span>) // mid <span class="keyword">for</span> x <span class="keyword">in</span> nums)</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">if</span> current_sum &lt;= threshold - <span class="built_in">len</span>(nums):</span><br><span class="line">                <span class="comment"># 如果和满足条件，说明 mid 是一个可能的解</span></span><br><span class="line">                <span class="comment"># 我们尝试寻找更小的解，所以收缩上界</span></span><br><span class="line">                r = mid</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="comment"># 如果和不满足条件，说明 mid 太小了</span></span><br><span class="line">                <span class="comment"># 我们需要更大的除数，所以收缩下界</span></span><br><span class="line">                l = mid</span><br><span class="line">                </span><br><span class="line">        <span class="comment"># 循环结束时, r 是满足条件的最小除数</span></span><br><span class="line">        <span class="keyword">return</span> r</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h3><ul>
+<li><p><strong>时间复杂度</strong>: O(N * log K)</p>
+<ul>
+<li>其中 <code>N</code> 是数组 <code>nums</code> 的长度，<code>K</code> 是 <code>nums</code> 数组中的最大值。</li>
+<li>二分查找的搜索空间大小为 <code>K</code>，因此二分过程需要进行 O(log K) 次迭代。</li>
+<li>在每一次迭代中，我们都需要遍历整个 <code>nums</code> 数组来计算总和，这个操作的复杂度是 O(N)。</li>
+<li>因此，总的时间复杂度是 O(N * log K)。</li>
+</ul>
+</li>
+<li><p><strong>空间复杂度</strong>: O(1)</p>
+<ul>
+<li>算法在执行过程中只使用了有限的几个变量（如 <code>l</code>, <code>r</code>, <code>mid</code>, <code>current_sum</code>），没有使用额外的、与输入规模相关的存储空间。</li>
+</ul>
+</li>
+</ul>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>本题是二分查找思想的一个典型应用，但它并非直接在输入数组上进行查找，而是在**可能解的范围（答案空间）**上进行查找。解决这类问题的关键在于：</p>
+<ol>
+<li>分析问题，发现输入与输出之间的单调关系。</li>
+<li>确定这个单调关系的定义域，即二分查找的上下边界。</li>
+<li>将原问题转化为一个“判定问题”（Check 函数）：给定一个候选解 <code>mid</code>，能否在 O(N) 时间内判断它是否满足条件？</li>
+</ol>
+<p>一旦这三步完成，就可以套用二分查找模板来高效地解决问题，将时间复杂度从可能的 O(N<em>K) 优化到 O(N</em>log K)。</p>
+]]></content>
+      <categories>
+        <category>算法题解</category>
+        <category>二分算法</category>
+        <category>二分答案</category>
+        <category>求最小</category>
+      </categories>
+      <tags>
+        <tag>数组</tag>
+        <tag>二分查找</tag>
+        <tag>第166场周赛</tag>
       </tags>
   </entry>
   <entry>
@@ -1473,102 +1473,6 @@
       </tags>
   </entry>
   <entry>
-    <title>LeetCode 2024 | 滑动窗口求解“考试的最大困扰度”</title>
-    <url>//posts/leetcode-2024/</url>
-    <content><![CDATA[<blockquote class="blockquote-center">
-            <i class="fa fa-quote-left"></i>
-            <p>LeetCode 第 2024 题：<a href="https://leetcode.cn/problems/maximize-the-confusion-of-an-exam/description/">考试的最大困扰度</a>。<br>该题核心在于，如何维护一个“窗口”，使得窗口内的子字符串可以通过不超过 k 次修改，变成一个全 ‘T’ 或全 ‘F’ 的字符串。</p>
-
-            <i class="fa fa-quote-right"></i>
-          </blockquote>
-<span id="more"></span>
-<h3 id="问题解读"><a href="#问题解读" class="headerlink" title="问题解读"></a>问题解读</h3><p>我们来仔细分析一下题目的目标：<strong>最大化连续相同结果的题数</strong>。</p>
-<p>这意味着我们要找到一个最长的子字符串，这个子字符串要么是 <code>TT...T</code>，要么是 <code>FF...F</code>。我们拥有一个强大的能力：最多可以将 <code>k</code> 个字符进行修改。</p>
-<p>这个问题可以分解为两个子问题：</p>
-<ol>
-<li>找到一个最长的子字符串，它最多包含 <code>k</code> 个 <code>&#39;F&#39;</code>。这样我们就可以把这些 <code>&#39;F&#39;</code> 都改成 <code>&#39;T&#39;</code>，从而得到一串连续的 <code>&#39;T&#39;</code>。</li>
-<li>找到一个最长的子字符串，它最多包含 <code>k</code> 个 <code>&#39;T&#39;</code>。这样我们就可以把这些 <code>&#39;T&#39;</code> 都改成 <code>&#39;F&#39;</code>，从而得到一串连续的 <code>&#39;F&#39;</code>。</li>
-</ol>
-<p>最终的答案就是这两个子问题结果中的最大值。这两个子问题都可以用滑动窗口完美解决。更巧妙的是，我们可以将这两个问题合二为一进行求解。</p>
-<h3 id="核心思路：滑动窗口"><a href="#核心思路：滑动窗口" class="headerlink" title="核心思路：滑动窗口"></a>核心思路：滑动窗口</h3><p>当我们看到“最长连续子串”这类问题时，通常可以考虑使用滑动窗口。滑动窗口就像一个在字符串上移动的框，我们关心的是这个框内的内容是否满足特定条件。</p>
-<p>在这个问题中，窗口需要满足的条件是：<strong>窗口内需要修改的字符数不能超过 <code>k</code></strong>。</p>
-<p>如何计算“需要修改的字符数”呢？假设当前窗口大小为 <code>len</code>，窗口内 ‘T’ 的数量为 <code>countT</code>，’F’ 的数量为 <code>countF</code>。</p>
-<ul>
-<li>要将窗口内所有字符变为 ‘T’，需要修改 <code>countF</code> 次。</li>
-<li>要将窗口内所有字符变为 ‘F’，需要修改 <code>countT</code> 次。</li>
-</ul>
-<p>我们希望用最少的操作次数，所以我们会选择将数量较少的字符修改成数量较多的字符。因此，需要修改的次数就是 <code>min(countT, countF)</code>。不过，换一种思路会更简单：<br><strong>需要修改的字符数 &#x3D; 窗口长度 - 窗口内出现次数最多的字符的数量</strong></p>
-<p>所以，窗口的“有效”条件就变成了：<br><code>(窗口长度) - max(countT, countF) &lt;= k</code></p>
-<h4 id="滑动窗口的运作流程"><a href="#滑动窗口的运作流程" class="headerlink" title="滑动窗口的运作流程"></a>滑动窗口的运作流程</h4><ol>
-<li><strong>窗口扩张</strong>：我们使用右指针 <code>right</code> 不断向右移动，扩大窗口，并将新字符纳入统计。</li>
-<li><strong>条件判断</strong>：每扩大一步，我们都检查上述“有效”条件是否还成立。</li>
-<li><strong>窗口收缩</strong>：如果条件不成立，说明当前窗口“太长了”，包含了太多需要修改的字符。此时，我们必须从左边收缩窗口，即移动左指针 <code>left</code>，并将被移出窗口的字符从统计中移除，直到窗口重新变得“有效”。</li>
-<li><strong>更新结果</strong>：在整个过程中，窗口的最大尺寸就是我们所求的答案。因为窗口收缩时，<code>left</code> 和 <code>right</code> 同步右移，长度不变；只有在不收缩时，<code>right</code> 右移，长度才会增加。所以，<code>right - left + 1</code> 始终记录着当前有效的最大窗口长度。</li>
-</ol>
-<h3 id="算法详解"><a href="#算法详解" class="headerlink" title="算法详解"></a>算法详解</h3><ol>
-<li><p><strong>初始化</strong>:</p>
-<ul>
-<li>定义左右指针 <code>left = 0</code>, <code>right = 0</code>。</li>
-<li>定义一个计数器（<code>dict</code> 或 <code>Counter</code>）来统计窗口内 <code>&#39;T&#39;</code> 和 <code>&#39;F&#39;</code> 的数量。</li>
-<li>初始化最大长度 <code>max_len = 0</code>。</li>
-</ul>
-</li>
-<li><p><strong>遍历扩张</strong>:</p>
-<ul>
-<li>用 <code>right</code> 指针遍历整个字符串 <code>answerKey</code>。</li>
-<li>在循环中，将 <code>answerKey[right]</code> 对应的字符计数加一。</li>
-</ul>
-</li>
-<li><p><strong>判断与收缩</strong>:</p>
-<ul>
-<li>计算当前窗口内出现次数最多的字符的数量 <code>max_freq</code>。</li>
-<li>检查 <code>(right - left + 1) - max_freq</code> 是否大于 <code>k</code>。</li>
-<li>如果大于 <code>k</code>，说明需要修改的字符超过了限制，必须收缩窗口：<ul>
-<li>将 <code>answerKey[left]</code> 对应的字符计数减一。</li>
-<li>将左指针 <code>left</code> 右移一位。</li>
-</ul>
-</li>
-</ul>
-</li>
-<li><p><strong>记录结果</strong>:</p>
-<ul>
-<li>经过收缩（或不收缩）后，当前窗口 <code>[left, right]</code> 必然是有效的。我们用它的长度 <code>right - left + 1</code> 来更新 <code>max_len</code>。</li>
-</ul>
-</li>
-<li><p><strong>返回</strong>:</p>
-<ul>
-<li>遍历结束后，<code>max_len</code> 即为最终答案。</li>
-</ul>
-</li>
-</ol>
-<h3 id="Python-代码实现"><a href="#Python-代码实现" class="headerlink" title="Python 代码实现"></a>Python 代码实现</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> Counter</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">maxConsecutiveAnswers</span>(<span class="params">self, answerKey: <span class="built_in">str</span>, k: <span class="built_in">int</span></span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        n = <span class="built_in">len</span>(answerKey)</span><br><span class="line">        max_len = <span class="number">0</span></span><br><span class="line">        left = <span class="number">0</span></span><br><span class="line">        counts = Counter()</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># right 指针负责扩大窗口</span></span><br><span class="line">        <span class="keyword">for</span> right <span class="keyword">in</span> <span class="built_in">range</span>(n):</span><br><span class="line">            <span class="comment"># 将新字符计入窗口</span></span><br><span class="line">            counts[answerKey[right]] += <span class="number">1</span></span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 窗口内出现次数最多的字符的数量</span></span><br><span class="line">            <span class="comment"># A more robust way is `max_freq = max(counts.get(&#x27;T&#x27;, 0), counts.get(&#x27;F&#x27;, 0))`</span></span><br><span class="line">            <span class="comment"># but since counts will not be empty, max(counts.values()) is fine.</span></span><br><span class="line">            max_freq = <span class="built_in">max</span>(counts.values())</span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 判断窗口是否需要收缩</span></span><br><span class="line">            <span class="comment"># 窗口长度: right - left + 1</span></span><br><span class="line">            <span class="comment"># 需要改变的字符数: (right - left + 1) - max_freq</span></span><br><span class="line">            <span class="keyword">if</span> (right - left + <span class="number">1</span>) - max_freq &gt; k:</span><br><span class="line">                <span class="comment"># 从窗口左边移出一个字符</span></span><br><span class="line">                counts[answerKey[left]] -= <span class="number">1</span></span><br><span class="line">                <span class="comment"># 左指针右移，收缩窗口</span></span><br><span class="line">                left += <span class="number">1</span></span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 经过上面的调整，当前窗口 [left, right] 肯定是有效的</span></span><br><span class="line">            <span class="comment"># 我们用它的长度更新最大长度</span></span><br><span class="line">            max_len = <span class="built_in">max</span>(max_len, right - left + <span class="number">1</span>)</span><br><span class="line">            </span><br><span class="line">        <span class="keyword">return</span> max_len</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h3 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h3><ul>
-<li><strong>时间复杂度</strong>: O(N)，其中 N 是字符串 <code>answerKey</code> 的长度。因为 <code>left</code> 和 <code>right</code> 指针都只会从头到尾遍历字符串一次。</li>
-<li><strong>空间复杂度</strong>: O(1)。我们使用的计数器 <code>counts</code> 最多只会存储两个键（’T’ 和 ‘F’），所以其空间占用是常数级别的。</li>
-</ul>
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>本题是滑动窗口思想的直接应用，考察的是对滑动窗口“维护一个满足特定条件的区间”这一核心思想的理解。<br>关键的收获是：</p>
-<ol>
-<li><strong>问题转化</strong>：将原问题“在 k 次修改下，最长的连续 T&#x2F;F 串”转化为“找到一个最长的子串，其中数量较少的字符不超过 k 个”。</li>
-<li><strong>窗口条件</strong>：巧妙地利用 <code>(窗口长度) - (主要元素数量) &lt;= k</code> 来作为窗口的有效性判断条件，这个公式同时兼顾了求最长连续 ‘T’ 和最长连续 ‘F’ 两种情况。</li>
-<li><strong>动态维护</strong>：通过扩张和收缩窗口，动态地维护一个始终满足条件的、尽可能长的区间，从而得到最终答案。</li>
-</ol>
-]]></content>
-      <categories>
-        <category>算法题解</category>
-        <category>滑动窗口与双指针</category>
-        <category>不定长滑动窗口</category>
-      </categories>
-      <tags>
-        <tag>二分查找</tag>
-        <tag>字符串</tag>
-        <tag>滑动窗口</tag>
-        <tag>前缀和</tag>
-        <tag>双指针</tag>
-        <tag>第 62 场双周赛</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>LeetCode 2070 | 二分查找解决“每一个查询的最大美丽值”</title>
     <url>//posts/leetcode-2070/</url>
     <content><![CDATA[<blockquote class="blockquote-center">
@@ -1779,100 +1683,6 @@
         <tag>滑动窗口</tag>
         <tag>前缀和</tag>
         <tag>第 271 场周赛</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>LeetCode 2156 | 滚动哈希巧解给定哈希值的子串</title>
-    <url>//posts/leetcode-2156/</url>
-    <content><![CDATA[<blockquote class="blockquote-center">
-            <i class="fa fa-quote-left"></i>
-            <p>LeetCode 第 2156 题：<a href="https://leetcode.cn/problems/find-substring-with-given-hash-value/description/">查找给定哈希值的子串</a>。<br>这道题将我们带入了“滚动哈希”（Rolling Hash）的精妙世界。它不仅仅是一个简单的滑动窗口，更是一次关于如何在模运算下高效更新哈希值的深刻实践。</p>
-
-            <i class="fa fa-quote-right"></i>
-          </blockquote>
-<span id="more"></span>
-<h3 id="问题解读"><a href="#问题解读" class="headerlink" title="问题解读"></a>问题解读</h3><p>题目要求我们根据一个自定义的哈希函数，在一个长字符串 <code>s</code> 中找到<strong>第一个</strong>长度为 <code>k</code> 且哈希值等于 <code>hashValue</code> 的子串。</p>
-<p>这个哈希函数定义如下：<br><code>hash(sub, p, m) = (val(sub[0])*p^0 + val(sub[1])*p^1 + ... + val(sub[k-1])*p^(k-1)) mod m</code></p>
-<p>其中 <code>val(c)</code> 是字符 <code>c</code> 的字母表顺序值（<code>&#39;a&#39;</code>&#x3D;1, <code>&#39;b&#39;</code>&#x3D;2, …）。</p>
-<ul>
-<li><strong>关键点</strong>：我们需要在一个大字符串中，对所有长度为 <code>k</code> 的子串计算哈希值。</li>
-<li><strong>目标</strong>：找到满足 <code>hash(sub) == hashValue</code> 的<strong>最靠前</strong>的那个子串。</li>
-</ul>
-<p>例如，对于 <code>s = &quot;fbxzaad&quot;</code>, <code>p = 31</code>, <code>m = 100</code>, <code>k = 3</code>, <code>hashValue = 32</code>，子串 <code>&quot;fbx&quot;</code> 和 <code>&quot;bxz&quot;</code> 的哈希值都是 32。但因为 <code>&quot;fbx&quot;</code> 在字符串中出现得更早，所以它是正确答案。</p>
-<h3 id="核心思路：逆向的滚动哈希"><a href="#核心思路：逆向的滚动哈希" class="headerlink" title="核心思路：逆向的滚动哈希"></a>核心思路：逆向的滚动哈希</h3><h4 id="暴力法的瓶颈"><a href="#暴力法的瓶颈" class="headerlink" title="暴力法的瓶颈"></a>暴力法的瓶颈</h4><p>最直观的方法是遍历 <code>s</code> 中每一个长度为 <code>k</code> 的子串，然后对每个子串都独立计算一次哈希值。这种方法的时间复杂度是 O(N<em>K)，其中 N 是 <code>s</code> 的长度。对于题目给定的数据范围 (<code>N</code> 可达 2</em>10^4)，这种方法会“超出时间限制”。</p>
-<h4 id="从左向右滑动的困境"><a href="#从左向右滑动的困境" class="headerlink" title="从左向右滑动的困境"></a>从左向右滑动的困境</h4><p>为了优化，我们自然会想到滑动窗口：当窗口从 <code>s[i:i+k]</code> 滑动到 <code>s[i+1:i+k+1]</code> 时，能否在 O(1) 的时间内更新哈希值？</p>
-<ul>
-<li><strong>移出</strong>：我们需要减去 <code>val(s[i]) * p^0</code> 的贡献。</li>
-<li><strong>移入</strong>：我们需要加入 <code>val(s[i+k]) * p^k</code>… 等等，这里就出现了问题。</li>
-</ul>
-<p>为了让原有的 <code>val(s[i+1])*p^1</code> 变为 <code>val(s[i+1])*p^0</code>，我们需要将整个哈希值（减去 <code>val(s[i])</code> 之后）除以 <code>power</code>。在模运算中，除以一个数等于乘以它的<strong>模逆元</strong>。计算模逆元本身就很复杂，而且当 <code>power</code> 和 <code>modulo</code> 不互质时，模逆元甚至不存在。这条路走不通。</p>
-<h4 id="柳暗花明：从右向左滑动"><a href="#柳暗花明：从右向左滑动" class="headerlink" title="柳暗花明：从右向左滑动"></a>柳暗花明：从右向左滑动</h4><p>既然从左向右有困难，我们何不逆向思考？<strong>从右向左滑动窗口</strong>！</p>
-<p>假设我们已知窗口 <code>s[i+1 : i+k+1]</code> 的哈希值 <code>h_old</code>，现在要计算它左边的窗口 <code>s[i : i+k]</code> 的哈希值 <code>h_new</code>。</p>
-<ul>
-<li><code>h_old = (val(s[i+1])*p^0 + ... + val(s[i+k])*p^(k-1)) mod m</code></li>
-</ul>
-<p>观察 <code>h_new</code> 的构成：</p>
-<ul>
-<li><code>h_new = (val(s[i])*p^0 + val(s[i+1])*p^1 + ... + val(s[i+k-1])*p^(k-1)) mod m</code></li>
-</ul>
-<p>我们可以找到一个递推关系：</p>
-<ol>
-<li>从 <code>h_old</code> 中减去最右侧字符 <code>s[i+k]</code> 的贡献，即 <code>val(s[i+k]) * p^(k-1)</code>。</li>
-<li>将剩余的部分整体乘以 <code>p</code>，这使得每一项的幂次都增加了 1 (<code>p^0</code> -&gt; <code>p^1</code>, <code>p^1</code> -&gt; <code>p^2</code>…)。</li>
-<li>最后，加上新进入窗口的字符 <code>s[i]</code> 的贡献，即 <code>val(s[i]) * p^0</code>。</li>
-</ol>
-<p>于是，我们得到了一个完美的 O(1) 更新公式：<br><code>h_new = ((h_old - val(s[i+k]) * p^(k-1)) * p + val(s[i])) mod m</code><br>这个公式只涉及加、减、乘，在模运算下非常简单！</p>
-<h3 id="滑动窗口算法详解"><a href="#滑动窗口算法详解" class="headerlink" title="滑动窗口算法详解"></a>滑动窗口算法详解</h3><ol>
-<li><p><strong>准备工作</strong>:</p>
-<ul>
-<li>预先计算 <code>power^(k-1) % modulo</code>，记为 <code>pk_1</code>。这个值在每次移除窗口最右侧字符时都会用到。</li>
-</ul>
-</li>
-<li><p><strong>初始化窗口</strong>:</p>
-<ul>
-<li>我们从字符串的<strong>最右端</strong>开始。首先完整计算最后一个窗口 <code>s[n-k : n]</code> 的哈希值，作为我们的初始 <code>current_hash</code>。</li>
-<li>检查这个初始哈希值是否与 <code>hashValue</code> 匹配。如果匹配，记录下当前的起始索引 <code>n-k</code> 作为候选答案。</li>
-</ul>
-</li>
-<li><p><strong>逆向滑动窗口</strong>:</p>
-<ul>
-<li>从 <code>i = n-k-1</code> 开始，循环递减至 <code>0</code>。<code>i</code> 代表新窗口的起始位置。</li>
-<li>在每次循环中，使用上面推导出的滚动哈希公式来更新 <code>current_hash</code>。<ul>
-<li><strong>移出</strong>：减去旧窗口最右侧字符 <code>s[i+k]</code> 的贡献。</li>
-<li><strong>乘幂</strong>：将结果乘以 <code>power</code>。</li>
-<li><strong>移入</strong>：加上新窗口最左侧字符 <code>s[i]</code> 的贡献。</li>
-<li><strong>注意</strong>：在进行模减法时，为防止出现负数，应写成 <code>(a - b + modulo) % modulo</code>。</li>
-</ul>
-</li>
-<li>每次更新哈希值后，都与 <code>hashValue</code> 进行比较。</li>
-<li>由于我们是从右向左遍历，任何一次匹配都意味着我们找到了一个比之前更靠前的答案。因此，只要匹配成功，就更新结果索引为当前的 <code>i</code>。</li>
-</ul>
-</li>
-<li><p><strong>返回结果</strong>:</p>
-<ul>
-<li>循环结束后，记录的最终索引就是题目所求的第一个满足条件的子串的起始位置。返回该子串即可。</li>
-</ul>
-</li>
-</ol>
-<h3 id="Python-代码实现"><a href="#Python-代码实现" class="headerlink" title="Python 代码实现"></a>Python 代码实现</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">subStrHash</span>(<span class="params">self, s: <span class="built_in">str</span>, power: <span class="built_in">int</span>, modulo: <span class="built_in">int</span>, k: <span class="built_in">int</span>, hashValue: <span class="built_in">int</span></span>) -&gt; <span class="built_in">str</span>:</span><br><span class="line">        n = <span class="built_in">len</span>(s)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 辅助函数，将 &#x27;a&#x27;-&#x27;z&#x27; 映射到 1-26</span></span><br><span class="line">        <span class="keyword">def</span> <span class="title function_">val</span>(<span class="params">c</span>):</span><br><span class="line">            <span class="keyword">return</span> <span class="built_in">ord</span>(c) - <span class="built_in">ord</span>(<span class="string">&#x27;a&#x27;</span>) + <span class="number">1</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># 步骤 1：预计算 p^(k-1) % m，用于移除窗口最右侧字符</span></span><br><span class="line">        pk_1 = <span class="built_in">pow</span>(power, k - <span class="number">1</span>, modulo)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 步骤 2：计算最右侧第一个窗口 s[n-k : n] 的哈希值</span></span><br><span class="line">        current_h = <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(k):</span><br><span class="line">            i = n - k + j <span class="comment"># 窗口内字符的索引</span></span><br><span class="line">            current_h = (current_h + val(s[i]) * <span class="built_in">pow</span>(power, j, modulo)) % modulo</span><br><span class="line">        </span><br><span class="line">        res_index = -<span class="number">1</span></span><br><span class="line">        <span class="keyword">if</span> current_h == hashValue:</span><br><span class="line">            res_index = n - k</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 步骤 3：从右向左滑动窗口</span></span><br><span class="line">        <span class="comment"># i 是新窗口的起始索引</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(n - k - <span class="number">1</span>, -<span class="number">1</span>, -<span class="number">1</span>):</span><br><span class="line">            <span class="comment"># old_hash (current_h) 对应 s[i+1 : i+k+1]</span></span><br><span class="line">            <span class="comment"># new_hash (将要计算的) 对应 s[i : i+k]</span></span><br><span class="line">            </span><br><span class="line">            old_right_val = val(s[i + k])</span><br><span class="line">            new_left_val = val(s[i])</span><br><span class="line"></span><br><span class="line">            <span class="comment"># 应用滚动哈希公式</span></span><br><span class="line">            <span class="comment"># a) 移除旧窗口最右侧字符的贡献</span></span><br><span class="line">            term_to_remove = (old_right_val * pk_1) % modulo</span><br><span class="line">            current_h = (current_h - term_to_remove + modulo) % modulo</span><br><span class="line">            </span><br><span class="line">            <span class="comment"># b) 所有项幂次加一</span></span><br><span class="line">            current_h = (current_h * power) % modulo</span><br><span class="line">            </span><br><span class="line">            <span class="comment"># c) 加上新窗口最左侧字符的贡献</span></span><br><span class="line">            current_h = (current_h + new_left_val) % modulo</span><br><span class="line"></span><br><span class="line">            <span class="comment"># 检查哈希值是否匹配</span></span><br><span class="line">            <span class="keyword">if</span> current_h == hashValue:</span><br><span class="line">                res_index = i <span class="comment"># 更新为更靠前的索引</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># 步骤 4：返回结果</span></span><br><span class="line">        <span class="keyword">return</span> s[res_index : res_index + k]</span><br></pre></td></tr></table></figure>
-
-<h3 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h3><ul>
-<li><strong>时间复杂度</strong>: O(N)。其中 N 是字符串 <code>s</code> 的长度。初始哈希计算耗时 O(K)，逆向滑动窗口循环 N-K 次，每次更新是 O(1)。总复杂度为 O(K + N - K) &#x3D; O(N)，实现了线性时间求解。</li>
-<li><strong>空间复杂度</strong>: O(1)。我们只使用了常数个变量来存储哈希值和中间计算结果。</li>
-</ul>
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>本题是滚动哈希算法的绝佳应用案例。它告诉我们，当标准的从左到右的滑动窗口遇到数学难题（如模逆元）时，不妨换个方向思考。<strong>逆向滑动</strong>在本题中优雅地绕开了复杂的模除法，将哈希值的更新简化为基础的模运算，充分展现了算法设计的灵活性和数学之美。</p>
-]]></content>
-      <categories>
-        <category>算法题解</category>
-        <category>滑动窗口与双指针</category>
-        <category>定长滑动窗口</category>
-      </categories>
-      <tags>
-        <tag>字符串</tag>
-        <tag>滑动窗口</tag>
-        <tag>哈希函数</tag>
-        <tag>滚动哈希</tag>
-        <tag>第 278 场周赛</tag>
       </tags>
   </entry>
   <entry>
@@ -2140,6 +1950,102 @@
       </tags>
   </entry>
   <entry>
+    <title>LeetCode 2024 | 滑动窗口求解“考试的最大困扰度”</title>
+    <url>//posts/leetcode-2024/</url>
+    <content><![CDATA[<blockquote class="blockquote-center">
+            <i class="fa fa-quote-left"></i>
+            <p>LeetCode 第 2024 题：<a href="https://leetcode.cn/problems/maximize-the-confusion-of-an-exam/description/">考试的最大困扰度</a>。<br>该题核心在于，如何维护一个“窗口”，使得窗口内的子字符串可以通过不超过 k 次修改，变成一个全 ‘T’ 或全 ‘F’ 的字符串。</p>
+
+            <i class="fa fa-quote-right"></i>
+          </blockquote>
+<span id="more"></span>
+<h3 id="问题解读"><a href="#问题解读" class="headerlink" title="问题解读"></a>问题解读</h3><p>我们来仔细分析一下题目的目标：<strong>最大化连续相同结果的题数</strong>。</p>
+<p>这意味着我们要找到一个最长的子字符串，这个子字符串要么是 <code>TT...T</code>，要么是 <code>FF...F</code>。我们拥有一个强大的能力：最多可以将 <code>k</code> 个字符进行修改。</p>
+<p>这个问题可以分解为两个子问题：</p>
+<ol>
+<li>找到一个最长的子字符串，它最多包含 <code>k</code> 个 <code>&#39;F&#39;</code>。这样我们就可以把这些 <code>&#39;F&#39;</code> 都改成 <code>&#39;T&#39;</code>，从而得到一串连续的 <code>&#39;T&#39;</code>。</li>
+<li>找到一个最长的子字符串，它最多包含 <code>k</code> 个 <code>&#39;T&#39;</code>。这样我们就可以把这些 <code>&#39;T&#39;</code> 都改成 <code>&#39;F&#39;</code>，从而得到一串连续的 <code>&#39;F&#39;</code>。</li>
+</ol>
+<p>最终的答案就是这两个子问题结果中的最大值。这两个子问题都可以用滑动窗口完美解决。更巧妙的是，我们可以将这两个问题合二为一进行求解。</p>
+<h3 id="核心思路：滑动窗口"><a href="#核心思路：滑动窗口" class="headerlink" title="核心思路：滑动窗口"></a>核心思路：滑动窗口</h3><p>当我们看到“最长连续子串”这类问题时，通常可以考虑使用滑动窗口。滑动窗口就像一个在字符串上移动的框，我们关心的是这个框内的内容是否满足特定条件。</p>
+<p>在这个问题中，窗口需要满足的条件是：<strong>窗口内需要修改的字符数不能超过 <code>k</code></strong>。</p>
+<p>如何计算“需要修改的字符数”呢？假设当前窗口大小为 <code>len</code>，窗口内 ‘T’ 的数量为 <code>countT</code>，’F’ 的数量为 <code>countF</code>。</p>
+<ul>
+<li>要将窗口内所有字符变为 ‘T’，需要修改 <code>countF</code> 次。</li>
+<li>要将窗口内所有字符变为 ‘F’，需要修改 <code>countT</code> 次。</li>
+</ul>
+<p>我们希望用最少的操作次数，所以我们会选择将数量较少的字符修改成数量较多的字符。因此，需要修改的次数就是 <code>min(countT, countF)</code>。不过，换一种思路会更简单：<br><strong>需要修改的字符数 &#x3D; 窗口长度 - 窗口内出现次数最多的字符的数量</strong></p>
+<p>所以，窗口的“有效”条件就变成了：<br><code>(窗口长度) - max(countT, countF) &lt;= k</code></p>
+<h4 id="滑动窗口的运作流程"><a href="#滑动窗口的运作流程" class="headerlink" title="滑动窗口的运作流程"></a>滑动窗口的运作流程</h4><ol>
+<li><strong>窗口扩张</strong>：我们使用右指针 <code>right</code> 不断向右移动，扩大窗口，并将新字符纳入统计。</li>
+<li><strong>条件判断</strong>：每扩大一步，我们都检查上述“有效”条件是否还成立。</li>
+<li><strong>窗口收缩</strong>：如果条件不成立，说明当前窗口“太长了”，包含了太多需要修改的字符。此时，我们必须从左边收缩窗口，即移动左指针 <code>left</code>，并将被移出窗口的字符从统计中移除，直到窗口重新变得“有效”。</li>
+<li><strong>更新结果</strong>：在整个过程中，窗口的最大尺寸就是我们所求的答案。因为窗口收缩时，<code>left</code> 和 <code>right</code> 同步右移，长度不变；只有在不收缩时，<code>right</code> 右移，长度才会增加。所以，<code>right - left + 1</code> 始终记录着当前有效的最大窗口长度。</li>
+</ol>
+<h3 id="算法详解"><a href="#算法详解" class="headerlink" title="算法详解"></a>算法详解</h3><ol>
+<li><p><strong>初始化</strong>:</p>
+<ul>
+<li>定义左右指针 <code>left = 0</code>, <code>right = 0</code>。</li>
+<li>定义一个计数器（<code>dict</code> 或 <code>Counter</code>）来统计窗口内 <code>&#39;T&#39;</code> 和 <code>&#39;F&#39;</code> 的数量。</li>
+<li>初始化最大长度 <code>max_len = 0</code>。</li>
+</ul>
+</li>
+<li><p><strong>遍历扩张</strong>:</p>
+<ul>
+<li>用 <code>right</code> 指针遍历整个字符串 <code>answerKey</code>。</li>
+<li>在循环中，将 <code>answerKey[right]</code> 对应的字符计数加一。</li>
+</ul>
+</li>
+<li><p><strong>判断与收缩</strong>:</p>
+<ul>
+<li>计算当前窗口内出现次数最多的字符的数量 <code>max_freq</code>。</li>
+<li>检查 <code>(right - left + 1) - max_freq</code> 是否大于 <code>k</code>。</li>
+<li>如果大于 <code>k</code>，说明需要修改的字符超过了限制，必须收缩窗口：<ul>
+<li>将 <code>answerKey[left]</code> 对应的字符计数减一。</li>
+<li>将左指针 <code>left</code> 右移一位。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>记录结果</strong>:</p>
+<ul>
+<li>经过收缩（或不收缩）后，当前窗口 <code>[left, right]</code> 必然是有效的。我们用它的长度 <code>right - left + 1</code> 来更新 <code>max_len</code>。</li>
+</ul>
+</li>
+<li><p><strong>返回</strong>:</p>
+<ul>
+<li>遍历结束后，<code>max_len</code> 即为最终答案。</li>
+</ul>
+</li>
+</ol>
+<h3 id="Python-代码实现"><a href="#Python-代码实现" class="headerlink" title="Python 代码实现"></a>Python 代码实现</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> Counter</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">maxConsecutiveAnswers</span>(<span class="params">self, answerKey: <span class="built_in">str</span>, k: <span class="built_in">int</span></span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        n = <span class="built_in">len</span>(answerKey)</span><br><span class="line">        max_len = <span class="number">0</span></span><br><span class="line">        left = <span class="number">0</span></span><br><span class="line">        counts = Counter()</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># right 指针负责扩大窗口</span></span><br><span class="line">        <span class="keyword">for</span> right <span class="keyword">in</span> <span class="built_in">range</span>(n):</span><br><span class="line">            <span class="comment"># 将新字符计入窗口</span></span><br><span class="line">            counts[answerKey[right]] += <span class="number">1</span></span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 窗口内出现次数最多的字符的数量</span></span><br><span class="line">            <span class="comment"># A more robust way is `max_freq = max(counts.get(&#x27;T&#x27;, 0), counts.get(&#x27;F&#x27;, 0))`</span></span><br><span class="line">            <span class="comment"># but since counts will not be empty, max(counts.values()) is fine.</span></span><br><span class="line">            max_freq = <span class="built_in">max</span>(counts.values())</span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 判断窗口是否需要收缩</span></span><br><span class="line">            <span class="comment"># 窗口长度: right - left + 1</span></span><br><span class="line">            <span class="comment"># 需要改变的字符数: (right - left + 1) - max_freq</span></span><br><span class="line">            <span class="keyword">if</span> (right - left + <span class="number">1</span>) - max_freq &gt; k:</span><br><span class="line">                <span class="comment"># 从窗口左边移出一个字符</span></span><br><span class="line">                counts[answerKey[left]] -= <span class="number">1</span></span><br><span class="line">                <span class="comment"># 左指针右移，收缩窗口</span></span><br><span class="line">                left += <span class="number">1</span></span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 经过上面的调整，当前窗口 [left, right] 肯定是有效的</span></span><br><span class="line">            <span class="comment"># 我们用它的长度更新最大长度</span></span><br><span class="line">            max_len = <span class="built_in">max</span>(max_len, right - left + <span class="number">1</span>)</span><br><span class="line">            </span><br><span class="line">        <span class="keyword">return</span> max_len</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h3><ul>
+<li><strong>时间复杂度</strong>: O(N)，其中 N 是字符串 <code>answerKey</code> 的长度。因为 <code>left</code> 和 <code>right</code> 指针都只会从头到尾遍历字符串一次。</li>
+<li><strong>空间复杂度</strong>: O(1)。我们使用的计数器 <code>counts</code> 最多只会存储两个键（’T’ 和 ‘F’），所以其空间占用是常数级别的。</li>
+</ul>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>本题是滑动窗口思想的直接应用，考察的是对滑动窗口“维护一个满足特定条件的区间”这一核心思想的理解。<br>关键的收获是：</p>
+<ol>
+<li><strong>问题转化</strong>：将原问题“在 k 次修改下，最长的连续 T&#x2F;F 串”转化为“找到一个最长的子串，其中数量较少的字符不超过 k 个”。</li>
+<li><strong>窗口条件</strong>：巧妙地利用 <code>(窗口长度) - (主要元素数量) &lt;= k</code> 来作为窗口的有效性判断条件，这个公式同时兼顾了求最长连续 ‘T’ 和最长连续 ‘F’ 两种情况。</li>
+<li><strong>动态维护</strong>：通过扩张和收缩窗口，动态地维护一个始终满足条件的、尽可能长的区间，从而得到最终答案。</li>
+</ol>
+]]></content>
+      <categories>
+        <category>算法题解</category>
+        <category>滑动窗口与双指针</category>
+        <category>不定长滑动窗口</category>
+      </categories>
+      <tags>
+        <tag>二分查找</tag>
+        <tag>字符串</tag>
+        <tag>滑动窗口</tag>
+        <tag>前缀和</tag>
+        <tag>双指针</tag>
+        <tag>第 62 场双周赛</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>LeetCode 2516 | 滑动窗口与逆向思维：求解“每种字符至少取 K 个”</title>
     <url>//posts/leetcode-2516/</url>
     <content><![CDATA[<blockquote class="blockquote-center">
@@ -2249,6 +2155,100 @@
         <tag>哈希表</tag>
         <tag>滑动窗口</tag>
         <tag>第 325 场周赛</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>LeetCode 2156 | 滚动哈希巧解给定哈希值的子串</title>
+    <url>//posts/leetcode-2156/</url>
+    <content><![CDATA[<blockquote class="blockquote-center">
+            <i class="fa fa-quote-left"></i>
+            <p>LeetCode 第 2156 题：<a href="https://leetcode.cn/problems/find-substring-with-given-hash-value/description/">查找给定哈希值的子串</a>。<br>这道题将我们带入了“滚动哈希”（Rolling Hash）的精妙世界。它不仅仅是一个简单的滑动窗口，更是一次关于如何在模运算下高效更新哈希值的深刻实践。</p>
+
+            <i class="fa fa-quote-right"></i>
+          </blockquote>
+<span id="more"></span>
+<h3 id="问题解读"><a href="#问题解读" class="headerlink" title="问题解读"></a>问题解读</h3><p>题目要求我们根据一个自定义的哈希函数，在一个长字符串 <code>s</code> 中找到<strong>第一个</strong>长度为 <code>k</code> 且哈希值等于 <code>hashValue</code> 的子串。</p>
+<p>这个哈希函数定义如下：<br><code>hash(sub, p, m) = (val(sub[0])*p^0 + val(sub[1])*p^1 + ... + val(sub[k-1])*p^(k-1)) mod m</code></p>
+<p>其中 <code>val(c)</code> 是字符 <code>c</code> 的字母表顺序值（<code>&#39;a&#39;</code>&#x3D;1, <code>&#39;b&#39;</code>&#x3D;2, …）。</p>
+<ul>
+<li><strong>关键点</strong>：我们需要在一个大字符串中，对所有长度为 <code>k</code> 的子串计算哈希值。</li>
+<li><strong>目标</strong>：找到满足 <code>hash(sub) == hashValue</code> 的<strong>最靠前</strong>的那个子串。</li>
+</ul>
+<p>例如，对于 <code>s = &quot;fbxzaad&quot;</code>, <code>p = 31</code>, <code>m = 100</code>, <code>k = 3</code>, <code>hashValue = 32</code>，子串 <code>&quot;fbx&quot;</code> 和 <code>&quot;bxz&quot;</code> 的哈希值都是 32。但因为 <code>&quot;fbx&quot;</code> 在字符串中出现得更早，所以它是正确答案。</p>
+<h3 id="核心思路：逆向的滚动哈希"><a href="#核心思路：逆向的滚动哈希" class="headerlink" title="核心思路：逆向的滚动哈希"></a>核心思路：逆向的滚动哈希</h3><h4 id="暴力法的瓶颈"><a href="#暴力法的瓶颈" class="headerlink" title="暴力法的瓶颈"></a>暴力法的瓶颈</h4><p>最直观的方法是遍历 <code>s</code> 中每一个长度为 <code>k</code> 的子串，然后对每个子串都独立计算一次哈希值。这种方法的时间复杂度是 O(N<em>K)，其中 N 是 <code>s</code> 的长度。对于题目给定的数据范围 (<code>N</code> 可达 2</em>10^4)，这种方法会“超出时间限制”。</p>
+<h4 id="从左向右滑动的困境"><a href="#从左向右滑动的困境" class="headerlink" title="从左向右滑动的困境"></a>从左向右滑动的困境</h4><p>为了优化，我们自然会想到滑动窗口：当窗口从 <code>s[i:i+k]</code> 滑动到 <code>s[i+1:i+k+1]</code> 时，能否在 O(1) 的时间内更新哈希值？</p>
+<ul>
+<li><strong>移出</strong>：我们需要减去 <code>val(s[i]) * p^0</code> 的贡献。</li>
+<li><strong>移入</strong>：我们需要加入 <code>val(s[i+k]) * p^k</code>… 等等，这里就出现了问题。</li>
+</ul>
+<p>为了让原有的 <code>val(s[i+1])*p^1</code> 变为 <code>val(s[i+1])*p^0</code>，我们需要将整个哈希值（减去 <code>val(s[i])</code> 之后）除以 <code>power</code>。在模运算中，除以一个数等于乘以它的<strong>模逆元</strong>。计算模逆元本身就很复杂，而且当 <code>power</code> 和 <code>modulo</code> 不互质时，模逆元甚至不存在。这条路走不通。</p>
+<h4 id="柳暗花明：从右向左滑动"><a href="#柳暗花明：从右向左滑动" class="headerlink" title="柳暗花明：从右向左滑动"></a>柳暗花明：从右向左滑动</h4><p>既然从左向右有困难，我们何不逆向思考？<strong>从右向左滑动窗口</strong>！</p>
+<p>假设我们已知窗口 <code>s[i+1 : i+k+1]</code> 的哈希值 <code>h_old</code>，现在要计算它左边的窗口 <code>s[i : i+k]</code> 的哈希值 <code>h_new</code>。</p>
+<ul>
+<li><code>h_old = (val(s[i+1])*p^0 + ... + val(s[i+k])*p^(k-1)) mod m</code></li>
+</ul>
+<p>观察 <code>h_new</code> 的构成：</p>
+<ul>
+<li><code>h_new = (val(s[i])*p^0 + val(s[i+1])*p^1 + ... + val(s[i+k-1])*p^(k-1)) mod m</code></li>
+</ul>
+<p>我们可以找到一个递推关系：</p>
+<ol>
+<li>从 <code>h_old</code> 中减去最右侧字符 <code>s[i+k]</code> 的贡献，即 <code>val(s[i+k]) * p^(k-1)</code>。</li>
+<li>将剩余的部分整体乘以 <code>p</code>，这使得每一项的幂次都增加了 1 (<code>p^0</code> -&gt; <code>p^1</code>, <code>p^1</code> -&gt; <code>p^2</code>…)。</li>
+<li>最后，加上新进入窗口的字符 <code>s[i]</code> 的贡献，即 <code>val(s[i]) * p^0</code>。</li>
+</ol>
+<p>于是，我们得到了一个完美的 O(1) 更新公式：<br><code>h_new = ((h_old - val(s[i+k]) * p^(k-1)) * p + val(s[i])) mod m</code><br>这个公式只涉及加、减、乘，在模运算下非常简单！</p>
+<h3 id="滑动窗口算法详解"><a href="#滑动窗口算法详解" class="headerlink" title="滑动窗口算法详解"></a>滑动窗口算法详解</h3><ol>
+<li><p><strong>准备工作</strong>:</p>
+<ul>
+<li>预先计算 <code>power^(k-1) % modulo</code>，记为 <code>pk_1</code>。这个值在每次移除窗口最右侧字符时都会用到。</li>
+</ul>
+</li>
+<li><p><strong>初始化窗口</strong>:</p>
+<ul>
+<li>我们从字符串的<strong>最右端</strong>开始。首先完整计算最后一个窗口 <code>s[n-k : n]</code> 的哈希值，作为我们的初始 <code>current_hash</code>。</li>
+<li>检查这个初始哈希值是否与 <code>hashValue</code> 匹配。如果匹配，记录下当前的起始索引 <code>n-k</code> 作为候选答案。</li>
+</ul>
+</li>
+<li><p><strong>逆向滑动窗口</strong>:</p>
+<ul>
+<li>从 <code>i = n-k-1</code> 开始，循环递减至 <code>0</code>。<code>i</code> 代表新窗口的起始位置。</li>
+<li>在每次循环中，使用上面推导出的滚动哈希公式来更新 <code>current_hash</code>。<ul>
+<li><strong>移出</strong>：减去旧窗口最右侧字符 <code>s[i+k]</code> 的贡献。</li>
+<li><strong>乘幂</strong>：将结果乘以 <code>power</code>。</li>
+<li><strong>移入</strong>：加上新窗口最左侧字符 <code>s[i]</code> 的贡献。</li>
+<li><strong>注意</strong>：在进行模减法时，为防止出现负数，应写成 <code>(a - b + modulo) % modulo</code>。</li>
+</ul>
+</li>
+<li>每次更新哈希值后，都与 <code>hashValue</code> 进行比较。</li>
+<li>由于我们是从右向左遍历，任何一次匹配都意味着我们找到了一个比之前更靠前的答案。因此，只要匹配成功，就更新结果索引为当前的 <code>i</code>。</li>
+</ul>
+</li>
+<li><p><strong>返回结果</strong>:</p>
+<ul>
+<li>循环结束后，记录的最终索引就是题目所求的第一个满足条件的子串的起始位置。返回该子串即可。</li>
+</ul>
+</li>
+</ol>
+<h3 id="Python-代码实现"><a href="#Python-代码实现" class="headerlink" title="Python 代码实现"></a>Python 代码实现</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">subStrHash</span>(<span class="params">self, s: <span class="built_in">str</span>, power: <span class="built_in">int</span>, modulo: <span class="built_in">int</span>, k: <span class="built_in">int</span>, hashValue: <span class="built_in">int</span></span>) -&gt; <span class="built_in">str</span>:</span><br><span class="line">        n = <span class="built_in">len</span>(s)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 辅助函数，将 &#x27;a&#x27;-&#x27;z&#x27; 映射到 1-26</span></span><br><span class="line">        <span class="keyword">def</span> <span class="title function_">val</span>(<span class="params">c</span>):</span><br><span class="line">            <span class="keyword">return</span> <span class="built_in">ord</span>(c) - <span class="built_in">ord</span>(<span class="string">&#x27;a&#x27;</span>) + <span class="number">1</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># 步骤 1：预计算 p^(k-1) % m，用于移除窗口最右侧字符</span></span><br><span class="line">        pk_1 = <span class="built_in">pow</span>(power, k - <span class="number">1</span>, modulo)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 步骤 2：计算最右侧第一个窗口 s[n-k : n] 的哈希值</span></span><br><span class="line">        current_h = <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(k):</span><br><span class="line">            i = n - k + j <span class="comment"># 窗口内字符的索引</span></span><br><span class="line">            current_h = (current_h + val(s[i]) * <span class="built_in">pow</span>(power, j, modulo)) % modulo</span><br><span class="line">        </span><br><span class="line">        res_index = -<span class="number">1</span></span><br><span class="line">        <span class="keyword">if</span> current_h == hashValue:</span><br><span class="line">            res_index = n - k</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 步骤 3：从右向左滑动窗口</span></span><br><span class="line">        <span class="comment"># i 是新窗口的起始索引</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(n - k - <span class="number">1</span>, -<span class="number">1</span>, -<span class="number">1</span>):</span><br><span class="line">            <span class="comment"># old_hash (current_h) 对应 s[i+1 : i+k+1]</span></span><br><span class="line">            <span class="comment"># new_hash (将要计算的) 对应 s[i : i+k]</span></span><br><span class="line">            </span><br><span class="line">            old_right_val = val(s[i + k])</span><br><span class="line">            new_left_val = val(s[i])</span><br><span class="line"></span><br><span class="line">            <span class="comment"># 应用滚动哈希公式</span></span><br><span class="line">            <span class="comment"># a) 移除旧窗口最右侧字符的贡献</span></span><br><span class="line">            term_to_remove = (old_right_val * pk_1) % modulo</span><br><span class="line">            current_h = (current_h - term_to_remove + modulo) % modulo</span><br><span class="line">            </span><br><span class="line">            <span class="comment"># b) 所有项幂次加一</span></span><br><span class="line">            current_h = (current_h * power) % modulo</span><br><span class="line">            </span><br><span class="line">            <span class="comment"># c) 加上新窗口最左侧字符的贡献</span></span><br><span class="line">            current_h = (current_h + new_left_val) % modulo</span><br><span class="line"></span><br><span class="line">            <span class="comment"># 检查哈希值是否匹配</span></span><br><span class="line">            <span class="keyword">if</span> current_h == hashValue:</span><br><span class="line">                res_index = i <span class="comment"># 更新为更靠前的索引</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># 步骤 4：返回结果</span></span><br><span class="line">        <span class="keyword">return</span> s[res_index : res_index + k]</span><br></pre></td></tr></table></figure>
+
+<h3 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h3><ul>
+<li><strong>时间复杂度</strong>: O(N)。其中 N 是字符串 <code>s</code> 的长度。初始哈希计算耗时 O(K)，逆向滑动窗口循环 N-K 次，每次更新是 O(1)。总复杂度为 O(K + N - K) &#x3D; O(N)，实现了线性时间求解。</li>
+<li><strong>空间复杂度</strong>: O(1)。我们只使用了常数个变量来存储哈希值和中间计算结果。</li>
+</ul>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>本题是滚动哈希算法的绝佳应用案例。它告诉我们，当标准的从左到右的滑动窗口遇到数学难题（如模逆元）时，不妨换个方向思考。<strong>逆向滑动</strong>在本题中优雅地绕开了复杂的模除法，将哈希值的更新简化为基础的模运算，充分展现了算法设计的灵活性和数学之美。</p>
+]]></content>
+      <categories>
+        <category>算法题解</category>
+        <category>滑动窗口与双指针</category>
+        <category>定长滑动窗口</category>
+      </categories>
+      <tags>
+        <tag>字符串</tag>
+        <tag>滑动窗口</tag>
+        <tag>哈希函数</tag>
+        <tag>滚动哈希</tag>
+        <tag>第 278 场周赛</tag>
       </tags>
   </entry>
   <entry>
@@ -3128,6 +3128,118 @@
       </tags>
   </entry>
   <entry>
+    <title>LeetCode 3048 | 标记所有下标的最早秒数 I</title>
+    <url>//posts/leetcode-3048/</url>
+    <content><![CDATA[<blockquote class="blockquote-center">
+            <i class="fa fa-quote-left"></i>
+            <p>LeetCode 第 3048 题：<a href="https://leetcode.cn/problems/earliest-second-to-mark-indices-i/description/">标记所有下标的最早秒数 I</a>。<br>本题的关键在于识别出答案（秒数）具备单调性，从而可以将求解“最早秒数”这个最优化问题，转化为一个判定“给定秒数是否可行”的问题，并利用二分查找高效求解。</p>
+
+            <i class="fa fa-quote-right"></i>
+          </blockquote>
+<span id="more"></span>
+
+<h3 id="问题解读"><a href="#问题解读" class="headerlink" title="问题解读"></a>问题解读</h3><p>我们有两个数组，<code>nums</code> 和 <code>changeIndices</code>，长度分别为 <code>n</code> 和 <code>m</code>。我们的目标是找到一个<strong>最早</strong>的秒数，在此时刻之前（含），能够将 <code>nums</code> 数组的所有 <code>n</code> 个下标都“标记”一遍。</p>
+<p>每一秒，我们有三种选择：</p>
+<ol>
+<li>将任意一个 <code>nums[i]</code> 的值减 1。</li>
+<li>如果 <code>nums[changeIndices[s]-1]</code> 的值恰好为 0，我们可以标记 <code>changeIndices[s]-1</code> 这个下标。</li>
+<li>什么都不做。</li>
+</ol>
+<p>核心约束是：</p>
+<ul>
+<li>标记操作只能在特定秒数 <code>s</code> 对特定的下标 <code>changeIndices[s]-1</code> 进行。</li>
+<li>标记一个下标 <code>i</code> 的前提是 <code>nums[i]</code> 必须已经被减为 0。</li>
+</ul>
+<p>我们需要在 <code>m</code> 秒的时间窗口内，找到满足条件的最小秒数。如果无法完成任务，则返回 -1。</p>
+<h3 id="核心思路：将“求解问题”转化为“判定问题”与二分查找"><a href="#核心思路：将“求解问题”转化为“判定问题”与二分查找" class="headerlink" title="核心思路：将“求解问题”转化为“判定问题”与二分查找"></a>核心思路：将“求解问题”转化为“判定问题”与二分查找</h3><p>直接求解“最早秒数”比较复杂，因为它涉及到一系列操作的最优调度。但这类“求最小值&#x2F;最大值”的问题，通常可以尝试使用二分查找来解决。</p>
+<p>我们可以对<strong>答案（秒数 <code>s</code>）<strong>进行二分查找。为此，我们需要验证答案的</strong>单调性</strong>：</p>
+<ul>
+<li>如果在 <code>s</code> 秒内可以标记所有下标，那么在 <code>s+1</code> 秒内，我们拥有更多的时间和操作机会，必然也可以完成任务。</li>
+<li>反之，如果在 <code>s</code> 秒内无法完成任务，那么在更短的 <code>s-1</code> 秒内，也必然无法完成。</li>
+</ul>
+<p>这种单调性是应用二分查找的完美前提。我们可以将原问题从“找到<strong>最早</strong>的那个秒数”，转化为一个更简单的判定问题：“给定 <code>s</code> 秒，我们能<strong>不能</strong>标记所有下标？”</p>
+<p>我们可以设计一个辅助函数 <code>check(s)</code> 来回答这个判定问题。如果能高效地实现 <code>check(s)</code>，就可以通过二分查找在 <code>[1, m]</code> 的范围内快速定位到最小的可行秒数。</p>
+<h3 id="算法详解"><a href="#算法详解" class="headerlink" title="算法详解"></a>算法详解</h3><h4 id="1-确定二分查找的范围"><a href="#1-确定二分查找的范围" class="headerlink" title="1. 确定二分查找的范围"></a>1. 确定二分查找的范围</h4><ul>
+<li><strong>下界 (left)</strong>：至少需要 1 秒，所以下界是 <code>1</code>。</li>
+<li><strong>上界 (right)</strong>：最多有 <code>m</code> 秒可用，所以上界是 <code>m</code>。</li>
+</ul>
+<p>我们就在 <code>[1, m]</code> 这个区间内对秒数 <code>s</code> 进行二分查找。</p>
+<h4 id="2-check-s-函数的设计（贪心策略）"><a href="#2-check-s-函数的设计（贪心策略）" class="headerlink" title="2. check(s) 函数的设计（贪心策略）"></a>2. <code>check(s)</code> 函数的设计（贪心策略）</h4><p><code>check(s)</code> 是整个算法的核心。给定 <code>s</code> 秒，我们如何判断是否能完成任务？这需要一个明智的策略来安排我们的操作。</p>
+<p><strong>核心贪心思想</strong>：对于任何一个需要标记的下标 <code>i</code>，为了给“减 1”操作留出尽可能多的时间，我们应该选择在 <code>s</code> 秒内<strong>最后一次</strong>出现 <code>i</code> 的机会来标记它。这样做可以最大化在该标记操作之前可用的、能够自由支配的“减 1”秒数。</p>
+<p>基于这个思想，<code>check(s)</code> 的步骤如下：</p>
+<ol>
+<li><p><strong>找到最后的标记时机</strong>：</p>
+<ul>
+<li>遍历 <code>changeIndices</code> 的前 <code>s</code> 个元素（即从第 1 秒到第 <code>s</code> 秒）。</li>
+<li>使用一个哈希表或数组 <code>last_pos</code>，记录每个下标 <code>i</code> (1 到 n) 在这 <code>s</code> 秒内最后一次出现的时间点。</li>
+<li>如果在遍历后，发现某个下标 <code>i</code> 从未在 <code>changeIndices</code> 的前 <code>s</code> 秒中出现过，那么它就不可能被标记，<code>check(s)</code> 直接返回 <code>False</code>。</li>
+</ul>
+</li>
+<li><p><strong>模拟过程，检查资源是否足够</strong>：</p>
+<ul>
+<li>我们从第 1 秒开始，一直模拟到第 <code>s</code> 秒。维护一个计数器 <code>ops</code>，表示我们积累了多少可以自由使用的“减 1”操作次数。</li>
+<li>在第 <code>t</code> 秒 (<code>1 &lt;= t &lt;= s</code>)：<ul>
+<li>查看 <code>changeIndices</code> 在这一秒指向的下标 <code>idx</code>。</li>
+<li>判断当前秒 <code>t</code> 是否是 <code>idx</code> 的预定标记时间（即 <code>t == last_pos[idx]</code>）。<ul>
+<li><strong>如果是</strong>：我们必须在这一秒标记 <code>idx</code>。为此，我们需要确保 <code>nums[idx-1]</code> 已经归零。这需要 <code>nums[idx-1]</code> 次“减 1”操作。我们检查积累的 <code>ops</code> 是否足够（<code>ops &gt;= nums[idx-1]</code>）。<ul>
+<li>如果不够，说明时间不够，<code>check(s)</code> 返回 <code>False</code>。</li>
+<li>如果足够，我们就“消耗”掉这些操作次数：<code>ops -= nums[idx-1]</code>。</li>
+</ul>
+</li>
+<li><strong>如果不是</strong>：这一秒不是 <code>idx</code> 的最后标记机会。根据我们的贪心策略，我们不会在此时标记它，而是将这一秒视为一个宝贵的、可用于“减 1”的空闲时间。因此，<code>ops</code> 加 1。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>返回结果</strong>：</p>
+<ul>
+<li>如果整个模拟过程（从第 1 秒到第 <code>s</code> 秒）都能顺利进行，没有因为 <code>ops</code> 不足而提前退出，那么就说明 <code>s</code> 秒是可行的，<code>check(s)</code> 返回 <code>True</code>。</li>
+</ul>
+</li>
+</ol>
+<h4 id="3-执行二分查找"><a href="#3-执行二分查找" class="headerlink" title="3. 执行二分查找"></a>3. 执行二分查找</h4><ul>
+<li>当 <code>left &lt;= right</code> 时，循环继续。</li>
+<li>计算中间值 <code>mid = left + (right - left) // 2</code> 作为当前的“猜测秒数”。</li>
+<li>调用 <code>check(mid)</code> 来判定：<ul>
+<li><strong>如果 <code>check(mid)</code> 返回 <code>True</code></strong>：说明 <code>mid</code> 秒是可行的。这可能是答案，但我们还想找一个更早的时间。因此，我们记录 <code>ans = mid</code>，并尝试在左半部分继续寻找：<code>right = mid - 1</code>。</li>
+<li><strong>如果 <code>check(mid)</code> 返回 <code>False</code></strong>：说明 <code>mid</code> 秒不够，我们需要更多的时间。因此，去右半部分寻找：<code>left = mid + 1</code>。</li>
+</ul>
+</li>
+<li>循环结束后，<code>ans</code> 中存储的就是满足条件的最早秒数。</li>
+</ul>
+<h3 id="Python-代码实现"><a href="#Python-代码实现" class="headerlink" title="Python 代码实现"></a>Python 代码实现</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> typing <span class="keyword">import</span> <span class="type">List</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">earliestSecondToMarkIndices</span>(<span class="params">self, nums: <span class="type">List</span>[<span class="built_in">int</span>], changeIndices: <span class="type">List</span>[<span class="built_in">int</span>]</span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        n = <span class="built_in">len</span>(nums)</span><br><span class="line">        m = <span class="built_in">len</span>(changeIndices)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># check(s) 函数用于判断在 s 秒内是否能完成所有标记任务</span></span><br><span class="line">        <span class="comment"># s 是秒数 (1-based), 对应 changeIndices 的前 s 个元素 (0-indexed: 0 to s-1)</span></span><br><span class="line">        <span class="keyword">def</span> <span class="title function_">check</span>(<span class="params">s: <span class="built_in">int</span></span>) -&gt; <span class="built_in">bool</span>:</span><br><span class="line">            <span class="comment"># last[i] 记录下标 i (1-based) 在前 s 秒内最后一次出现的时间点 (0-indexed)</span></span><br><span class="line">            last = [-<span class="number">1</span>] * (n + <span class="number">1</span>)</span><br><span class="line">            <span class="keyword">for</span> t <span class="keyword">in</span> <span class="built_in">range</span>(s):</span><br><span class="line">                <span class="comment"># changeIndices 中的值是 1-based 的</span></span><br><span class="line">                last[changeIndices[t]] = t</span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 如果在前 s 秒内，有的下标从未出现过，则不可能被标记</span></span><br><span class="line">            <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, n + <span class="number">1</span>):</span><br><span class="line">                <span class="keyword">if</span> last[i] == -<span class="number">1</span>:</span><br><span class="line">                    <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">            </span><br><span class="line">            <span class="comment"># ops 记录可用于“减 1”操作的空闲秒数</span></span><br><span class="line">            ops = <span class="number">0</span></span><br><span class="line">            <span class="comment"># 遍历前 s 秒</span></span><br><span class="line">            <span class="keyword">for</span> t <span class="keyword">in</span> <span class="built_in">range</span>(s):</span><br><span class="line">                idx = changeIndices[t]</span><br><span class="line">                <span class="comment"># 如果当前时间 t 是标记下标 idx 的最后时机</span></span><br><span class="line">                <span class="keyword">if</span> t == last[idx]:</span><br><span class="line">                    <span class="comment"># 获取将 nums[idx-1] 降为 0 所需的“减 1”操作次数</span></span><br><span class="line">                    cost = nums[idx - <span class="number">1</span>]</span><br><span class="line">                    <span class="comment"># 如果空闲操作数不够，则 s 秒内无法完成任务</span></span><br><span class="line">                    <span class="keyword">if</span> ops &lt; cost:</span><br><span class="line">                        <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">                    <span class="comment"># 消耗掉 cost 次空闲操作</span></span><br><span class="line">                    ops -= cost</span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    <span class="comment"># 如果当前时间 t 不是最后标记时机，则可视为一次空闲操作</span></span><br><span class="line">                    ops += <span class="number">1</span></span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 如果成功遍历完 s 秒，说明 s 秒是可行的</span></span><br><span class="line">            <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># 二分查找答案</span></span><br><span class="line">        <span class="comment"># 搜索范围是 [1, m]，即最早可能的时间和最晚可能的时间</span></span><br><span class="line">        left, right = <span class="number">1</span>, m</span><br><span class="line">        ans = -<span class="number">1</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">while</span> left &lt;= right:</span><br><span class="line">            mid = left + (right - left) // <span class="number">2</span></span><br><span class="line">            <span class="keyword">if</span> check(mid):</span><br><span class="line">                <span class="comment"># 如果 mid 秒可行，说明它是一个潜在的答案</span></span><br><span class="line">                <span class="comment"># 我们尝试寻找更早的时间，所以向左收缩范围</span></span><br><span class="line">                ans = mid</span><br><span class="line">                right = mid - <span class="number">1</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="comment"># 如果 mid 秒不可行，说明时间太少，需要更多时间</span></span><br><span class="line">                <span class="comment"># 向右收缩范围</span></span><br><span class="line">                left = mid + <span class="number">1</span></span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> ans</span><br></pre></td></tr></table></figure>
+
+<h3 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h3><ul>
+<li><strong>时间复杂度</strong>: O((N + M) * log(M))。<ul>
+<li><code>N</code> 是 <code>nums</code> 的长度，<code>M</code> 是 <code>changeIndices</code> 的长度。</li>
+<li>二分查找的搜索空间大小为 <code>M</code>，因此需要 <code>log(M)</code> 次迭代。</li>
+<li>在每次迭代中，我们调用 <code>check(s)</code> 函数。该函数需要遍历 <code>changeIndices</code> 的前 <code>s</code> 个元素（最多 <code>M</code> 个）和 <code>n</code> 个下标，时间复杂度为 O(N + s)，即 O(N + M)。</li>
+<li>因此，总时间复杂度是这两者的乘积。</li>
+</ul>
+</li>
+<li><strong>空间复杂度</strong>: O(N)。<ul>
+<li>在 <code>check</code> 函数中，我们使用了 <code>last</code> 数组来存储每个下标的最后出现位置，其大小为 <code>N+1</code>。因此空间复杂度为 O(N)。</li>
+</ul>
+</li>
+</ul>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>本题是“二分答案”思想的又一个经典应用。当问题的目标是求解一个符合条件的“最小值”或“最大值”，并且该问题的可行性具有单调性时，我们应该优先考虑能否将其转化为一个判定问题，并通过二分查找来加速求解。本题的难点在于设计 <code>check</code> 函数，通过采用“将困难的标记操作尽可能延后”的贪心策略，我们可以高效地判断出在给定的时间限制下任务是否可行。</p>
+]]></content>
+      <categories>
+        <category>算法题解</category>
+        <category>二分算法</category>
+        <category>二分答案</category>
+        <category>求最小</category>
+      </categories>
+      <tags>
+        <tag>数组</tag>
+        <tag>二分查找</tag>
+        <tag>贪心</tag>
+        <tag>第386场周赛</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>LeetCode 3296 | 移山所需的最少秒数</title>
     <url>//posts/leetcode-3296/</url>
     <content><![CDATA[<blockquote class="blockquote-center">
@@ -3625,6 +3737,111 @@
         <tag>排序</tag>
         <tag>前缀和</tag>
         <tag>第431场周赛</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>LeetCode 3488 | BS解决“距离最小相等元素查询”</title>
+    <url>//posts/leetcode-3488/</url>
+    <content><![CDATA[<blockquote class="blockquote-center">
+            <i class="fa fa-quote-left"></i>
+            <p>LeetCode 第 3488 题：<a href="https://leetcode.cn/problems/closest-equal-element-queries/">距离最小相等元素查询</a>。<br>本题巧妙地结合了哈希表预处理和二分查找，高效解决环形数组中的距离查询问题，是“预处理+查询”思想的经典体现。</p>
+
+            <i class="fa fa-quote-right"></i>
+          </blockquote>
+<span id="more"></span>
+<h3 id="问题解读"><a href="#问题解读" class="headerlink" title="问题解读"></a>问题解读</h3><p>题目给了我们一个 <strong>环形</strong> 数组 <code>nums</code> 和一个查询数组 <code>queries</code>。对于 <code>queries</code> 中的每一个下标 <code>queries[i]</code>，我们需要在 <code>nums</code> 数组中找到另一个下标 <code>j</code>，满足 <code>nums[j]</code> 与 <code>nums[queries[i]]</code> 的值相等，并且 <code>j</code> 与 <code>queries[i]</code> 之间的距离是所有满足条件的下标中最小的。</p>
+<p>这里的 <strong>距离</strong> 需要特别注意，因为数组是环形的。两个下标 <code>i</code> 和 <code>j</code> 在一个长度为 <code>n</code> 的环形数组中的距离是 <code>min(|i - j|, n - |i - j|)</code>。如果找不到任何其他具有相同值的下标，那么该查询的结果就是 -1。</p>
+<p>我们最后需要返回一个答案数组 <code>answer</code>，其中 <code>answer[i]</code> 对应第 <code>i</code> 个查询的结果。</p>
+<p>举个例子，<code>nums = [1,3,1,4,1,3,2]</code>, <code>queries = [0,3,5]</code>, 数组长度 <code>n=7</code>：</p>
+<ul>
+<li>对于查询 <code>queries[0] = 0</code>：<ul>
+<li><code>nums[0]</code> 的值是 1。 <code>nums</code> 中其他值为 1 的下标有 2 和 4。</li>
+<li>到下标 2 的距离是 <code>min(|0-2|, 7-|0-2|) = min(2, 5) = 2</code>。</li>
+<li>到下标 4 的距离是 <code>min(|0-4|, 7-|0-4|) = min(4, 3) = 3</code>。</li>
+<li>最小距离是 2。</li>
+</ul>
+</li>
+<li>对于查询 <code>queries[1] = 3</code>：<ul>
+<li><code>nums[3]</code> 的值是 4。 <code>nums</code> 中没有其他值为 4 的元素。</li>
+<li>结果为 -1。</li>
+</ul>
+</li>
+<li>对于查询 <code>queries[2] = 5</code>：<ul>
+<li><code>nums[5]</code> 的值是 3。<code>nums</code> 中另一个值为 3 的下标是 1。</li>
+<li>距离是 <code>min(|5-1|, 7-|5-1|) = min(4, 3) = 3</code>。</li>
+</ul>
+</li>
+<li>因此，最终答案是 <code>[2, -1, 3]</code>。</li>
+</ul>
+<h3 id="核心思路：预处理-二分查找"><a href="#核心思路：预处理-二分查找" class="headerlink" title="核心思路：预处理 + 二分查找"></a>核心思路：预处理 + 二分查找</h3><p>一个直接的想法是，对每个查询 <code>q_idx</code>，我们都遍历整个 <code>nums</code> 数组，找出所有值与 <code>nums[q_idx]</code> 相等的下标，然后逐一计算环形距离并取最小值。如果 <code>queries</code> 的长度是 Q，<code>nums</code> 的长度是 N，这种暴力解法的时间复杂度是 O(Q * N)，在 N 和 Q 都达到 10^5 的情况下，将会超时。</p>
+<p>为了优化查询，我们可以对 <code>nums</code> 数组进行 <strong>预处理</strong>。</p>
+<p>整个优化的思路分为两步：</p>
+<ol>
+<li><p><strong>预处理与分组</strong>：我们可以使用一个哈希表（在 Python 中是字典），将 <code>nums</code> 中相同值的元素的 <strong>下标</strong> 聚合在一起。哈希表的键（key）是 <code>nums</code> 中的值，值（value）是一个包含该值所有出现位置下标的列表。因为我们是按顺序遍历 <code>nums</code> 来构建这个哈希表的，所以每个下标列表天然就是 <strong>有序的</strong>。</p>
+</li>
+<li><p><strong>高效查询</strong>：完成预处理后，对于每个查询的下标 <code>q_idx</code>，我们先找到它的值 <code>val = nums[q_idx]</code>。然后，我们从哈希表中取出 <code>val</code> 对应的有序下标列表 <code>indices</code>。问题就转化成了：<strong>在一个排好序的数组 <code>indices</code> 中，找到离 <code>q_idx</code> 最近的两个邻居</strong>。<br>这正是二分查找的用武之地。我们可以通过二分查找，在 <code>indices</code> 列表中快速定位到 <code>q_idx</code> 自己的位置。它的前一个元素和后一个元素（需要考虑环绕情况）就是距离最近的候选者。</p>
+</li>
+</ol>
+<p>通过这种方式，每次查询我们不再需要遍历整个 <code>nums</code> 数组，而只需要在对应的小得多的下标列表上进行一次二分查找，时间复杂度从 O(N) 降到了 O(log K)（K 是某个值出现的次数，K ≤ N），显著提高了算法的整体效率。</p>
+<h3 id="算法详解"><a href="#算法详解" class="headerlink" title="算法详解"></a>算法详解</h3><ol>
+<li><p><strong>预处理 <code>nums</code> 数组</strong></p>
+<ul>
+<li>创建一个哈希表 <code>value_to_indices</code>，用于存储值到其下标列表的映射。</li>
+<li>遍历 <code>nums</code> 数组，对于每个元素 <code>nums[i]</code>，将其下标 <code>i</code> 添加到 <code>value_to_indices[nums[i]]</code> 对应的列表中。</li>
+</ul>
+</li>
+<li><p><strong>处理 <code>queries</code> 数组</strong></p>
+<ul>
+<li>创建一个空的答案数组 <code>ans</code>。</li>
+<li>获取 <code>nums</code> 的长度 <code>n</code>，这在计算环形距离时会用到。</li>
+<li>遍历 <code>queries</code> 中的每一个 <code>q_idx</code>：<ul>
+<li>获取其值 <code>val = nums[q_idx]</code> 和对应的下标列表 <code>indices = value_to_indices[val]</code>。</li>
+<li>如果 <code>indices</code> 的长度小于等于 1，说明没有其他相等的元素，将 -1 添加到 <code>ans</code> 中。</li>
+<li>否则，使用二分查找（在 Python 中是 <code>bisect.bisect_left</code>）在 <code>indices</code> 中找到 <code>q_idx</code> 的位置 <code>pos</code>。</li>
+<li><code>q_idx</code> 在 <code>indices</code> 中的逻辑前驱下标是 <code>prev_idx = indices[(pos - 1 + len(indices)) % len(indices)]</code>。</li>
+<li><code>q_idx</code> 在 <code>indices</code> 中的逻辑后继下标是 <code>next_idx = indices[(pos + 1) % len(indices)]</code>。这里的取模运算优雅地处理了列表首尾的环绕情况。</li>
+<li>分别计算 <code>q_idx</code> 到 <code>prev_idx</code> 和 <code>next_idx</code> 的环形距离。<ul>
+<li><code>dist_prev = min(abs(q_idx - prev_idx), n - abs(q_idx - prev_idx))</code></li>
+<li><code>dist_next = min(abs(q_idx - next_idx), n - abs(q_idx - next_idx))</code></li>
+</ul>
+</li>
+<li>将 <code>min(dist_prev, dist_next)</code> 添加到 <code>ans</code> 数组中。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>返回结果</strong></p>
+<ul>
+<li>遍历结束后，返回 <code>ans</code> 数组。</li>
+</ul>
+</li>
+</ol>
+<h3 id="Python-代码实现"><a href="#Python-代码实现" class="headerlink" title="Python 代码实现"></a>Python 代码实现</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> collections</span><br><span class="line"><span class="keyword">import</span> bisect</span><br><span class="line"><span class="keyword">from</span> typing <span class="keyword">import</span> <span class="type">List</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">solveQueries</span>(<span class="params">self, nums: <span class="type">List</span>[<span class="built_in">int</span>], queries: <span class="type">List</span>[<span class="built_in">int</span>]</span>) -&gt; <span class="type">List</span>[<span class="built_in">int</span>]:</span><br><span class="line">        n = <span class="built_in">len</span>(nums)</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 步骤 1: 预处理 nums 数组</span></span><br><span class="line">        <span class="comment"># 使用哈希表存储每个值及其出现的所有下标</span></span><br><span class="line">        value_to_indices = collections.defaultdict(<span class="built_in">list</span>)</span><br><span class="line">        <span class="keyword">for</span> i, num <span class="keyword">in</span> <span class="built_in">enumerate</span>(nums):</span><br><span class="line">            value_to_indices[num].append(i)</span><br><span class="line"></span><br><span class="line">        ans = []</span><br><span class="line">        <span class="comment"># 步骤 2: 处理 queries 数组</span></span><br><span class="line">        <span class="keyword">for</span> q_idx <span class="keyword">in</span> queries:</span><br><span class="line">            val = nums[q_idx]</span><br><span class="line">            indices = value_to_indices[val]</span><br><span class="line"></span><br><span class="line">            <span class="comment"># 如果该值只出现一次，没有其他相等元素</span></span><br><span class="line">            <span class="keyword">if</span> <span class="built_in">len</span>(indices) &lt;= <span class="number">1</span>:</span><br><span class="line">                ans.append(-<span class="number">1</span>)</span><br><span class="line">                <span class="keyword">continue</span></span><br><span class="line"></span><br><span class="line">            <span class="comment"># 使用二分查找在下标列表中定位当前查询的下标</span></span><br><span class="line">            <span class="comment"># bisect_left 会找到 q_idx 在列表中的位置</span></span><br><span class="line">            pos = bisect.bisect_left(indices, q_idx)</span><br><span class="line"></span><br><span class="line">            <span class="comment"># 找到逻辑上的前一个和后一个下标</span></span><br><span class="line">            <span class="comment"># (pos - 1 + len(indices)) % len(indices) 是一种处理负数取模的通用技巧</span></span><br><span class="line">            prev_idx = indices[(pos - <span class="number">1</span> + <span class="built_in">len</span>(indices)) % <span class="built_in">len</span>(indices)]</span><br><span class="line">            <span class="comment"># (pos + 1) % len(indices) 用于处理列表末尾的环绕</span></span><br><span class="line">            next_idx = indices[(pos + <span class="number">1</span>) % <span class="built_in">len</span>(indices)]</span><br><span class="line"></span><br><span class="line">            <span class="comment"># 计算到前一个和后一个元素的环形距离</span></span><br><span class="line">            dist_prev = <span class="built_in">min</span>(<span class="built_in">abs</span>(q_idx - prev_idx), n - <span class="built_in">abs</span>(q_idx - prev_idx))</span><br><span class="line">            dist_next = <span class="built_in">min</span>(<span class="built_in">abs</span>(q_idx - next_idx), n - <span class="built_in">abs</span>(q_idx - next_idx))</span><br><span class="line"></span><br><span class="line">            <span class="comment"># 取两者中的较小值</span></span><br><span class="line">            ans.append(<span class="built_in">min</span>(dist_prev, dist_next))</span><br><span class="line">            </span><br><span class="line">        <span class="comment"># 步骤 3: 返回结果</span></span><br><span class="line">        <span class="keyword">return</span> ans</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h3><ul>
+<li><strong>时间复杂度</strong>: O(N + Q * log N)。<ul>
+<li><code>N</code> 是 <code>nums</code> 的长度, <code>Q</code> 是 <code>queries</code> 的长度。</li>
+<li>构建哈希表 <code>value_to_indices</code> 需要 O(N) 的时间。</li>
+<li>对于每个查询，哈希表查找的平均时间是 O(1)，二分查找的时间是 O(log K)，其中 K 是相同元素的数量（K ≤ N）。因此，处理所有查询的总时间是 O(Q * log N)。</li>
+</ul>
+</li>
+<li><strong>空间复杂度</strong>: O(N)。<ul>
+<li>在最坏的情况下（<code>nums</code> 中所有元素都不同），哈希表 <code>value_to_indices</code> 需要存储 N 个键和 N 个单元素列表，总空间消耗为 O(N)。</li>
+</ul>
+</li>
+</ul>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>本题是“预处理 + 高效查询”设计模式的一个绝佳范例。当面对需要对一个静态数据集进行多次查询的场景时，我们应首先考虑是否可以通过一次性的预处理（如排序、分组、构建特定数据结构等）来优化后续的查询操作。哈希表用于快速分组，而二分查找则利用了数据的有序性，两者的结合为解决这类问题提供了强大而高效的工具。</p>
+]]></content>
+      <categories>
+        <category>算法题解</category>
+        <category>二分算法</category>
+        <category>二分查找</category>
+      </categories>
+      <tags>
+        <tag>数组</tag>
+        <tag>二分查找</tag>
+        <tag>哈希表</tag>
+        <tag>第441场周赛</tag>
       </tags>
   </entry>
   <entry>
@@ -4169,111 +4386,6 @@
         <tag>哈希表</tag>
         <tag>滑动窗口</tag>
         <tag>双指针</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>LeetCode 3488 | BS解决“距离最小相等元素查询”</title>
-    <url>//posts/leetcode-3488/</url>
-    <content><![CDATA[<blockquote class="blockquote-center">
-            <i class="fa fa-quote-left"></i>
-            <p>LeetCode 第 3488 题：<a href="https://leetcode.cn/problems/closest-equal-element-queries/">距离最小相等元素查询</a>。<br>本题巧妙地结合了哈希表预处理和二分查找，高效解决环形数组中的距离查询问题，是“预处理+查询”思想的经典体现。</p>
-
-            <i class="fa fa-quote-right"></i>
-          </blockquote>
-<span id="more"></span>
-<h3 id="问题解读"><a href="#问题解读" class="headerlink" title="问题解读"></a>问题解读</h3><p>题目给了我们一个 <strong>环形</strong> 数组 <code>nums</code> 和一个查询数组 <code>queries</code>。对于 <code>queries</code> 中的每一个下标 <code>queries[i]</code>，我们需要在 <code>nums</code> 数组中找到另一个下标 <code>j</code>，满足 <code>nums[j]</code> 与 <code>nums[queries[i]]</code> 的值相等，并且 <code>j</code> 与 <code>queries[i]</code> 之间的距离是所有满足条件的下标中最小的。</p>
-<p>这里的 <strong>距离</strong> 需要特别注意，因为数组是环形的。两个下标 <code>i</code> 和 <code>j</code> 在一个长度为 <code>n</code> 的环形数组中的距离是 <code>min(|i - j|, n - |i - j|)</code>。如果找不到任何其他具有相同值的下标，那么该查询的结果就是 -1。</p>
-<p>我们最后需要返回一个答案数组 <code>answer</code>，其中 <code>answer[i]</code> 对应第 <code>i</code> 个查询的结果。</p>
-<p>举个例子，<code>nums = [1,3,1,4,1,3,2]</code>, <code>queries = [0,3,5]</code>, 数组长度 <code>n=7</code>：</p>
-<ul>
-<li>对于查询 <code>queries[0] = 0</code>：<ul>
-<li><code>nums[0]</code> 的值是 1。 <code>nums</code> 中其他值为 1 的下标有 2 和 4。</li>
-<li>到下标 2 的距离是 <code>min(|0-2|, 7-|0-2|) = min(2, 5) = 2</code>。</li>
-<li>到下标 4 的距离是 <code>min(|0-4|, 7-|0-4|) = min(4, 3) = 3</code>。</li>
-<li>最小距离是 2。</li>
-</ul>
-</li>
-<li>对于查询 <code>queries[1] = 3</code>：<ul>
-<li><code>nums[3]</code> 的值是 4。 <code>nums</code> 中没有其他值为 4 的元素。</li>
-<li>结果为 -1。</li>
-</ul>
-</li>
-<li>对于查询 <code>queries[2] = 5</code>：<ul>
-<li><code>nums[5]</code> 的值是 3。<code>nums</code> 中另一个值为 3 的下标是 1。</li>
-<li>距离是 <code>min(|5-1|, 7-|5-1|) = min(4, 3) = 3</code>。</li>
-</ul>
-</li>
-<li>因此，最终答案是 <code>[2, -1, 3]</code>。</li>
-</ul>
-<h3 id="核心思路：预处理-二分查找"><a href="#核心思路：预处理-二分查找" class="headerlink" title="核心思路：预处理 + 二分查找"></a>核心思路：预处理 + 二分查找</h3><p>一个直接的想法是，对每个查询 <code>q_idx</code>，我们都遍历整个 <code>nums</code> 数组，找出所有值与 <code>nums[q_idx]</code> 相等的下标，然后逐一计算环形距离并取最小值。如果 <code>queries</code> 的长度是 Q，<code>nums</code> 的长度是 N，这种暴力解法的时间复杂度是 O(Q * N)，在 N 和 Q 都达到 10^5 的情况下，将会超时。</p>
-<p>为了优化查询，我们可以对 <code>nums</code> 数组进行 <strong>预处理</strong>。</p>
-<p>整个优化的思路分为两步：</p>
-<ol>
-<li><p><strong>预处理与分组</strong>：我们可以使用一个哈希表（在 Python 中是字典），将 <code>nums</code> 中相同值的元素的 <strong>下标</strong> 聚合在一起。哈希表的键（key）是 <code>nums</code> 中的值，值（value）是一个包含该值所有出现位置下标的列表。因为我们是按顺序遍历 <code>nums</code> 来构建这个哈希表的，所以每个下标列表天然就是 <strong>有序的</strong>。</p>
-</li>
-<li><p><strong>高效查询</strong>：完成预处理后，对于每个查询的下标 <code>q_idx</code>，我们先找到它的值 <code>val = nums[q_idx]</code>。然后，我们从哈希表中取出 <code>val</code> 对应的有序下标列表 <code>indices</code>。问题就转化成了：<strong>在一个排好序的数组 <code>indices</code> 中，找到离 <code>q_idx</code> 最近的两个邻居</strong>。<br>这正是二分查找的用武之地。我们可以通过二分查找，在 <code>indices</code> 列表中快速定位到 <code>q_idx</code> 自己的位置。它的前一个元素和后一个元素（需要考虑环绕情况）就是距离最近的候选者。</p>
-</li>
-</ol>
-<p>通过这种方式，每次查询我们不再需要遍历整个 <code>nums</code> 数组，而只需要在对应的小得多的下标列表上进行一次二分查找，时间复杂度从 O(N) 降到了 O(log K)（K 是某个值出现的次数，K ≤ N），显著提高了算法的整体效率。</p>
-<h3 id="算法详解"><a href="#算法详解" class="headerlink" title="算法详解"></a>算法详解</h3><ol>
-<li><p><strong>预处理 <code>nums</code> 数组</strong></p>
-<ul>
-<li>创建一个哈希表 <code>value_to_indices</code>，用于存储值到其下标列表的映射。</li>
-<li>遍历 <code>nums</code> 数组，对于每个元素 <code>nums[i]</code>，将其下标 <code>i</code> 添加到 <code>value_to_indices[nums[i]]</code> 对应的列表中。</li>
-</ul>
-</li>
-<li><p><strong>处理 <code>queries</code> 数组</strong></p>
-<ul>
-<li>创建一个空的答案数组 <code>ans</code>。</li>
-<li>获取 <code>nums</code> 的长度 <code>n</code>，这在计算环形距离时会用到。</li>
-<li>遍历 <code>queries</code> 中的每一个 <code>q_idx</code>：<ul>
-<li>获取其值 <code>val = nums[q_idx]</code> 和对应的下标列表 <code>indices = value_to_indices[val]</code>。</li>
-<li>如果 <code>indices</code> 的长度小于等于 1，说明没有其他相等的元素，将 -1 添加到 <code>ans</code> 中。</li>
-<li>否则，使用二分查找（在 Python 中是 <code>bisect.bisect_left</code>）在 <code>indices</code> 中找到 <code>q_idx</code> 的位置 <code>pos</code>。</li>
-<li><code>q_idx</code> 在 <code>indices</code> 中的逻辑前驱下标是 <code>prev_idx = indices[(pos - 1 + len(indices)) % len(indices)]</code>。</li>
-<li><code>q_idx</code> 在 <code>indices</code> 中的逻辑后继下标是 <code>next_idx = indices[(pos + 1) % len(indices)]</code>。这里的取模运算优雅地处理了列表首尾的环绕情况。</li>
-<li>分别计算 <code>q_idx</code> 到 <code>prev_idx</code> 和 <code>next_idx</code> 的环形距离。<ul>
-<li><code>dist_prev = min(abs(q_idx - prev_idx), n - abs(q_idx - prev_idx))</code></li>
-<li><code>dist_next = min(abs(q_idx - next_idx), n - abs(q_idx - next_idx))</code></li>
-</ul>
-</li>
-<li>将 <code>min(dist_prev, dist_next)</code> 添加到 <code>ans</code> 数组中。</li>
-</ul>
-</li>
-</ul>
-</li>
-<li><p><strong>返回结果</strong></p>
-<ul>
-<li>遍历结束后，返回 <code>ans</code> 数组。</li>
-</ul>
-</li>
-</ol>
-<h3 id="Python-代码实现"><a href="#Python-代码实现" class="headerlink" title="Python 代码实现"></a>Python 代码实现</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> collections</span><br><span class="line"><span class="keyword">import</span> bisect</span><br><span class="line"><span class="keyword">from</span> typing <span class="keyword">import</span> <span class="type">List</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">solveQueries</span>(<span class="params">self, nums: <span class="type">List</span>[<span class="built_in">int</span>], queries: <span class="type">List</span>[<span class="built_in">int</span>]</span>) -&gt; <span class="type">List</span>[<span class="built_in">int</span>]:</span><br><span class="line">        n = <span class="built_in">len</span>(nums)</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 步骤 1: 预处理 nums 数组</span></span><br><span class="line">        <span class="comment"># 使用哈希表存储每个值及其出现的所有下标</span></span><br><span class="line">        value_to_indices = collections.defaultdict(<span class="built_in">list</span>)</span><br><span class="line">        <span class="keyword">for</span> i, num <span class="keyword">in</span> <span class="built_in">enumerate</span>(nums):</span><br><span class="line">            value_to_indices[num].append(i)</span><br><span class="line"></span><br><span class="line">        ans = []</span><br><span class="line">        <span class="comment"># 步骤 2: 处理 queries 数组</span></span><br><span class="line">        <span class="keyword">for</span> q_idx <span class="keyword">in</span> queries:</span><br><span class="line">            val = nums[q_idx]</span><br><span class="line">            indices = value_to_indices[val]</span><br><span class="line"></span><br><span class="line">            <span class="comment"># 如果该值只出现一次，没有其他相等元素</span></span><br><span class="line">            <span class="keyword">if</span> <span class="built_in">len</span>(indices) &lt;= <span class="number">1</span>:</span><br><span class="line">                ans.append(-<span class="number">1</span>)</span><br><span class="line">                <span class="keyword">continue</span></span><br><span class="line"></span><br><span class="line">            <span class="comment"># 使用二分查找在下标列表中定位当前查询的下标</span></span><br><span class="line">            <span class="comment"># bisect_left 会找到 q_idx 在列表中的位置</span></span><br><span class="line">            pos = bisect.bisect_left(indices, q_idx)</span><br><span class="line"></span><br><span class="line">            <span class="comment"># 找到逻辑上的前一个和后一个下标</span></span><br><span class="line">            <span class="comment"># (pos - 1 + len(indices)) % len(indices) 是一种处理负数取模的通用技巧</span></span><br><span class="line">            prev_idx = indices[(pos - <span class="number">1</span> + <span class="built_in">len</span>(indices)) % <span class="built_in">len</span>(indices)]</span><br><span class="line">            <span class="comment"># (pos + 1) % len(indices) 用于处理列表末尾的环绕</span></span><br><span class="line">            next_idx = indices[(pos + <span class="number">1</span>) % <span class="built_in">len</span>(indices)]</span><br><span class="line"></span><br><span class="line">            <span class="comment"># 计算到前一个和后一个元素的环形距离</span></span><br><span class="line">            dist_prev = <span class="built_in">min</span>(<span class="built_in">abs</span>(q_idx - prev_idx), n - <span class="built_in">abs</span>(q_idx - prev_idx))</span><br><span class="line">            dist_next = <span class="built_in">min</span>(<span class="built_in">abs</span>(q_idx - next_idx), n - <span class="built_in">abs</span>(q_idx - next_idx))</span><br><span class="line"></span><br><span class="line">            <span class="comment"># 取两者中的较小值</span></span><br><span class="line">            ans.append(<span class="built_in">min</span>(dist_prev, dist_next))</span><br><span class="line">            </span><br><span class="line">        <span class="comment"># 步骤 3: 返回结果</span></span><br><span class="line">        <span class="keyword">return</span> ans</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h3 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h3><ul>
-<li><strong>时间复杂度</strong>: O(N + Q * log N)。<ul>
-<li><code>N</code> 是 <code>nums</code> 的长度, <code>Q</code> 是 <code>queries</code> 的长度。</li>
-<li>构建哈希表 <code>value_to_indices</code> 需要 O(N) 的时间。</li>
-<li>对于每个查询，哈希表查找的平均时间是 O(1)，二分查找的时间是 O(log K)，其中 K 是相同元素的数量（K ≤ N）。因此，处理所有查询的总时间是 O(Q * log N)。</li>
-</ul>
-</li>
-<li><strong>空间复杂度</strong>: O(N)。<ul>
-<li>在最坏的情况下（<code>nums</code> 中所有元素都不同），哈希表 <code>value_to_indices</code> 需要存储 N 个键和 N 个单元素列表，总空间消耗为 O(N)。</li>
-</ul>
-</li>
-</ul>
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>本题是“预处理 + 高效查询”设计模式的一个绝佳范例。当面对需要对一个静态数据集进行多次查询的场景时，我们应首先考虑是否可以通过一次性的预处理（如排序、分组、构建特定数据结构等）来优化后续的查询操作。哈希表用于快速分组，而二分查找则利用了数据的有序性，两者的结合为解决这类问题提供了强大而高效的工具。</p>
-]]></content>
-      <categories>
-        <category>算法题解</category>
-        <category>二分算法</category>
-        <category>二分查找</category>
-      </categories>
-      <tags>
-        <tag>数组</tag>
-        <tag>二分查找</tag>
-        <tag>哈希表</tag>
-        <tag>第441场周赛</tag>
       </tags>
   </entry>
   <entry>
