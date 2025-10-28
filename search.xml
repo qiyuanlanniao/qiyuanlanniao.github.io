@@ -2335,6 +2335,127 @@
       </tags>
   </entry>
   <entry>
+    <title>LeetCode 2576 | 求出最多标记下标</title>
+    <url>//posts/leetcode-2576/</url>
+    <content><![CDATA[<blockquote class="blockquote-center">
+            <i class="fa fa-quote-left"></i>
+            <p>LeetCode 第 2576 题：<a href="https://leetcode.cn/problems/find-the-maximum-number-of-marked-indices/description/">求出最多标记下标</a>。<br>本题的关键在于通过排序，将问题转化为一个判定问题：我们能否标记出 <code>2*k</code> 个下标？这个判定问题具有单调性，因此可以利用二分查找来高效地找到最大的 <code>k</code>。</p>
+
+            <i class="fa fa-quote-right"></i>
+          </blockquote>
+<span id="more"></span>
+
+<h3 id="问题解读"><a href="#问题解读" class="headerlink" title="问题解读"></a>问题解读</h3><p>题目要求我们在一个整数数组 <code>nums</code> 中，尽可能多地标记下标。标记的规则是：每次选择两个未被标记的、不同的下标 <code>i</code> 和 <code>j</code>，如果它们满足 <code>2 * nums[i] &lt;= nums[j]</code>，就可以将这两个下标标记。我们的目标是最大化被标记的下标总数。</p>
+<p>这里的核心约束条件是：</p>
+<ol>
+<li>每次操作选择的 <code>i</code> 和 <code>j</code> 必须是之前未被标记过的。</li>
+<li>必须满足 <code>2 * nums[i] &lt;= nums[j]</code> 的条件。</li>
+<li>目标是让最终被标记的下标数量最多。</li>
+</ol>
+<p>由于被标记的下标总是成对出现的，所以最大化标记下标的数量等价于最大化我们能成功匹配的<strong>配对数</strong>。</p>
+<p>举个例子，<code>nums = [9,2,5,4]</code>。<br>如果我们想匹配，一个很自然的想法是先对数组排序，得到 <code>[2,4,5,9]</code>。这样我们更容易找到满足 <code>2 * x &lt;= y</code> 的数对。<br>排序后，我们尝试配对：</p>
+<ul>
+<li>拿最小的 <code>2</code> 和 <code>4</code> 配对？<code>2 * 2 &lt;= 4</code>，不满足。</li>
+<li>拿最小的 <code>2</code> 和 <code>5</code> 配对？<code>2 * 2 &lt;= 5</code>，满足。我们可以标记 <code>2</code> 和 <code>5</code>。</li>
+<li>剩下 <code>4</code> 和 <code>9</code>。<code>2 * 4 &lt;= 9</code>，满足。我们可以标记 <code>4</code> 和 <code>9</code>。<br>最终，所有数字都被标记了，总共 4 个。</li>
+</ul>
+<p>这个例子启发我们，排序可能是一个关键步骤，并且配对时应该采取某种贪心策略。</p>
+<h3 id="核心思路：将“求解问题”转化为“判定问题”与二分查找"><a href="#核心思路：将“求解问题”转化为“判定问题”与二分查找" class="headerlink" title="核心思路：将“求解问题”转化为“判定问题”与二分查找"></a>核心思路：将“求解问题”转化为“判定问题”与二分查找</h3><p>直接求解“最多能凑成几对”似乎有些复杂。我们可以换一个角度思考：给定一个整数 <code>k</code>，我们能否判断出<strong>是否可以凑成 <code>k</code> 对</strong>？</p>
+<p>这个问题，即“判定问题”，相对更容易解决。如果我们能解决这个判定问题，就可以利用其单调性进行二分查找。</p>
+<p><strong>判定问题：<code>check(k)</code></strong><br>假设我们要判断能否凑成 <code>k</code> 对。为了尽可能地满足 <code>2 * nums[i] &lt;= nums[j]</code> 这个条件，我们应该让 <code>nums[i]</code> 尽可能小，<code>nums[j]</code> 尽可能大。<br>一个最优的贪心策略是：</p>
+<ol>
+<li>首先对数组 <code>nums</code> 进行排序。</li>
+<li>选出数组中最小的 <code>k</code> 个数作为所有 <code>nums[i]</code> 的候选。</li>
+<li>选出数组中最大的 <code>k</code> 个数作为所有 <code>nums[j]</code> 的候选。</li>
+<li>然后进行配对。为了让每个小的数都能配对成功，我们应该用最小的 <code>nums[i]</code>（即 <code>nums[0]</code>）去和最小的可用 <code>nums[j]</code>（即 <code>nums[n-k]</code>）配对，以此类推。</li>
+<li>所以，检查条件就变成了：<code>nums[0]</code> 能否和 <code>nums[n-k]</code> 配对，<code>nums[1]</code> 能否和 <code>nums[n-k+1]</code> 配对，……，<code>nums[k-1]</code> 能否和 <code>nums[n-1]</code> 配对。</li>
+<li>如果 <code>2 * nums[i] &lt;= nums[n-k+i]</code> 对所有的 <code>i</code> in <code>[0, k-1]</code> 都成立，那么我们就能凑成 <code>k</code> 对。</li>
+</ol>
+<p><strong>单调性</strong><br>这个判定结果具有明显的单调性：</p>
+<ul>
+<li>如果我们能成功凑成 <code>k</code> 对，那么我们一定能凑成 <code>k-1</code> 对（因为我们可以直接使用前 <code>k-1</code> 对的方案）。</li>
+<li>如果我们无法凑成 <code>k</code> 对，那么我们更不可能凑成 <code>k+1</code> 对（因为 <code>k+1</code> 对的要求更严格）。</li>
+</ul>
+<p>这种单调性是应用二分查找的完美场景。我们可以对“配对数 <code>k</code>”进行二分查找，来快速定位到那个“最大可行”的临界点。</p>
+<p>二分查找的搜索范围是什么？</p>
+<ul>
+<li><strong>下界 (left)</strong>：最少可以凑成 0 对。</li>
+<li><strong>上界 (right)</strong>：最多可以凑成 <code>n/2</code> 对，因为每对消耗两个数。</li>
+</ul>
+<p>因此，我们就在 <code>[0, n/2]</code> 这个区间内，对配对数 <code>k</code> 进行二分查找。</p>
+<h3 id="算法详解"><a href="#算法详解" class="headerlink" title="算法详解"></a>算法详解</h3><ol>
+<li><p><strong>排序</strong></p>
+<ul>
+<li>首先，对 <code>nums</code> 数组进行升序排序。</li>
+</ul>
+</li>
+<li><p><strong>确定二分查找的范围</strong></p>
+<ul>
+<li><code>left = 0</code>：可能的最小配对数。</li>
+<li><code>right = len(nums) // 2 + 1</code>：配对数的一个开区间上界。我们将搜索区间设为 <code>[left, right)</code>，其中 <code>left</code> 始终是我们已知的可行解。</li>
+</ul>
+</li>
+<li><p><strong>执行二分查找</strong></p>
+<ul>
+<li>当 <code>left + 1 &lt; right</code> 时，循环继续。</li>
+<li>计算中间值 <code>k = (left + right) // 2</code> 作为当前的“猜测配对数”。</li>
+<li>调用判定逻辑 <code>check(k)</code>：<ul>
+<li>遍历 <code>i</code> from <code>0</code> to <code>k-1</code>。</li>
+<li>检查 <code>2 * nums[i]</code> 是否小于等于 <code>nums[len(nums) - k + i]</code>。</li>
+<li>在Python中，<code>nums[len(nums) - k + i]</code> 可以用负数索引 <code>nums[i-k]</code> 巧妙地表示。</li>
+<li><strong>如果 <code>check(k)</code> 为真</strong> (即 <code>k</code> 对是可行的)：<ul>
+<li>说明 <code>k</code> 是一个潜在的答案，但我们想找的是“最大”的 <code>k</code>，所以我们尝试一个更大的值，将搜索范围的下界更新：<code>left = k</code>。</li>
+</ul>
+</li>
+<li><strong>如果 <code>check(k)</code> 为假</strong> (即 <code>k</code> 对是不可行的)：<ul>
+<li>说明 <code>k</code> 太大了，必须减少配对数，所以将搜索范围的上界更新：<code>right = k</code>。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>返回结果</strong></p>
+<ul>
+<li>循环结束后，<code>left</code> 中存储的就是满足条件的<strong>最大配对数</strong>。</li>
+<li>题目要求返回最多可以标记的<strong>下标数目</strong>，所以最终结果是 <code>left * 2</code>。</li>
+</ul>
+</li>
+</ol>
+<h3 id="Python-代码实现"><a href="#Python-代码实现" class="headerlink" title="Python 代码实现"></a>Python 代码实现</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> typing <span class="keyword">import</span> <span class="type">List</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">maxNumOfMarkedIndices</span>(<span class="params">self, nums: <span class="type">List</span>[<span class="built_in">int</span>]</span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        <span class="comment"># 步骤 1：排序</span></span><br><span class="line">        nums.sort()</span><br><span class="line">        n = <span class="built_in">len</span>(nums)</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 步骤 2：确定二分查找范围</span></span><br><span class="line">        <span class="comment"># 我们对“可以凑成的配对数 k”进行二分查找</span></span><br><span class="line">        <span class="comment"># left 是已知可行的最大配对数，right 是不可行的最小配对数（开区间）</span></span><br><span class="line">        left, right = <span class="number">0</span>, n // <span class="number">2</span> + <span class="number">1</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 步骤 3：执行二分查找</span></span><br><span class="line">        <span class="keyword">while</span> left + <span class="number">1</span> &lt; right:</span><br><span class="line">            <span class="comment"># k 是我们尝试要验证的配对数</span></span><br><span class="line">            k = (left + right) // <span class="number">2</span></span><br><span class="line">            </span><br><span class="line">            <span class="comment"># check(k): 检查是否能凑成 k 对</span></span><br><span class="line">            <span class="comment"># 贪心策略：用最小的 k 个数 nums[0...k-1]</span></span><br><span class="line">            <span class="comment"># 去匹配最大的 k 个数 nums[n-k...n-1]</span></span><br><span class="line">            <span class="comment"># all() 函数会检查所有条件是否为真</span></span><br><span class="line">            <span class="comment"># nums[i-k] 是 Python 的负数索引，等价于 nums[n + i - k]</span></span><br><span class="line">            <span class="keyword">if</span> <span class="built_in">all</span>(nums[i] * <span class="number">2</span> &lt;= nums[i - k] <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(k)):</span><br><span class="line">                <span class="comment"># 如果可以凑成 k 对，说明 k 是一个可行的解</span></span><br><span class="line">                <span class="comment"># 我们尝试寻找更大的 k，所以更新下界</span></span><br><span class="line">                left = k</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="comment"># 如果不行，说明 k 太大了，需要减小 k</span></span><br><span class="line">                <span class="comment"># 更新上界</span></span><br><span class="line">                right = k</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 步骤 4：返回结果</span></span><br><span class="line">        <span class="comment"># left 是我们找到的最大可行配对数</span></span><br><span class="line">        <span class="comment"># 总标记数量是配对数的两倍</span></span><br><span class="line">        <span class="keyword">return</span> left * <span class="number">2</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h3><ul>
+<li><strong>时间复杂度</strong>: O(N * log N)。<ul>
+<li>对数组排序需要 O(N log N) 的时间。</li>
+<li>二分查找的范围是 <code>n/2</code>，所以需要 O(log N) 次迭代。</li>
+<li>在每次迭代中，我们的 <code>check</code> 逻辑（即 <code>all(...)</code> 生成器表达式）需要遍历 <code>k</code> 个元素，<code>k</code> 最大为 <code>N/2</code>，所以检查的时间复杂度为 O(N)。</li>
+<li>因此，二分查找部分的总时间是 O(N log N)。</li>
+<li>两者相加，总时间复杂度由排序和二分查找共同决定，为 O(N log N)。</li>
+</ul>
+</li>
+<li><strong>空间复杂度</strong>: O(log N) 或 O(N)。<ul>
+<li>这主要取决于排序算法使用的空间。Python 的 Timsort 在平均情况下的空间复杂度是 O(log N)，最坏情况下是 O(N)。如果我们不考虑排序本身占用的空间，则算法是 O(1) 的。</li>
+</ul>
+</li>
+</ul>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>本题是“二分答案”思想的又一个典型应用。当直接求解一个“最大值”或“最小值”问题比较困难时，我们可以尝试将其转化为一个“判定性”问题。如果这个判定问题对于答案具有单调性，就可以通过二分查找来极大地优化求解过程。这里的关键点在于，为判定问题 <code>check(k)</code> 设计出一个高效的贪心策略，从而确保了整个算法的正确性和效率。效率。</p>
+]]></content>
+      <categories>
+        <category>算法题解</category>
+        <category>二分算法</category>
+        <category>二分答案</category>
+        <category>求最大</category>
+      </categories>
+      <tags>
+        <tag>数组</tag>
+        <tag>二分查找</tag>
+        <tag>贪心</tag>
+        <tag>排序</tag>
+        <tag>双指针</tag>
+        <tag>第334场周赛</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>LeetCode 2730 | 滑动窗口求解“找到最长的半重复子字符串”</title>
     <url>//posts/leetcode-2730/</url>
     <content><![CDATA[<blockquote class="blockquote-center">
