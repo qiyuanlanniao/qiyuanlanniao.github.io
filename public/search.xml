@@ -5404,6 +5404,108 @@
       </tags>
   </entry>
   <entry>
+    <title>LeetCode 3613 | 最小化连通分量的最大成本</title>
+    <url>//posts/leetcode-3613/</url>
+    <content><![CDATA[<blockquote class="blockquote-center">
+            <i class="fa fa-quote-left"></i>
+            <p>LeetCode 第 3613 题：<a href="https://leetcode.cn/problems/minimize-maximum-component-cost/description/">最小化连通分量的最大成本</a>。<br>本题是一道典型的“最大值最小化”问题，其核心在于识别出答案的单调性，并将一个求解最优值的问题，巧妙地转化为一个判定性的问题，从而利用二分查找在对数时间内高效求解。</p>
+
+            <i class="fa fa-quote-right"></i>
+          </blockquote>
+<span id="more"></span>
+
+<h3 id="问题解读"><a href="#问题解读" class="headerlink" title="问题解读"></a>问题解读</h3><p>我们得到一个包含 <code>n</code> 个节点的无向连通图，以及一个边集 <code>edges</code>，每条边都有一个权重。同时给定一个整数 <code>k</code>。</p>
+<p>我们的任务是：通过移除图中的任意数量的边，使得最终图中最多只有 <code>k</code> 个连通分量。在所有满足这个条件的方案中，我们需要找到一个方案，使得所有连通分量中“成本”的最大值是最小的。</p>
+<p>这里的“连通分量的成本”被定义为该分量内所有边权的最大值。如果一个分量里没有边，其成本为 0。</p>
+<p>我们的目标就是求这个<strong>最小的“最大成本”</strong>。</p>
+<p>举个例子，<code>n = 5</code>, <code>edges = [[0,1,4],[1,2,3],[1,3,2],[3,4,6]]</code>, <code>k = 2</code>。<br>如果我们允许的最大成本是 4，那么所有权重 &gt; 4 的边都必须移除。在这个例子中，权重为 6 的边 <code>[3,4]</code> 被移除。剩下的边 <code>[0,1,4]</code>, <code>[1,2,3]</code>, <code>[1,3,2]</code> 形成一个连通分量 <code>&#123;0, 1, 2, 3&#125;</code>，其成本是 <code>max(4,3,2) = 4</code>。节点 <code>&#123;4&#125;</code> 自己形成一个连通分量，成本为 0。这样我们得到了 2 个连通分量，最大成本是 4，满足 <code>k=2</code> 的要求。我们可以尝试更小的最大成本，但最终会发现 4 是能达成的最小值。</p>
+<h3 id="核心思路：将“求解问题”转化为“判定问题”与二分查找"><a href="#核心思路：将“求解问题”转化为“判定问题”与二分查找" class="headerlink" title="核心思路：将“求解问题”转化为“判定问题”与二分查找"></a>核心思路：将“求解问题”转化为“判定问题”与二分查找</h3><p>直接求解“最小的最大成本”是相当棘手的。但是，我们可以换一个角度思考：如果我们<strong>假定</strong>一个最大成本 <code>C</code>，我们能否判断出，通过保留所有权重 <code>w &lt;= C</code> 的边，能否使得图中的连通分量数量不多于 <code>k</code>？</p>
+<p>这个判定问题就清晰多了。我们可以设计一个辅助函数 <code>check(max_cost)</code> 来解决它：</p>
+<ol>
+<li>首先，我们假设图中所有的节点都是独立的，共有 <code>n</code> 个连通分量。</li>
+<li>我们遍历图中所有的边。</li>
+<li>只考虑那些权重 <code>w &lt;= max_cost</code> 的边。对于每一条这样的边，我们将它连接的两个节点合并到同一个连通分量中。</li>
+<li>遍历完所有符合条件的边之后，我们统计一下图中还剩下多少个连通分量。</li>
+<li>如果连通分量的数量小于或等于 <code>k</code>，说明我们假定的这个最大成本 <code>max_cost</code> 是可行的。</li>
+</ol>
+<p>为了高效地处理节点的合并与连通分量的计数，<strong>并查集 (Disjoint Set Union, DSU)</strong> 是最理想的数据结构。</p>
+<p>现在，我们有了一个判定的方法。不难发现，这个判定结果具有<strong>单调性</strong>：</p>
+<ul>
+<li>如果一个最大成本 <code>C</code> 是可行的（即连通分量数 <code>&lt;= k</code>），那么任何大于 <code>C</code> 的成本 <code>C&#39;</code> 也必然可行（因为 <code>C&#39;</code> 会保留所有 <code>C</code> 能保留的边，以及可能更多的边，这只会让连通分量数量更少或不变）。</li>
+<li>反之，如果 <code>C</code> 不可行，那么任何小于 <code>C</code> 的成本也必然不可行。</li>
+</ul>
+<p>这种单调性是应用<strong>二分查找</strong>的完美信号。我们可以对“最大成本”这个值进行二分查找，来快速定位到那个“最小的可行成本”的临界点。</p>
+<p>这个二分查找的搜索范围是什么呢？</p>
+<ul>
+<li><strong>下界 (left)</strong>：成本最低可以是 0，对应移除所有边的情况。</li>
+<li><strong>上界 (right)</strong>：成本最高不会超过所有边中的最大权重。根据题目限制，最大权重为 <code>10^6</code>。</li>
+</ul>
+<p>因此，我们就在 <code>[0, 10^6]</code> 这个区间内，对最大成本进行二分查找。</p>
+<h3 id="算法详解"><a href="#算法详解" class="headerlink" title="算法详解"></a>算法详解</h3><ol>
+<li><p><strong>确定二分查找的范围</strong></p>
+<ul>
+<li><code>left = 0</code>：可能的最低成本。</li>
+<li><code>right = 10^6</code>：可能的最高成本。</li>
+<li><code>ans</code> 初始化为 <code>right</code>，用来记录我们找到的可行解。</li>
+</ul>
+</li>
+<li><p><strong>执行二分查找</strong></p>
+<ul>
+<li>当 <code>left &lt;= right</code> 时，循环继续。</li>
+<li>计算中间值 <code>mid = left + (right - left) // 2</code> 作为当前的“猜测最大成本”。</li>
+<li>调用辅助函数 <code>check(mid)</code> 来判定这个猜测值是否可行。<ul>
+<li><strong>如果 <code>check(mid)</code> 返回 <code>True</code></strong> (即 <code>mid</code> 这个成本上限是可行的)：<ul>
+<li>说明 <code>mid</code> 是一个潜在的答案，我们记录下来 <code>ans = mid</code>。</li>
+<li>但是我们想找的是“最小”的最大成本，所以我们尝试一个更小的值，将搜索范围缩小到左半边：<code>right = mid - 1</code>。</li>
+</ul>
+</li>
+<li><strong>如果 <code>check(mid)</code> 返回 <code>False</code></strong> (即 <code>mid</code> 这个成本上限太低，导致连通分量过多)：<ul>
+<li>说明我们需要更大的成本上限，将搜索范围缩小到右半边：<code>left = mid + 1</code>。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>返回结果</strong></p>
+<ul>
+<li>循环结束后，<code>ans</code> 中存储的就是满足条件的最小的最大成本。</li>
+</ul>
+</li>
+</ol>
+<h3 id="Python-代码实现"><a href="#Python-代码实现" class="headerlink" title="Python 代码实现"></a>Python 代码实现</h3><p>为了实现 <code>check</code> 函数，我们需要一个并查集 (DSU) 的数据结构。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> typing <span class="keyword">import</span> <span class="type">List</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">DSU</span>:</span><br><span class="line">    <span class="string">&quot;&quot;&quot;一个简单的并查集实现&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, n: <span class="built_in">int</span></span>):</span><br><span class="line">        <span class="comment"># 初始化，每个节点指向自己</span></span><br><span class="line">        <span class="variable language_">self</span>.parent = <span class="built_in">list</span>(<span class="built_in">range</span>(n))</span><br><span class="line">        <span class="comment"># 初始时，连通分量的数量为 n</span></span><br><span class="line">        <span class="variable language_">self</span>.count = n</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">find</span>(<span class="params">self, i: <span class="built_in">int</span></span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        <span class="comment"># 查找根节点，并进行路径压缩</span></span><br><span class="line">        <span class="keyword">if</span> <span class="variable language_">self</span>.parent[i] != i:</span><br><span class="line">            <span class="variable language_">self</span>.parent[i] = <span class="variable language_">self</span>.find(<span class="variable language_">self</span>.parent[i])</span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">self</span>.parent[i]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">union</span>(<span class="params">self, i: <span class="built_in">int</span>, j: <span class="built_in">int</span></span>) -&gt; <span class="built_in">bool</span>:</span><br><span class="line">        <span class="comment"># 合并两个节点所在的集合</span></span><br><span class="line">        root_i = <span class="variable language_">self</span>.find(i)</span><br><span class="line">        root_j = <span class="variable language_">self</span>.find(j)</span><br><span class="line">        <span class="keyword">if</span> root_i != root_j:</span><br><span class="line">            <span class="variable language_">self</span>.parent[root_i] = root_j</span><br><span class="line">            <span class="comment"># 成功合并，连通分量数量减一</span></span><br><span class="line">            <span class="variable language_">self</span>.count -= <span class="number">1</span></span><br><span class="line">            <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line">        <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">minCost</span>(<span class="params">self, n: <span class="built_in">int</span>, edges: <span class="type">List</span>[<span class="type">List</span>[<span class="built_in">int</span>]], k: <span class="built_in">int</span></span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 判定函数：在最大成本为 max_cost 的情况下，连通分量数量是否小于等于 k</span></span><br><span class="line">        <span class="keyword">def</span> <span class="title function_">check</span>(<span class="params">max_cost: <span class="built_in">int</span></span>) -&gt; <span class="built_in">bool</span>:</span><br><span class="line">            dsu = DSU(n)</span><br><span class="line">            <span class="comment"># 遍历所有边，只使用权重 &lt;= max_cost 的边来合并节点</span></span><br><span class="line">            <span class="keyword">for</span> u, v, w <span class="keyword">in</span> edges:</span><br><span class="line">                <span class="keyword">if</span> w &lt;= max_cost:</span><br><span class="line">                    dsu.union(u, v)</span><br><span class="line">            <span class="comment"># 判断最终的连通分量数量是否满足条件</span></span><br><span class="line">            <span class="keyword">return</span> dsu.count &lt;= k</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 二分查找答案的范围</span></span><br><span class="line">        left, right = <span class="number">0</span>, <span class="number">10</span>**<span class="number">6</span></span><br><span class="line">        ans = right</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 执行二分查找</span></span><br><span class="line">        <span class="keyword">while</span> left &lt;= right:</span><br><span class="line">            mid = left + (right - left) // <span class="number">2</span></span><br><span class="line">            <span class="keyword">if</span> check(mid):</span><br><span class="line">                <span class="comment"># 如果 mid 可行，它是一个潜在答案</span></span><br><span class="line">                <span class="comment"># 尝试寻找更小的成本，所以向左收缩</span></span><br><span class="line">                ans = mid</span><br><span class="line">                right = mid - <span class="number">1</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="comment"># 如果 mid 不可行，说明成本上限太低</span></span><br><span class="line">                <span class="comment"># 必须增大，所以向右收缩</span></span><br><span class="line">                left = mid + <span class="number">1</span></span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> ans</span><br></pre></td></tr></table></figure>
+
+<h3 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h3><ul>
+<li><strong>时间复杂度</strong>: O(E * log(W) * α(N))。<ul>
+<li><code>W</code> 是边权的最大值 (即 <code>10^6</code>)，二分查找需要 <code>log(W)</code> 次迭代。</li>
+<li>在每次迭代中，我们都需要调用 <code>check</code> 函数。该函数会遍历所有 <code>E</code> 条边。</li>
+<li>在 <code>check</code> 函数内部，每次 <code>union</code> 和 <code>find</code> 操作的平均时间复杂度接近常数，严格来说是 <code>α(N)</code>（反阿克曼函数），其中 <code>N</code> 是节点数。</li>
+<li>因此，总时间复杂度是这三者的乘积。由于 <code>α(N)</code> 增长极其缓慢，通常可视为常数，所以时间复杂度可近似为 O(E * log(W))。</li>
+</ul>
+</li>
+<li><strong>空间复杂度</strong>: O(N)。<ul>
+<li>主要的空间开销来自于并查集数据结构，需要一个大小为 <code>N</code> 的数组来存储父节点指针。</li>
+</ul>
+</li>
+</ul>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>本题是二分查找思想应用的又一个经典范例。它教会我们当遇到求解“最小值中的最大值”或者“最大值中的最小值”这类具有单调性的最优化问题时，可以优先考虑是否能将其转化为一个更简单的“判定性”问题。如果可以，那么二分查找就是解决这类问题的绝佳工具，它能将搜索范围不断折半，从而在对数级别的时间复杂度内找到最优解。</p>
+]]></content>
+      <categories>
+        <category>算法题解</category>
+        <category>二分算法</category>
+        <category>二分答案</category>
+        <category>最小化最大值</category>
+      </categories>
+      <tags>
+        <tag>二分查找</tag>
+        <tag>排序</tag>
+        <tag>图论</tag>
+        <tag>并查集</tag>
+        <tag>第458场周赛</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>LeetCode 3634 | 排序+滑动窗口：求解使数组平衡的最少移除数目</title>
     <url>//posts/leetcode-3634/</url>
     <content><![CDATA[<blockquote class="blockquote-center">
