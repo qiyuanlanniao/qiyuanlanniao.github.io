@@ -7398,4 +7398,100 @@
         <tag>贪心</tag>
       </tags>
   </entry>
+  <entry>
+    <title>LeetCode 2517 | 礼盒的最大甜蜜度</title>
+    <url>//posts/leetcode-2517/</url>
+    <content><![CDATA[<blockquote class="blockquote-center">
+            <i class="fa fa-quote-left"></i>
+            <p>LeetCode 第 2517 题：<a href="https://leetcode.cn/problems/maximum-tastiness-of-candy-basket/description/">礼盒的最大甜蜜度</a>。<br>这是一个经典的“最大化最小值”问题。当直接求解“最大的甜蜜度”比较困难时，我们可以转换思路，通过二分查找来猜测一个甜蜜度 <code>d</code>，然后验证是否存在一种方案能够满足“任意两种糖果的价格差都大于等于 <code>d</code>”，从而将一个求解最值的问题转化为一个判定性的问题。</p>
+
+            <i class="fa fa-quote-right"></i>
+          </blockquote>
+<span id="more"></span>
+
+<h3 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h3><p>给你一个正整数数组 <code>price</code> ，其中 <code>price[i]</code> 表示第 <code>i</code> 类糖果的价格，另给你一个正整数 <code>k</code> 。</p>
+<p>商店组合 <code>k</code> 类 <strong>不同</strong> 糖果打包成礼盒出售。礼盒的 <strong>甜蜜度</strong> 是礼盒中任意两种糖果 <strong>价格</strong> 绝对差的最小值。</p>
+<p>返回礼盒的 <strong>最大</strong> 甜蜜度。</p>
+<p><strong>示例 1：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">输入：price =, k = 3</span><br><span class="line">输出：8</span><br><span class="line">解释：选出价格分别为 的三类糖果。</span><br><span class="line">礼盒的甜蜜度为 min(|13 - 5|, |13 - 21|, |5 - 21|) = min(8, 8, 16) = 8 。</span><br><span class="line">可以证明能够取得的最大甜蜜度就是 8 。</span><br></pre></td></tr></table></figure>
+
+<p><strong>示例 2：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">输入：price =, k = 2</span><br><span class="line">输出：2</span><br><span class="line">解释：选出价格分别为 的两类糖果。 </span><br><span class="line">礼盒的甜蜜度为 min(|1 - 3|) = min(2) = 2 。</span><br><span class="line">可以证明能够取得的最大甜蜜度就是 2 。</span><br></pre></td></tr></table></figure>
+
+<p><strong>示例 3：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">输入：price =, k = 2</span><br><span class="line">输出：0</span><br><span class="line">解释：从现有的糖果中任选两类糖果，甜蜜度都会是 0 。</span><br></pre></td></tr></table></figure>
+
+<p><strong>提示：</strong></p>
+<ul>
+<li><code>2 &lt;= k &lt;= price.length &lt;= 10^5</code></li>
+<li><code>1 &lt;= price[i] &lt;= 10^9</code></li>
+</ul>
+<h3 id="解题思路"><a href="#解题思路" class="headerlink" title="解题思路"></a>解题思路</h3><h4 id="问题转换与二分答案"><a href="#问题转换与二分答案" class="headerlink" title="问题转换与二分答案"></a>问题转换与二分答案</h4><p>题目的目标是求“最大”的“最小”差值，这是一个典型的“最大化最小值”问题，通常可以考虑使用二分查找来解决。</p>
+<p>我们不直接去求解这个最大甜蜜度，而是去猜测它。假设我们猜测最大甜蜜度可以是 <code>d</code>，那么我们需要解决一个判定性问题：<strong>能否在 <code>price</code> 数组中选出 <code>k</code> 个数，使得它们之间任意两个数的差都大于等于 <code>d</code> ？</strong></p>
+<p>这个判定问题具有单调性：</p>
+<ul>
+<li>如果甜蜜度 <code>d</code> <strong>可以</strong>实现，那么任何小于 <code>d</code> 的甜蜜度（例如 <code>d-1</code>）也一定可以实现。</li>
+<li>如果甜蜜度 <code>d</code> <strong>无法</strong>实现，那么任何大于 <code>d</code> 的甜蜜度（例如 <code>d+1</code>）也一定无法实现。</li>
+</ul>
+<p>这种单调性是使用二分查找的理论基础。我们可以二分枚举答案 <code>d</code>，找到满足条件的 <code>d</code> 的最大值。</p>
+<h4 id="check-d-函数的设计"><a href="#check-d-函数的设计" class="headerlink" title="check(d) 函数的设计"></a><code>check(d)</code> 函数的设计</h4><p>现在，核心问题变成了如何高效地实现 <code>check(d)</code> 函数，即判断能否选出 <code>k</code> 个价格，使得它们两两之差的绝对值不小于 <code>d</code>。</p>
+<p>为了让价格差尽可能大，我们应该选择那些数值上离得尽可能远的糖果。一个自然的想法是<strong>贪心</strong>。</p>
+<ol>
+<li><strong>排序</strong>：首先，我们将 <code>price</code> 数组升序排序。这样，任意两个价格的差值就等于它们在排序后数组中的数值之差。</li>
+<li><strong>贪心选择</strong>：我们总是选择第一个糖果（价格最低的那个）作为礼盒中的第一个成员。然后，向后遍历数组，寻找下一个与上一个已选糖果价格之差大于等于 <code>d</code> 的糖果。<ul>
+<li>设我们上一个选择的糖果价格是 <code>pre</code>。我们从 <code>pre</code> 的位置继续向后扫描，找到第一个价格 <code>p</code> 满足 <code>p - pre &gt;= d</code>。</li>
+<li>一旦找到，就将这个糖果选入礼盒，更新 <code>pre = p</code>，并将计数器加一。</li>
+<li>重复这个过程，直到遍历完整个数组。</li>
+</ul>
+</li>
+<li><strong>判断</strong>：最后，检查我们通过这种贪心策略选出的糖果数量是否达到了 <code>k</code>。如果数量大于等于 <code>k</code>，说明甜蜜度 <code>d</code> 是可行的，<code>check(d)</code> 返回 <code>True</code>；否则返回 <code>False</code>。</li>
+</ol>
+<p>这个贪心策略是正确的，因为为了在有限的价格范围内放下尽可能多的、满足最小间距 <code>d</code> 的糖果，我们每次选择下一个糖果时，都应该选择“恰好”满足条件或者刚刚超过条件的那个，这样可以为后面的选择留出最大的空间。</p>
+<h4 id="二分查找框架"><a href="#二分查找框架" class="headerlink" title="二分查找框架"></a>二分查找框架</h4><ol>
+<li><strong>确定搜索范围</strong>：<ul>
+<li>甜蜜度的最小值显然是 <code>0</code>。</li>
+<li>甜蜜度的最大值不会超过 <code>(price[n-1] - price[0])</code>。我们可以用这个作为上界，或者一个更紧的上界 <code>(price[n-1] - price[0]) / (k - 1)</code>。</li>
+</ul>
+</li>
+<li><strong>实施二分</strong>：<ul>
+<li>设置左边界 <code>l = 0</code>，右边界 <code>r</code> 为一个足够大的数（例如 <code>10^9</code> 或上述上界）。</li>
+<li>在 <code>while</code> 循环中，取中点 <code>mid = (l + r) // 2</code>。</li>
+<li>调用 <code>check(mid)</code>：<ul>
+<li>如果 <code>check(mid)</code> 为 <code>True</code>，说明 <code>mid</code> 这个甜蜜度是可行的，我们可以尝试更大的值。所以，我们将 <code>mid</code> 存为可能的答案，并移动左边界 <code>l = mid + 1</code>。</li>
+<li>如果 <code>check(mid)</code> 为 <code>False</code>，说明 <code>mid</code> 太大了，需要尝试小一点的值。移动右边界 <code>r = mid - 1</code>。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>返回结果</strong>：循环结束后，最后一次使得 <code>check</code> 返回 <code>True</code> 的那个值就是最终答案。</li>
+</ol>
+<h3 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> typing <span class="keyword">import</span> <span class="type">List</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">maximumTastiness</span>(<span class="params">self, price: <span class="type">List</span>[<span class="built_in">int</span>], k: <span class="built_in">int</span></span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        <span class="comment"># 对价格进行排序，这是贪心策略的前提</span></span><br><span class="line">        price.sort()</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># check(d) 函数用于判断是否存在一种选择方案，</span></span><br><span class="line">        <span class="comment"># 使得礼盒的甜蜜度至少为 d</span></span><br><span class="line">        <span class="keyword">def</span> <span class="title function_">check</span>(<span class="params">d: <span class="built_in">int</span></span>) -&gt; <span class="built_in">bool</span>:</span><br><span class="line">            <span class="comment"># 贪心选择 k 个糖果</span></span><br><span class="line">            <span class="comment"># 默认选择第一个（价格最低的）</span></span><br><span class="line">            count = <span class="number">1</span></span><br><span class="line">            last_price = price</span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 遍历价格数组，寻找下一个满足条件的糖果</span></span><br><span class="line">            <span class="keyword">for</span> p <span class="keyword">in</span> price:</span><br><span class="line">                <span class="keyword">if</span> p - last_price &gt;= d:</span><br><span class="line">                    count += <span class="number">1</span></span><br><span class="line">                    last_price = p</span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 如果能选出至少 k 个，则说明甜蜜度 d 是可行的</span></span><br><span class="line">            <span class="keyword">return</span> count &gt;= k</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 二分查找答案的范围</span></span><br><span class="line">        <span class="comment"># 左边界 l: 最小可能的甜蜜度</span></span><br><span class="line">        <span class="comment"># 右边界 r: 最大可能的甜蜜度</span></span><br><span class="line">        l, r = <span class="number">0</span>, price[-<span class="number">1</span>] - price</span><br><span class="line">        ans = <span class="number">0</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 开始二分查找</span></span><br><span class="line">        <span class="keyword">while</span> l &lt;= r:</span><br><span class="line">            mid = (l + r) // <span class="number">2</span></span><br><span class="line">            <span class="keyword">if</span> check(mid):</span><br><span class="line">                <span class="comment"># 如果 mid 可行，说明答案可能是 mid 或更大</span></span><br><span class="line">                <span class="comment"># 保存当前可行的 mid，并尝试更大的值</span></span><br><span class="line">                ans = mid</span><br><span class="line">                l = mid + <span class="number">1</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="comment"># 如果 mid 不可行，说明 mid 太大了，需要缩小范围</span></span><br><span class="line">                r = mid - <span class="number">1</span></span><br><span class="line">                </span><br><span class="line">        <span class="keyword">return</span> ans</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h3><ul>
+<li><strong>时间复杂度</strong>：O(N log N + N log M)，其中 N 是 <code>price</code> 数组的长度，M 是价格的最大差值 <code>price[-1] - price[0]</code>。<ul>
+<li>对 <code>price</code> 数组排序需要 O(N log N) 的时间。</li>
+<li>二分查找的过程需要进行 O(log M) 次迭代。</li>
+<li>在每次迭代中，<code>check</code> 函数需要 O(N) 的时间来遍历数组。</li>
+<li>因此，总时间复杂度为 O(N log N + N log M)。由于 N 通常远大于 log M，复杂度主要由排序和 <code>check</code> 函数决定。</li>
+</ul>
+</li>
+<li><strong>空间复杂度</strong>：O(log N) 或 O(N)，取决于排序算法所使用的栈空间。如果原地排序，则为 O(log N)；如果使用了需要额外空间的排序，则为 O(N)。</li>
+</ul>
+<pre><code>
+</code></pre>
+]]></content>
+      <categories>
+        <category>算法题解</category>
+        <category>二分算法</category>
+        <category>二分答案</category>
+        <category>最大化最小值</category>
+      </categories>
+      <tags>
+        <tag>数组</tag>
+        <tag>二分查找</tag>
+        <tag>贪心</tag>
+        <tag>排序</tag>
+        <tag>第325场周赛</tag>
+      </tags>
+  </entry>
 </search>
