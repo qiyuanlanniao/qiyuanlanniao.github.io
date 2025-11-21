@@ -7494,4 +7494,60 @@
         <tag>第325场周赛</tag>
       </tags>
   </entry>
+  <entry>
+    <title>LeetCode 668 | 乘法表中第k小的数</title>
+    <url>//posts/leetcode-668/</url>
+    <content><![CDATA[<blockquote class="blockquote-center">
+            <i class="fa fa-quote-left"></i>
+            <p>LeetCode 第 668 题：<a href="https://leetcode.cn/problems/kth-smallest-number-in-multiplication-table/description/">乘法表中第k小的数</a>。<br>本题可以转化为一个判定性问题：给定整数 x，统计乘法表中 ≤x 的元素个数 cnt，判断是否满足 cnt≥k。</p>
+
+            <i class="fa fa-quote-right"></i>
+          </blockquote>
+<span id="more"></span>
+
+<h3 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h3><p>给定一个 <code>m x n</code> 的乘法表，以及一个正整数 <code>k</code>，你需要返回表中第 <code>k</code> 小的数字。</p>
+<p>乘法表是一个整数矩阵 <code>mat</code>，其中 <code>mat[i][j] == i * j</code>（下标从 1 开始）。</p>
+<p><strong>示例 1：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">输入：m = 3, n = 3, k = 5</span><br><span class="line">输出：3</span><br><span class="line">解释：</span><br><span class="line">乘法表:</span><br><span class="line">1	2	3</span><br><span class="line">2	4	6</span><br><span class="line">3	6	9</span><br><span class="line"></span><br><span class="line">排序后的序列为：1, 2, 2, 3, 3, 4, 6, 6, 9。第 5 小的数字是 3。</span><br></pre></td></tr></table></figure>
+
+<p><strong>示例 2：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">输入：m = 2, n = 3, k = 6</span><br><span class="line">输出：6</span><br><span class="line">解释：</span><br><span class="line">乘法表:</span><br><span class="line">1	2	3</span><br><span class="line">2	4	6</span><br><span class="line"></span><br><span class="line">排序后的序列为：1, 2, 2, 3, 4, 6。第 6 小的数字是 6。</span><br></pre></td></tr></table></figure>
+
+<p><strong>提示：</strong></p>
+<ul>
+<li><code>1 &lt;= m, n &lt;= 3 * 10^4</code></li>
+<li><code>1 &lt;= k &lt;= m * n</code></li>
+</ul>
+<h3 id="解题思路"><a href="#解题思路" class="headerlink" title="解题思路"></a>解题思路</h3><h4 id="暴力解法为何不可行？"><a href="#暴力解法为何不可行？" class="headerlink" title="暴力解法为何不可行？"></a>暴力解法为何不可行？</h4><p>一个直观的想法是生成整个 <code>m x n</code> 的乘法表，将其展平成一个一维数组，然后排序，最后返回第 <code>k</code> 个元素。</p>
+<p>然而，根据题目的约束条件，<code>m</code> 和 <code>n</code> 的最大值都可以达到 30000。这意味着乘法表最多可能有 <code>30000 * 30000 = 9 * 10^8</code> 个元素。 创建和存储如此巨大的数组会导致内存溢出，因此暴力解法是不可行的。</p>
+<h4 id="二分答案"><a href="#二分答案" class="headerlink" title="二分答案"></a>二分答案</h4><p>这道题是“寻找第 k 小元素”的经典变体。对于这类问题，一个强大的思想是<strong>二分答案</strong>。</p>
+<p>我们要求的解（第 k 小的数）一定在 <code>[1, m*n]</code> 这个区间内。我们可以对这个数值区间进行二分查找。假设我们猜测第 <code>k</code> 小的数是 <code>mid</code>。为了验证这个猜测，我们需要快速计算出乘法表中有多少个数小于等于 <code>mid</code>。我们把这个计数函数记为 <code>count(mid)</code>。</p>
+<ul>
+<li>如果 <code>count(mid) &gt;= k</code>，这说明 <code>mid</code> 太大了，或者 <code>mid</code> 正好是我们要找的答案。真正的第 <code>k</code> 小的数可能更小，或者就是 <code>mid</code>。因此，我们应该在 <code>[1, mid]</code> 这个区间继续查找。</li>
+<li>如果 <code>count(mid) &lt; k</code>，这说明 <code>mid</code> 太小了，乘法表中比它小的数不足 <code>k</code> 个。因此，第 <code>k</code> 小的数一定比 <code>mid</code> 大。我们应该在 <code>[mid + 1, m*n]</code> 这个区间继续查找。</li>
+</ul>
+<p>通过不断缩小范围，我们最终可以找到满足条件的最小的那个数，即为第 <code>k</code> 小的数。</p>
+<h4 id="如何实现-count-x-函数？"><a href="#如何实现-count-x-函数？" class="headerlink" title="如何实现 count(x) 函数？"></a>如何实现 <code>count(x)</code> 函数？</h4><p>现在问题的核心变成了如何高效地计算乘法表里小于等于 <code>x</code> 的数的个数。</p>
+<p>乘法表的每一行 <code>i</code> （<code>1 &lt;= i &lt;= m</code>）都是一个等差数列：<code>1*i, 2*i, 3*i, ..., n*i</code>。</p>
+<p>对于第 <code>i</code> 行，我们要计算有多少个 <code>j*i &lt;= x</code>，其中 <code>1 &lt;= j &lt;= n</code>。<br>这等价于 <code>j &lt;= x / i</code>。<br>所以，在第 <code>i</code> 行，小于等于 <code>x</code> 的数的个数就是 <code>floor(x / i)</code>。但是，这个个数不能超过该行的总列数 <code>n</code>。</p>
+<p>因此，第 <code>i</code> 行中小于等于 <code>x</code> 的数字个数为 <code>min(floor(x / i), n)</code>。</p>
+<p>我们将每一行的计数加起来，就得到了整个乘法表中不大于 <code>x</code> 的数字总数：<br><code>count(x) = sum(min(floor(x / i), n) for i in 1..m)</code></p>
+<h3 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">findKthNumber</span>(<span class="params">self, m: <span class="built_in">int</span>, n: <span class="built_in">int</span>, k: <span class="built_in">int</span></span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        使用二分查找在答案空间 [1, m*n] 中寻找第 k 小的数。</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        </span><br><span class="line">        <span class="keyword">def</span> <span class="title function_">check</span>(<span class="params">x: <span class="built_in">int</span></span>) -&gt; <span class="built_in">bool</span>:</span><br><span class="line">            <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">            检查乘法表中小于等于 x 的数的个数是否大于等于 k。</span></span><br><span class="line"><span class="string">            &quot;&quot;&quot;</span></span><br><span class="line">            count = <span class="number">0</span></span><br><span class="line">            <span class="comment"># 遍历每一行</span></span><br><span class="line">            <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, m + <span class="number">1</span>):</span><br><span class="line">                <span class="comment"># 对于第 i 行，其元素为 i, 2*i, 3*i, ...</span></span><br><span class="line">                <span class="comment"># 小于等于 x 的元素个数为 x // i，但不能超过列数 n</span></span><br><span class="line">                count += <span class="built_in">min</span>(x // i, n)</span><br><span class="line">            <span class="keyword">return</span> count &gt;= k</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 答案的范围是 [1, m*n]</span></span><br><span class="line">        left, right = <span class="number">1</span>, m * n</span><br><span class="line">        ans = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">while</span> left &lt;= right:</span><br><span class="line">            mid = (left + right) // <span class="number">2</span></span><br><span class="line">            <span class="keyword">if</span> check(mid):</span><br><span class="line">                <span class="comment"># mid 可能是答案，或者答案在 mid 的左侧</span></span><br><span class="line">                <span class="comment"># 我们需要找到满足条件的最小的 mid</span></span><br><span class="line">                ans = mid</span><br><span class="line">                right = mid - <span class="number">1</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="comment"># mid 太小了，答案在 mid 的右侧</span></span><br><span class="line">                left = mid + <span class="number">1</span></span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> ans</span><br></pre></td></tr></table></figure>
+
+<h3 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h3><ul>
+<li><strong>时间复杂度</strong>: <code>O(m * log(m*n))</code>。二分查找的范围是 <code>m*n</code>，所以对数项是 <code>log(m*n)</code>。在每次二分检查中，<code>check</code> 函数需要 <code>O(m)</code> 的时间来遍历 <code>m</code> 行。</li>
+<li><strong>空间复杂度</strong>: <code>O(1)</code>。我们只使用了常数个变量。</li>
+</ul>
+]]></content>
+      <categories>
+        <category>算法题解</category>
+        <category>二分算法</category>
+        <category>二分答案</category>
+        <category>第K小/大</category>
+      </categories>
+      <tags>
+        <tag>二分查找</tag>
+        <tag>数学</tag>
+      </tags>
+  </entry>
 </search>
