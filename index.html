@@ -267,7 +267,7 @@
       
           <blockquote class="blockquote-center">
             <i class="fa fa-quote-left"></i>
-            <p>LeetCode 第 378 题：<a target="_blank" rel="noopener" href="https://leetcode.cn/problems/kth-smallest-element-in-a-sorted-matrix/description/">有序矩阵中第 K 小的元素</a>。<br>在一个行和列都按升序排列的 $n \times n$ 矩阵中，寻找第 $k$ 小的元素。<br>对于寻找第 $k$ 个数的问题，通常会想到堆（Heap）或者快速选择（Quick Select），但利用矩阵的有序特性，我们可以在<strong>值域</strong>上进行二分查找，将问题转化为“判定性”问题。</p>
+            <p>LeetCode 第 378 题：<a target="_blank" rel="noopener" href="https://leetcode.cn/problems/kth-smallest-element-in-a-sorted-matrix/description/">有序矩阵中第 K 小的元素</a>。<br>对于在一个值域范围内查找“第 K 小”或“第 K 大”的问题，尤其是当数据本身具有一定的有序性（如行、列分别排序）时，<strong>二分答案</strong> 往往是优于排序和堆的更优解法。本题利用矩阵的性质，将时间复杂度从多项式级降低到了对数级。</p>
 
             <i class="fa fa-quote-right"></i>
           </blockquote>
