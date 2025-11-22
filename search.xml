@@ -7551,11 +7551,9 @@
       </tags>
   </entry>
   <entry>
-    <title></title>
-    <url>/posts/2025/11/22/LeetCode-378-%E6%9C%89%E5%BA%8F%E7%9F%A9%E9%98%B5%E4%B8%AD%E7%AC%AC-K-%E5%B0%8F%E7%9A%84%E5%85%83%E7%B4%A0/</url>
-    <content><![CDATA[<p>这是一篇基于你提供的代码和参考风格生成的 Hexo Next 主题博客文章。</p>
-<hr>
-<h2 id="title-LeetCode-378-有序矩阵中第-K-小的元素date-2025-11-22-14-30-00updated-2025-11-22-14-30-00comments-truetags-数组-二分查找-矩阵-排序-堆（优先队列）categories-算法题解-二分算法-二分答案-第K小-大permalink-posts-leetcode-378"><a href="#title-LeetCode-378-有序矩阵中第-K-小的元素date-2025-11-22-14-30-00updated-2025-11-22-14-30-00comments-truetags-数组-二分查找-矩阵-排序-堆（优先队列）categories-算法题解-二分算法-二分答案-第K小-大permalink-posts-leetcode-378" class="headerlink" title="title: LeetCode 378 | 有序矩阵中第 K 小的元素date: 2025-11-22 14:30:00updated: 2025-11-22 14:30:00comments: truetags:  - 数组  - 二分查找  - 矩阵  - 排序  - 堆（优先队列）categories:  - 算法题解  - 二分算法  - 二分答案  - 第K小&#x2F;大permalink: posts&#x2F;leetcode-378&#x2F;"></a>title: LeetCode 378 | 有序矩阵中第 K 小的元素<br>date: 2025-11-22 14:30:00<br>updated: 2025-11-22 14:30:00<br>comments: true<br>tags:<br>  - 数组<br>  - 二分查找<br>  - 矩阵<br>  - 排序<br>  - 堆（优先队列）<br>categories:<br>  - 算法题解<br>  - 二分算法<br>  - 二分答案<br>  - 第K小&#x2F;大<br>permalink: posts&#x2F;leetcode-378&#x2F;</h2><blockquote class="blockquote-center">
+    <title>LeetCode 378 | 有序矩阵中第 K 小的元素</title>
+    <url>//posts/leetcode-378/</url>
+    <content><![CDATA[<blockquote class="blockquote-center">
             <i class="fa fa-quote-left"></i>
             <p>LeetCode 第 378 题：<a href="https://leetcode.cn/problems/kth-smallest-element-in-a-sorted-matrix/description/">有序矩阵中第 K 小的元素</a>。<br>在一个行和列都按升序排列的 $n \times n$ 矩阵中，寻找第 $k$ 小的元素。<br>对于寻找第 $k$ 个数的问题，通常会想到堆（Heap）或者快速选择（Quick Select），但利用矩阵的有序特性，我们可以在<strong>值域</strong>上进行二分查找，将问题转化为“判定性”问题。</p>
 
@@ -7609,5 +7607,18 @@
 <h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>这道题展示了<strong>二分答案</strong>在非线性索引结构（如矩阵）中的应用。关键点在于不要局限于“二分下标”，而是大胆地对“结果值”进行二分，并利用矩阵的几何性质（右上角阶梯遍历）来优化判定过程。</p>
 <p>相比于使用 <code>PriorityQueue</code> (小顶堆) 的 $O(k \log n)$ 或归并排序思路，二分值域法在 $k$ 较大（接近 $n^2$）时表现更加稳定，且不需要额外的堆空间。</p>
 ]]></content>
+      <categories>
+        <category>算法题解</category>
+        <category>二分算法</category>
+        <category>二分答案</category>
+        <category>第K小/大</category>
+      </categories>
+      <tags>
+        <tag>数组</tag>
+        <tag>二分查找</tag>
+        <tag>排序</tag>
+        <tag>矩阵</tag>
+        <tag>堆（优先队列）</tag>
+      </tags>
   </entry>
 </search>

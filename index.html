@@ -192,7 +192,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://github.com/posts/2025/11/22/LeetCode-378-%E6%9C%89%E5%BA%8F%E7%9F%A9%E9%98%B5%E4%B8%AD%E7%AC%AC-K-%E5%B0%8F%E7%9A%84%E5%85%83%E7%B4%A0/">
+    <link itemprop="mainEntityOfPage" href="http://github.com/posts/leetcode-378/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -206,7 +206,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/posts/2025/11/22/LeetCode-378-%E6%9C%89%E5%BA%8F%E7%9F%A9%E9%98%B5%E4%B8%AD%E7%AC%AC-K-%E5%B0%8F%E7%9A%84%E5%85%83%E7%B4%A0/" class="post-title-link" itemprop="url">未命名</a>
+            <a href="/posts/leetcode-378/" class="post-title-link" itemprop="url">LeetCode 378 | 有序矩阵中第 K 小的元素</a>
         </h2>
 
         <div class="post-meta">
@@ -216,7 +216,28 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2025-11-22 14:25:07" itemprop="dateCreated datePublished" datetime="2025-11-22T14:25:07+08:00">2025-11-22</time>
+              <time title="创建时间：2025-11-22 14:30:00" itemprop="dateCreated datePublished" datetime="2025-11-22T14:30:00+08:00">2025-11-22</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%AE%97%E6%B3%95%E9%A2%98%E8%A7%A3/" itemprop="url" rel="index"><span itemprop="name">算法题解</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%AE%97%E6%B3%95%E9%A2%98%E8%A7%A3/%E4%BA%8C%E5%88%86%E7%AE%97%E6%B3%95/" itemprop="url" rel="index"><span itemprop="name">二分算法</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%AE%97%E6%B3%95%E9%A2%98%E8%A7%A3/%E4%BA%8C%E5%88%86%E7%AE%97%E6%B3%95/%E4%BA%8C%E5%88%86%E7%AD%94%E6%A1%88/" itemprop="url" rel="index"><span itemprop="name">二分答案</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%AE%97%E6%B3%95%E9%A2%98%E8%A7%A3/%E4%BA%8C%E5%88%86%E7%AE%97%E6%B3%95/%E4%BA%8C%E5%88%86%E7%AD%94%E6%A1%88/%E7%AC%ACK%E5%B0%8F-%E5%A4%A7/" itemprop="url" rel="index"><span itemprop="name">第K小/大</span></a>
+                </span>
             </span>
 
           
@@ -228,8 +249,8 @@
       </span>
       <span class="post-meta-item-text">Valine：</span>
     
-    <a title="valine" href="/posts/2025/11/22/LeetCode-378-%E6%9C%89%E5%BA%8F%E7%9F%A9%E9%98%B5%E4%B8%AD%E7%AC%AC-K-%E5%B0%8F%E7%9A%84%E5%85%83%E7%B4%A0/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/posts/2025/11/22/LeetCode-378-%E6%9C%89%E5%BA%8F%E7%9F%A9%E9%98%B5%E4%B8%AD%E7%AC%AC-K-%E5%B0%8F%E7%9A%84%E5%85%83%E7%B4%A0/" itemprop="commentCount"></span>
+    <a title="valine" href="/posts/leetcode-378/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/posts/leetcode-378/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -244,9 +265,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>这是一篇基于你提供的代码和参考风格生成的 Hexo Next 主题博客文章。</p>
-<hr>
-<h2 id="title-LeetCode-378-有序矩阵中第-K-小的元素date-2025-11-22-14-30-00updated-2025-11-22-14-30-00comments-truetags-数组-二分查找-矩阵-排序-堆（优先队列）categories-算法题解-二分算法-二分答案-第K小-大permalink-posts-leetcode-378"><a href="#title-LeetCode-378-有序矩阵中第-K-小的元素date-2025-11-22-14-30-00updated-2025-11-22-14-30-00comments-truetags-数组-二分查找-矩阵-排序-堆（优先队列）categories-算法题解-二分算法-二分答案-第K小-大permalink-posts-leetcode-378" class="headerlink" title="title: LeetCode 378 | 有序矩阵中第 K 小的元素date: 2025-11-22 14:30:00updated: 2025-11-22 14:30:00comments: truetags:  - 数组  - 二分查找  - 矩阵  - 排序  - 堆（优先队列）categories:  - 算法题解  - 二分算法  - 二分答案  - 第K小&#x2F;大permalink: posts&#x2F;leetcode-378&#x2F;"></a>title: LeetCode 378 | 有序矩阵中第 K 小的元素<br>date: 2025-11-22 14:30:00<br>updated: 2025-11-22 14:30:00<br>comments: true<br>tags:<br>  - 数组<br>  - 二分查找<br>  - 矩阵<br>  - 排序<br>  - 堆（优先队列）<br>categories:<br>  - 算法题解<br>  - 二分算法<br>  - 二分答案<br>  - 第K小&#x2F;大<br>permalink: posts&#x2F;leetcode-378&#x2F;</h2><blockquote class="blockquote-center">
+          <blockquote class="blockquote-center">
             <i class="fa fa-quote-left"></i>
             <p>LeetCode 第 378 题：<a target="_blank" rel="noopener" href="https://leetcode.cn/problems/kth-smallest-element-in-a-sorted-matrix/description/">有序矩阵中第 K 小的元素</a>。<br>在一个行和列都按升序排列的 $n \times n$ 矩阵中，寻找第 $k$ 小的元素。<br>对于寻找第 $k$ 个数的问题，通常会想到堆（Heap）或者快速选择（Quick Select），但利用矩阵的有序特性，我们可以在<strong>值域</strong>上进行二分查找，将问题转化为“判定性”问题。</p>
 
@@ -254,7 +273,7 @@
           </blockquote>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/posts/2025/11/22/LeetCode-378-%E6%9C%89%E5%BA%8F%E7%9F%A9%E9%98%B5%E4%B8%AD%E7%AC%AC-K-%E5%B0%8F%E7%9A%84%E5%85%83%E7%B4%A0/#more" rel="contents">
+              <a class="btn" href="/posts/leetcode-378/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
