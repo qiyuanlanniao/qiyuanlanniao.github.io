@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"github.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"valine","storage":true,"lazyload":false,"nav":null,"activeClass":"valine"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="LeetCode 第 632 题：最小区间。该题要求在 k 个排序列表中寻找一个最小的数值区间，这个区间需要包含来自每个列表的至少一个元素。这是一个经典的多路数据处理问题，通过将所有元素“压平”并结合滑动窗口，可以巧妙地解决。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LeetCode 632 | 滑动窗口求解“最小区间”">
+<meta property="og:url" content="http://github.com/posts/leetcode-632/index.html">
+<meta property="og:site_name" content="Changan&#39;s Blog">
+<meta property="og:description" content="LeetCode 第 632 题：最小区间。该题要求在 k 个排序列表中寻找一个最小的数值区间，这个区间需要包含来自每个列表的至少一个元素。这是一个经典的多路数据处理问题，通过将所有元素“压平”并结合滑动窗口，可以巧妙地解决。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-10-13T02:05:00.000Z">
+<meta property="article:modified_time" content="2025-10-13T02:05:00.000Z">
+<meta property="article:author" content="Changan">
+<meta property="article:tag" content="数组">
+<meta property="article:tag" content="贪心">
+<meta property="article:tag" content="哈希表">
+<meta property="article:tag" content="滑动窗口">
+<meta property="article:tag" content="排序">
+<meta property="article:tag" content="堆（优先队列）">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://github.com/posts/leetcode-632/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>LeetCode 632 | 滑动窗口求解“最小区间” | Changan's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Changan's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+    <a href="https://github.com/qiyuanlanniao" class="github-corner" aria-label="View source on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#151513; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"/><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"/><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"/></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Changan's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://github.com/posts/leetcode-632/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Changan">
+      <meta itemprop="description" content="Good things take time">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Changan's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          LeetCode 632 | 滑动窗口求解“最小区间”
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2025-10-13 10:05:00" itemprop="dateCreated datePublished" datetime="2025-10-13T10:05:00+08:00">2025-10-13</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%AE%97%E6%B3%95%E9%A2%98%E8%A7%A3/" itemprop="url" rel="index"><span itemprop="name">算法题解</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%AE%97%E6%B3%95%E9%A2%98%E8%A7%A3/%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%E4%B8%8E%E5%8F%8C%E6%8C%87%E9%92%88/" itemprop="url" rel="index"><span itemprop="name">滑动窗口与双指针</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/posts/leetcode-632/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/posts/leetcode-632/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <blockquote class="blockquote-center">
+            <i class="fa fa-quote-left"></i>
+            <p>LeetCode 第 632 题：<a target="_blank" rel="noopener" href="https://leetcode.cn/problems/smallest-range-covering-elements-from-k-lists/">最小区间</a>。<br>该题要求在 k 个排序列表中寻找一个最小的数值区间，这个区间需要包含来自每个列表的至少一个元素。这是一个经典的多路数据处理问题，通过将所有元素“压平”并结合滑动窗口，可以巧妙地解决。</p>
+
+            <i class="fa fa-quote-right"></i>
+          </blockquote>
+<span id="more"></span>
+<h3 id="问题解读"><a href="#问题解读" class="headerlink" title="问题解读"></a>问题解读</h3><p>题目给了我们 <code>k</code> 个非递减排序的整数列表 <code>nums</code>。我们需要找到一个最小的数值区间 <code>[a, b]</code>，要求这个区间必须包含来自<strong>每一个</strong>列表的至少一个数字。</p>
+<p>“最小”区间的定义有两层：</p>
+<ol>
+<li>首先比较区间的长度 <code>b - a</code>，长度越小，区间就越小。</li>
+<li>如果两个区间的长度相等，那么起始点 <code>a</code> 较小的区间更小。</li>
+</ol>
+<p>例如，对于 <code>nums = [[4,10,15,24,26], [0,9,12,20], [5,18,22,30]]</code>：</p>
+<ul>
+<li>区间 <code>[20, 24]</code> 是一个有效的覆盖区间，因为它包含了来自列表1的 <code>24</code>、列表2的 <code>20</code> 和列表3的 <code>22</code>。</li>
+<li>这个区间的长度是 4。</li>
+<li>我们可以找到其他有效区间，如 <code>[0, 5]</code> 覆盖了 <code>4, 0, 5</code>，长度为 5。</li>
+<li>经过比较，<code>[20, 24]</code> 是所有有效区间中长度最小的，因此是最终答案。</li>
+</ul>
+<p>直接在 <code>k</code> 个列表中寻找这样的区间非常困难，因为我们不知道区间的端点应该如何选择。</p>
+<h3 id="核心思路：排序-滑动窗口"><a href="#核心思路：排序-滑动窗口" class="headerlink" title="核心思路：排序 + 滑动窗口"></a>核心思路：排序 + 滑动窗口</h3><p>这个问题的核心难点在于数据分散在 <code>k</code> 个不同的列表中，难以统一处理。一个常见的“降维”思路是，将多路数据合并成一路，从而应用更成熟的单数组算法。</p>
+<p>关键的洞察在于：<strong>最优区间的两个端点 <code>a</code> 和 <code>b</code>，必然是输入数据中存在的某两个数</strong>。</p>
+<p>基于此，我们可以：</p>
+<ol>
+<li><strong>扁平化数据</strong>：将所有 <code>k</code> 个列表中的所有数字合并到一个单一的列表中。为了后续判断区间有效性，我们不仅要存储数值，还要存储它来自哪个列表。因此，我们创建一个 <code>(数值, 原始列表索引)</code> 的元组列表。</li>
+<li><strong>排序</strong>：对这个合并后的列表，按照数值进行升序排序。</li>
+<li><strong>滑动窗口</strong>：现在问题转化为了一个更经典的形式——在排序后的列表中，寻找一个<strong>最短的子数组（窗口）</strong>，这个子数组中包含了来自全部 <code>k</code> 个不同原始列表的元素。这正是滑动窗口算法的用武之地。</li>
+</ol>
+<p>我们用 <code>left</code> 和 <code>right</code> 两个指针来定义窗口。我们不断向右移动 <code>right</code> 来扩张窗口，直到窗口内的元素满足“覆盖所有k个列表”的条件。一旦满足，我们就记录下这个有效区间，并尝试从左侧移动 <code>left</code> 指针来收缩窗口，寻找一个可能更小的有效区间。</p>
+<p><em>上图形象地展示了在合并排序后的列表上，一个有效的滑动窗口如何覆盖了来自3个不同列表的元素。</em></p>
+<h3 id="算法详解"><a href="#算法详解" class="headerlink" title="算法详解"></a>算法详解</h3><ol>
+<li><p><strong>数据预处理：扁平化与排序</strong></p>
+<ul>
+<li>初始化一个空列表 <code>merged_list</code>。</li>
+<li>遍历输入的 <code>k</code> 个列表，将每个数字 <code>val</code> 和它所属的列表索引 <code>i</code> 作为一个元组 <code>(val, i)</code> 添加到 <code>merged_list</code> 中。</li>
+<li>调用排序函数，对 <code>merged_list</code> 按元组的第一个元素（即数值）进行升序排序。</li>
+</ul>
+</li>
+<li><p><strong>滑动窗口遍历</strong></p>
+<ul>
+<li>初始化左指针 <code>left = 0</code>，以及一个最终答案区间 <code>ans</code>（可以初始化为一个无限大的区间）。</li>
+<li>为了高效地判断窗口有效性，我们使用一个哈希表 <code>counts</code> 来记录窗口内每个列表的元素数量，并用一个变量 <code>covered_lists</code> 记录当前已覆盖的列表数量。</li>
+<li>使用 <code>right</code> 指针从 <code>0</code> 到 <code>len(merged_list) - 1</code> 进行遍历，代表窗口的右边界。</li>
+<li>对于 <code>right</code> 指向的元素 <code>(val, list_idx)</code>:<ul>
+<li><strong>扩展窗口</strong>：将其加入窗口。在 <code>counts</code> 中将 <code>list_idx</code> 的计数加一。如果这个计数从 0 变为 1，说明我们刚刚覆盖了一个新的列表，因此 <code>covered_lists</code> 加 1。</li>
+</ul>
+</li>
+<li><strong>检查并收缩窗口</strong>：<ul>
+<li>使用一个 <code>while</code> 循环检查 <code>covered_lists</code> 是否等于 <code>k</code>。如果是，说明当前窗口 <code>[left, right]</code> 是一个有效的候选区间。</li>
+<li>获取当前区间的左右端点值 <code>merged_list[left][0]</code> 和 <code>merged_list[right][0]</code>，计算区间长度。</li>
+<li>如果当前区间比已记录的 <code>ans</code> 区间更小，则更新 <code>ans</code>。</li>
+<li><strong>收缩窗口</strong>：尝试将 <code>left</code> 指针右移。在 <code>counts</code> 中将 <code>left</code> 指向元素的列表索引的计数减一。如果计数变为 0，说明我们失去了一个列表的覆盖，<code>covered_lists</code> 减 1。此时 <code>while</code> 循环将终止。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>返回结果</strong></p>
+<ul>
+<li>当 <code>right</code> 指针遍历完整个列表后，<code>ans</code> 中存储的就是最终的最小区间。</li>
+</ul>
+</li>
+</ol>
+<h3 id="Python-代码实现"><a href="#Python-代码实现" class="headerlink" title="Python 代码实现"></a>Python 代码实现</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> collections</span><br><span class="line"><span class="keyword">from</span> typing <span class="keyword">import</span> <span class="type">List</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">smallestRange</span>(<span class="params">self, nums: <span class="type">List</span>[<span class="type">List</span>[<span class="built_in">int</span>]]</span>) -&gt; <span class="type">List</span>[<span class="built_in">int</span>]:</span><br><span class="line">        <span class="comment"># 步骤 1: 创建并排序合并列表</span></span><br><span class="line">        merged_list = []</span><br><span class="line">        <span class="keyword">for</span> i, lst <span class="keyword">in</span> <span class="built_in">enumerate</span>(nums):</span><br><span class="line">            <span class="keyword">for</span> val <span class="keyword">in</span> lst:</span><br><span class="line">                merged_list.append((val, i))</span><br><span class="line">        </span><br><span class="line">        merged_list.sort(key=<span class="keyword">lambda</span> x: x[<span class="number">0</span>])</span><br><span class="line"></span><br><span class="line">        k = <span class="built_in">len</span>(nums)</span><br><span class="line">        left = <span class="number">0</span></span><br><span class="line">        list_counts = collections.defaultdict(<span class="built_in">int</span>)</span><br><span class="line">        lists_covered = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">        min_range_size = <span class="built_in">float</span>(<span class="string">&#x27;inf&#x27;</span>)</span><br><span class="line">        result_start, result_end = <span class="number">0</span>, <span class="number">0</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># 步骤 2: 滑动窗口</span></span><br><span class="line">        <span class="keyword">for</span> right <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(merged_list)):</span><br><span class="line">            val_right, list_idx_right = merged_list[right]</span><br><span class="line"></span><br><span class="line">            <span class="comment"># 扩展窗口</span></span><br><span class="line">            <span class="keyword">if</span> list_counts[list_idx_right] == <span class="number">0</span>:</span><br><span class="line">                lists_covered += <span class="number">1</span></span><br><span class="line">            list_counts[list_idx_right] += <span class="number">1</span></span><br><span class="line"></span><br><span class="line">            <span class="comment"># 当窗口有效时，检查并尝试收缩</span></span><br><span class="line">            <span class="keyword">while</span> lists_covered == k:</span><br><span class="line">                val_left, list_idx_left = merged_list[left]</span><br><span class="line"></span><br><span class="line">                <span class="comment"># 检查是否为更小的区间</span></span><br><span class="line">                current_range_size = val_right - val_left</span><br><span class="line">                <span class="keyword">if</span> current_range_size &lt; min_range_size:</span><br><span class="line">                    min_range_size = current_range_size</span><br><span class="line">                    result_start = val_left</span><br><span class="line">                    result_end = val_right</span><br><span class="line">                </span><br><span class="line">                <span class="comment"># 收缩窗口</span></span><br><span class="line">                list_counts[list_idx_left] -= <span class="number">1</span></span><br><span class="line">                <span class="keyword">if</span> list_counts[list_idx_left] == <span class="number">0</span>:</span><br><span class="line">                    lists_covered -= <span class="number">1</span></span><br><span class="line">                </span><br><span class="line">                left += <span class="number">1</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> [result_start, result_end]</span><br></pre></td></tr></table></figure>
+
+<h3 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h3><ul>
+<li><strong>时间复杂度</strong>: O(N log N)，其中 N 是所有列表中元素的总数。主要开销在于对 <code>merged_list</code> 的排序。后续的滑动窗口遍历是 O(N)，因为 <code>left</code> 和 <code>right</code> 指针都只遍历列表一次。</li>
+<li><strong>空间复杂度</strong>: O(N)，用于存储 <code>merged_list</code> 和哈希表 <code>counts</code>。</li>
+</ul>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>本题展示了如何通过数据结构的转换，将一个看似复杂的多列表问题简化为单数组上的经典算法问题。扁平化和排序是处理多个有序序列的常用技巧，它为滑动窗口等高效算法的应用铺平了道路。此外，对于此类问题，还存在一种使用最小堆（Min-Heap）的更优解法，其时间复杂度为 O(N log k)，在 <code>k</code> 远小于 <code>N</code> 时更具优势，也值得进一步学习。</p>
+
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%95%B0%E7%BB%84/" rel="tag"># 数组</a>
+              <a href="/tags/%E8%B4%AA%E5%BF%83/" rel="tag"># 贪心</a>
+              <a href="/tags/%E5%93%88%E5%B8%8C%E8%A1%A8/" rel="tag"># 哈希表</a>
+              <a href="/tags/%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3/" rel="tag"># 滑动窗口</a>
+              <a href="/tags/%E6%8E%92%E5%BA%8F/" rel="tag"># 排序</a>
+              <a href="/tags/%E5%A0%86%EF%BC%88%E4%BC%98%E5%85%88%E9%98%9F%E5%88%97%EF%BC%89/" rel="tag"># 堆（优先队列）</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/posts/leetcode-76/" rel="prev" title="LeetCode 76 | 滑动窗口求解“最小覆盖子串”">
+      <i class="fa fa-chevron-left"></i> LeetCode 76 | 滑动窗口求解“最小覆盖子串”
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/posts/leetcode-2302/" rel="next" title="LeetCode 2302 | 滑动窗口求解“统计得分小于 K 的子数组数目”">
+      LeetCode 2302 | 滑动窗口求解“统计得分小于 K 的子数组数目” <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E8%A7%A3%E8%AF%BB"><span class="nav-number">1.</span> <span class="nav-text">问题解读</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E6%80%9D%E8%B7%AF%EF%BC%9A%E6%8E%92%E5%BA%8F-%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3"><span class="nav-number">2.</span> <span class="nav-text">核心思路：排序 + 滑动窗口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E8%AF%A6%E8%A7%A3"><span class="nav-number">3.</span> <span class="nav-text">算法详解</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Python-%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0"><span class="nav-number">4.</span> <span class="nav-text">Python 代码实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%8D%E6%9D%82%E5%BA%A6%E5%88%86%E6%9E%90"><span class="nav-number">5.</span> <span class="nav-text">复杂度分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">6.</span> <span class="nav-text">总结</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Changan"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Changan</p>
+  <div class="site-description" itemprop="description">Good things take time</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">101</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">22</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">107</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/qiyuanlanniao" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;qiyuanlanniao"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:hmca09502@gmail.com" title="E-Mail → mailto:hmca09502@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Changan</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('https://cdn.jsdelivr.net/npm/valine@1.5.3/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'fNBvdCThX5dQrppj7znaQ3xJ-gzGzoHsz',
+      appKey     : 'Mom6ApPuWkqQu8UwakobSJqh',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

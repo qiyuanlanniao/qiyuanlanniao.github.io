@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"github.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"valine","storage":true,"lazyload":false,"nav":null,"activeClass":"valine"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="LeetCode 第 1283 题：使结果不超过阈值的最小除数。本题的核心在于识别出“除数”与“结果和”之间的单调性，从而将问题转化为一个经典的“在答案空间上进行二分查找”的场景。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LeetCode 1283 | 二分查找解决“使结果不超过阈值的最小除数”">
+<meta property="og:url" content="http://github.com/posts/leetcode-1283/index.html">
+<meta property="og:site_name" content="Changan&#39;s Blog">
+<meta property="og:description" content="LeetCode 第 1283 题：使结果不超过阈值的最小除数。本题的核心在于识别出“除数”与“结果和”之间的单调性，从而将问题转化为一个经典的“在答案空间上进行二分查找”的场景。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-10-23T12:20:00.000Z">
+<meta property="article:modified_time" content="2025-10-23T12:20:00.000Z">
+<meta property="article:author" content="Changan">
+<meta property="article:tag" content="数组">
+<meta property="article:tag" content="二分查找">
+<meta property="article:tag" content="第166场周赛">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://github.com/posts/leetcode-1283/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>LeetCode 1283 | 二分查找解决“使结果不超过阈值的最小除数” | Changan's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Changan's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+    <a href="https://github.com/qiyuanlanniao" class="github-corner" aria-label="View source on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#151513; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"/><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"/><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"/></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Changan's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://github.com/posts/leetcode-1283/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Changan">
+      <meta itemprop="description" content="Good things take time">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Changan's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          LeetCode 1283 | 二分查找解决“使结果不超过阈值的最小除数”
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2025-10-23 20:20:00" itemprop="dateCreated datePublished" datetime="2025-10-23T20:20:00+08:00">2025-10-23</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%AE%97%E6%B3%95%E9%A2%98%E8%A7%A3/" itemprop="url" rel="index"><span itemprop="name">算法题解</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%AE%97%E6%B3%95%E9%A2%98%E8%A7%A3/%E4%BA%8C%E5%88%86%E7%AE%97%E6%B3%95/" itemprop="url" rel="index"><span itemprop="name">二分算法</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%AE%97%E6%B3%95%E9%A2%98%E8%A7%A3/%E4%BA%8C%E5%88%86%E7%AE%97%E6%B3%95/%E4%BA%8C%E5%88%86%E7%AD%94%E6%A1%88/" itemprop="url" rel="index"><span itemprop="name">二分答案</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%AE%97%E6%B3%95%E9%A2%98%E8%A7%A3/%E4%BA%8C%E5%88%86%E7%AE%97%E6%B3%95/%E4%BA%8C%E5%88%86%E7%AD%94%E6%A1%88/%E6%B1%82%E6%9C%80%E5%B0%8F/" itemprop="url" rel="index"><span itemprop="name">求最小</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/posts/leetcode-1283/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/posts/leetcode-1283/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <blockquote class="blockquote-center">
+            <i class="fa fa-quote-left"></i>
+            <p>LeetCode 第 1283 题：<a target="_blank" rel="noopener" href="https://leetcode.cn/problems/find-the-smallest-divisor-given-a-threshold/description/">使结果不超过阈值的最小除数</a>。<br>本题的核心在于识别出“除数”与“结果和”之间的单调性，从而将问题转化为一个经典的“在答案空间上进行二分查找”的场景。</p>
+
+            <i class="fa fa-quote-right"></i>
+          </blockquote>
+<span id="more"></span>
+<h3 id="问题解读"><a href="#问题解读" class="headerlink" title="问题解读"></a>问题解读</h3><p>题目要求我们寻找一个<strong>最小的正整数除数</strong>，用这个除数去除数组 <code>nums</code> 中的每个元素，并将所有结果<strong>向上取整</strong>后求和。最终，这个和必须小于或等于给定的 <code>threshold</code>。</p>
+<p>关键点在于“向上取整”。例如，<code>7 / 3 = 2.33...</code>，向上取整后是 <code>3</code>；<code>10 / 2 = 5</code>，向上取整后还是 <code>5</code>。</p>
+<p>我们来看一个例子：<code>nums = [1,2,5,9], threshold = 6</code>。</p>
+<ul>
+<li>如果选择除数为 1，和为 <code>ceil(1/1) + ceil(2/1) + ceil(5/1) + ceil(9/1) = 1 + 2 + 5 + 9 = 17</code>。<code>17 &gt; 6</code>，不满足条件。</li>
+<li>如果选择除数为 4，和为 <code>ceil(1/4) + ceil(2/4) + ceil(5/4) + ceil(9/4) = 1 + 1 + 2 + 3 = 7</code>。<code>7 &gt; 6</code>，不满足条件。</li>
+<li>如果选择除数为 5，和为 <code>ceil(1/5) + ceil(2/5) + ceil(5/5) + ceil(9/5) = 1 + 1 + 1 + 2 = 5</code>。<code>5 &lt;= 6</code>，满足条件。</li>
+</ul>
+<p>我们找到了一个满足条件的除数 <code>5</code>。但题目要求的是<strong>最小</strong>的那个。我们可以继续验证，发现除数 <code>4</code> 不满足条件，因此 <code>5</code> 就是我们要找的最小除数。</p>
+<h3 id="核心思路：在答案上进行二分查找"><a href="#核心思路：在答案上进行二分查找" class="headerlink" title="核心思路：在答案上进行二分查找"></a>核心思路：在答案上进行二分查找</h3><p>一个朴素的想法是，从除数 <code>d = 1</code> 开始，逐个向上尝试，计算每次的和，直到找到第一个满足 <code>sum &lt;= threshold</code> 的除数。然而，<code>nums</code> 中的元素最大可达 <code>10^6</code>，这意味着除数的取值范围也可能很大，线性遍历非常耗时，可能会超时。</p>
+<p>这时，我们需要观察问题是否存在某种<strong>单调性</strong>。</p>
+<ul>
+<li>当<strong>除数增大</strong>时，数组中每个元素 <code>num / divisor</code> 的结果会减小或不变。</li>
+<li>因此，所有结果向上取整后的<strong>总和也会减小或不变</strong>。</li>
+</ul>
+<p>这种“除数”与“总和”之间的单调递减关系，是使用<strong>二分查找</strong>的绝佳信号。我们可以对<strong>答案（也就是除数）本身</strong>进行二分查找。</p>
+<ol>
+<li><p><strong>确定搜索范围</strong>：</p>
+<ul>
+<li>除数最小也得是 <code>1</code>，这是我们的左边界。</li>
+<li>除数最大是多少呢？如果除数等于 <code>max(nums)</code>，那么每个数相除的结果向上取整后不是 <code>1</code> 就是 <code>0</code>（正整数没有0），所以和最大是 <code>len(nums)</code>。如果除数比 <code>max(nums)</code> 还大，和依然是 <code>len(nums)</code>。因此，将搜索范围的右边界设为 <code>max(nums)</code> 是一个合理的上界。</li>
+</ul>
+</li>
+<li><p><strong>二分过程</strong>：</p>
+<ul>
+<li>取搜索范围 <code>[left, right]</code> 的中间值 <code>mid</code> 作为候选的除数。</li>
+<li>计算当除数为 <code>mid</code> 时的总和。</li>
+<li>如果 <code>sum &lt;= threshold</code>，说明 <code>mid</code> 是一个<strong>可能</strong>的解，但我们想找更小的，所以我们尝试在 <code>[left, mid]</code> 这个更小的区间里继续寻找。</li>
+<li>如果 <code>sum &gt; threshold</code>，说明 <code>mid</code> 这个除数太小了，导致和超标了。我们需要一个更大的除数，所以在 <code>[mid + 1, right]</code> 区间里继续寻找。</li>
+</ul>
+</li>
+</ol>
+<p>通过不断缩小搜索范围，我们最终可以锁定满足条件的最小除数。</p>
+<h3 id="算法详解"><a href="#算法详解" class="headerlink" title="算法详解"></a>算法详解</h3><ol>
+<li><p><strong>确定二分边界</strong></p>
+<ul>
+<li>左边界 <code>l</code>：最小可能的除数是 <code>1</code>。</li>
+<li>右边界 <code>r</code>：最大可能的除数是 <code>max(nums)</code>。</li>
+<li><em>注意</em>：代码实现中 <code>l</code> 从 <code>0</code> 开始，但因为 <code>mid</code> 的计算和 <code>l</code> 的更新方式，<code>mid</code> 永远不会是 <code>0</code>，不影响结果。</li>
+</ul>
+</li>
+<li><p><strong>编写 <code>check</code> 函数（求和逻辑）</strong></p>
+<ul>
+<li>这是二分查找的核心判断条件。给定一个除数 <code>d</code>，我们需要计算 <code>sum(ceil(x/d) for x in nums)</code>。</li>
+<li>在整数运算中，<code>ceil(x/d)</code> 有一个巧妙的等价转换：<code>(x + d - 1) // d</code>。</li>
+<li>代码中使用了另一个更精妙的转换：<code>ceil(x/d) = (x - 1) // d + 1</code>。</li>
+<li>因此，<code>sum(ceil(x/d))</code> 等于 <code>sum((x - 1) // d + 1)</code>，进一步等于 <code>sum((x - 1) // d) + len(nums)</code>。</li>
+<li>所以，判断条件 <code>sum(ceil(x/d)) &lt;= threshold</code> 就等价于 <code>sum((x - 1) // d) + len(nums) &lt;= threshold</code>，即 <code>sum((x - 1) // d) &lt;= threshold - len(nums)</code>。这正是代码中所使用的判断逻辑，它通过预先减掉 <code>len(nums)</code> 使得循环内的计算更简洁。</li>
+</ul>
+</li>
+<li><p><strong>循环二分</strong></p>
+<ul>
+<li>采用 <code>while l + 1 &lt; r</code> 的二分模板。这个模板的循环终止条件是 <code>l</code> 和 <code>r</code> 相邻。</li>
+<li>在循环中，计算 <code>mid = (l + r) // 2</code>。</li>
+<li>如果 <code>mid</code> 满足条件（和小于等于阈值），说明 <code>mid</code> 是一个潜在的答案，或者还有更小的答案。我们将上界收缩到 <code>mid</code>，即 <code>r = mid</code>，去左半边寻找更优解。</li>
+<li>如果 <code>mid</code> 不满足条件，说明 <code>mid</code> 太小了，必须选择一个更大的除数。我们将下界提升到 <code>mid</code>，即 <code>l = mid</code>，去右半边寻找解。</li>
+<li>循环结束后，<code>r</code> 就指向了满足条件的最小除数。</li>
+</ul>
+</li>
+</ol>
+<h3 id="Python-代码实现"><a href="#Python-代码实现" class="headerlink" title="Python 代码实现"></a>Python 代码实现</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> typing <span class="keyword">import</span> <span class="type">List</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">smallestDivisor</span>(<span class="params">self, nums: <span class="type">List</span>[<span class="built_in">int</span>], threshold: <span class="built_in">int</span></span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        <span class="comment"># 步骤 1: 确定二分查找的边界</span></span><br><span class="line">        <span class="comment"># 左边界 l 可以从 0 或 1 开始，因为除数最小为 1。</span></span><br><span class="line">        <span class="comment"># 右边界 r 是数组中的最大值，更大的除数不会产生更小的和。</span></span><br><span class="line">        l, r = <span class="number">0</span>, <span class="built_in">max</span>(nums)</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 步骤 3: 循环二分</span></span><br><span class="line">        <span class="comment"># 采用 l + 1 &lt; r 的模板，循环直到 l 和 r 相邻</span></span><br><span class="line">        <span class="keyword">while</span> l + <span class="number">1</span> &lt; r:</span><br><span class="line">            mid = (l + r) // <span class="number">2</span></span><br><span class="line">            <span class="comment"># 防止除以 0 的情况</span></span><br><span class="line">            <span class="keyword">if</span> mid == <span class="number">0</span>:</span><br><span class="line">                l = mid</span><br><span class="line">                <span class="keyword">continue</span></span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 步骤 2: check 函数逻辑</span></span><br><span class="line">            <span class="comment"># 计算以 mid 为除数时的总和</span></span><br><span class="line">            <span class="comment"># ceil(x/mid) 等价于 (x-1)//mid + 1</span></span><br><span class="line">            <span class="comment"># sum((x-1)//mid + 1) &lt;= threshold 变形为:</span></span><br><span class="line">            <span class="comment"># sum((x-1)//mid) &lt;= threshold - len(nums)</span></span><br><span class="line">            current_sum = <span class="built_in">sum</span>((x - <span class="number">1</span>) // mid <span class="keyword">for</span> x <span class="keyword">in</span> nums)</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">if</span> current_sum &lt;= threshold - <span class="built_in">len</span>(nums):</span><br><span class="line">                <span class="comment"># 如果和满足条件，说明 mid 是一个可能的解</span></span><br><span class="line">                <span class="comment"># 我们尝试寻找更小的解，所以收缩上界</span></span><br><span class="line">                r = mid</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="comment"># 如果和不满足条件，说明 mid 太小了</span></span><br><span class="line">                <span class="comment"># 我们需要更大的除数，所以收缩下界</span></span><br><span class="line">                l = mid</span><br><span class="line">                </span><br><span class="line">        <span class="comment"># 循环结束时, r 是满足条件的最小除数</span></span><br><span class="line">        <span class="keyword">return</span> r</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h3><ul>
+<li><p><strong>时间复杂度</strong>: O(N * log K)</p>
+<ul>
+<li>其中 <code>N</code> 是数组 <code>nums</code> 的长度，<code>K</code> 是 <code>nums</code> 数组中的最大值。</li>
+<li>二分查找的搜索空间大小为 <code>K</code>，因此二分过程需要进行 O(log K) 次迭代。</li>
+<li>在每一次迭代中，我们都需要遍历整个 <code>nums</code> 数组来计算总和，这个操作的复杂度是 O(N)。</li>
+<li>因此，总的时间复杂度是 O(N * log K)。</li>
+</ul>
+</li>
+<li><p><strong>空间复杂度</strong>: O(1)</p>
+<ul>
+<li>算法在执行过程中只使用了有限的几个变量（如 <code>l</code>, <code>r</code>, <code>mid</code>, <code>current_sum</code>），没有使用额外的、与输入规模相关的存储空间。</li>
+</ul>
+</li>
+</ul>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>本题是二分查找思想的一个典型应用，但它并非直接在输入数组上进行查找，而是在**可能解的范围（答案空间）**上进行查找。解决这类问题的关键在于：</p>
+<ol>
+<li>分析问题，发现输入与输出之间的单调关系。</li>
+<li>确定这个单调关系的定义域，即二分查找的上下边界。</li>
+<li>将原问题转化为一个“判定问题”（Check 函数）：给定一个候选解 <code>mid</code>，能否在 O(N) 时间内判断它是否满足条件？</li>
+</ol>
+<p>一旦这三步完成，就可以套用二分查找模板来高效地解决问题，将时间复杂度从可能的 O(N<em>K) 优化到 O(N</em>log K)。</p>
+
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%95%B0%E7%BB%84/" rel="tag"># 数组</a>
+              <a href="/tags/%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE/" rel="tag"># 二分查找</a>
+              <a href="/tags/%E7%AC%AC166%E5%9C%BA%E5%91%A8%E8%B5%9B/" rel="tag"># 第166场周赛</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/posts/leetcode-1287/" rel="prev" title="LeetCode 1287 | 有序数组中出现次数超过四分之一的元素">
+      <i class="fa fa-chevron-left"></i> LeetCode 1287 | 有序数组中出现次数超过四分之一的元素
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/posts/leetcode-1011/" rel="next" title="LeetCode 1011 | 在 D 天内送达包裹的能力">
+      LeetCode 1011 | 在 D 天内送达包裹的能力 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E8%A7%A3%E8%AF%BB"><span class="nav-number">1.</span> <span class="nav-text">问题解读</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E6%80%9D%E8%B7%AF%EF%BC%9A%E5%9C%A8%E7%AD%94%E6%A1%88%E4%B8%8A%E8%BF%9B%E8%A1%8C%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE"><span class="nav-number">2.</span> <span class="nav-text">核心思路：在答案上进行二分查找</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E8%AF%A6%E8%A7%A3"><span class="nav-number">3.</span> <span class="nav-text">算法详解</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Python-%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0"><span class="nav-number">4.</span> <span class="nav-text">Python 代码实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%8D%E6%9D%82%E5%BA%A6%E5%88%86%E6%9E%90"><span class="nav-number">5.</span> <span class="nav-text">复杂度分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">6.</span> <span class="nav-text">总结</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Changan"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Changan</p>
+  <div class="site-description" itemprop="description">Good things take time</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">101</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">22</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">107</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/qiyuanlanniao" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;qiyuanlanniao"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:hmca09502@gmail.com" title="E-Mail → mailto:hmca09502@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Changan</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('https://cdn.jsdelivr.net/npm/valine@1.5.3/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'fNBvdCThX5dQrppj7znaQ3xJ-gzGzoHsz',
+      appKey     : 'Mom6ApPuWkqQu8UwakobSJqh',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

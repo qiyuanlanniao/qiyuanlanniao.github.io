@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"github.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"valine","storage":true,"lazyload":false,"nav":null,"activeClass":"valine"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="LeetCode 第 3508 题：设计路由器。本题要求设计一个数据结构，高效地模拟路由器的行为。解法的关键在于为不同的操作需求选择最合适的数据结构，特别是利用题目中时间戳的有序性，通过二分查找优化范围查询的性能。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LeetCode 3508 | 设计路由器：双端队列与二分查找的高效结合">
+<meta property="og:url" content="http://github.com/posts/leetcode-3508/index.html">
+<meta property="og:site_name" content="Changan&#39;s Blog">
+<meta property="og:description" content="LeetCode 第 3508 题：设计路由器。本题要求设计一个数据结构，高效地模拟路由器的行为。解法的关键在于为不同的操作需求选择最合适的数据结构，特别是利用题目中时间戳的有序性，通过二分查找优化范围查询的性能。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-10-22T02:20:00.000Z">
+<meta property="article:modified_time" content="2025-10-22T02:20:00.000Z">
+<meta property="article:author" content="Changan">
+<meta property="article:tag" content="二分查找">
+<meta property="article:tag" content="哈希表">
+<meta property="article:tag" content="设计">
+<meta property="article:tag" content="有序集合">
+<meta property="article:tag" content="队列">
+<meta property="article:tag" content="第444场周赛">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://github.com/posts/leetcode-3508/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>LeetCode 3508 | 设计路由器：双端队列与二分查找的高效结合 | Changan's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Changan's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+    <a href="https://github.com/qiyuanlanniao" class="github-corner" aria-label="View source on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#151513; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"/><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"/><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"/></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Changan's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://github.com/posts/leetcode-3508/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Changan">
+      <meta itemprop="description" content="Good things take time">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Changan's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          LeetCode 3508 | 设计路由器：双端队列与二分查找的高效结合
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2025-10-22 10:20:00" itemprop="dateCreated datePublished" datetime="2025-10-22T10:20:00+08:00">2025-10-22</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%AE%97%E6%B3%95%E9%A2%98%E8%A7%A3/" itemprop="url" rel="index"><span itemprop="name">算法题解</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%AE%97%E6%B3%95%E9%A2%98%E8%A7%A3/%E4%BA%8C%E5%88%86%E7%AE%97%E6%B3%95/" itemprop="url" rel="index"><span itemprop="name">二分算法</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%AE%97%E6%B3%95%E9%A2%98%E8%A7%A3/%E4%BA%8C%E5%88%86%E7%AE%97%E6%B3%95/%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE/" itemprop="url" rel="index"><span itemprop="name">二分查找</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/posts/leetcode-3508/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/posts/leetcode-3508/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <blockquote class="blockquote-center">
+            <i class="fa fa-quote-left"></i>
+            <p>LeetCode 第 3508 题：<a target="_blank" rel="noopener" href="https://leetcode.cn/problems/implement-router/solutions/3641772/mo-ni-ha-xi-biao-dui-lie-er-fen-cha-zhao-y7l7/">设计路由器</a>。<br>本题要求设计一个数据结构，高效地模拟路由器的行为。解法的关键在于为不同的操作需求选择最合适的数据结构，特别是利用题目中时间戳的有序性，通过二分查找优化范围查询的性能。</p>
+
+            <i class="fa fa-quote-right"></i>
+          </blockquote>
+<span id="more"></span>
+<h3 id="问题解读"><a href="#问题解读" class="headerlink" title="问题解读"></a>问题解读</h3><p>我们需要设计并实现一个 <code>Router</code> 类，它能模拟网络路由器处理数据包的基本功能。这个类需要支持三个核心操作：</p>
+<ol>
+<li><p><code>Router(int memoryLimit)</code>: 构造函数，初始化一个有固定内存上限 <code>memoryLimit</code> 的路由器。路由器中存储的数据包数量不能超过这个限制。</p>
+</li>
+<li><p><code>bool addPacket(int source, int destination, int timestamp)</code>: 添加一个数据包。</p>
+<ul>
+<li>每个数据包由来源、目的地和时间戳唯一标识。如果一个完全相同的数据包已经存在，则视为重复，添加失败。</li>
+<li>如果内存已满（达到 <code>memoryLimit</code>），在添加新数据包前，必须先将<strong>最旧的</strong>一个数据包转发出去，以腾出空间。</li>
+<li>一个关键信息是：<code>addPacket</code> 的调用会按照 <code>timestamp</code> 的<strong>非递减顺序</strong>进行。</li>
+</ul>
+</li>
+<li><p><code>int[] forwardPacket()</code>: 转发数据包。</p>
+<ul>
+<li>遵循<strong>先进先出 (FIFO)</strong> 原则，移除并返回存储在路由器中<strong>最旧</strong>的数据包。</li>
+<li>如果没有数据包，返回空数组。</li>
+</ul>
+</li>
+<li><p><code>int getCount(int destination, int startTime, int endTime)</code>: 计数查询。</p>
+<ul>
+<li>返回当前路由器中，目的地为 <code>destination</code> 且时间戳在 <code>[startTime, endTime]</code> 闭区间内的数据包数量。</li>
+</ul>
+</li>
+</ol>
+<h3 id="核心思路：组合数据结构-二分查找"><a href="#核心思路：组合数据结构-二分查找" class="headerlink" title="核心思路：组合数据结构 + 二分查找"></a>核心思路：组合数据结构 + 二分查找</h3><p>这是一个典型的系统设计题，需要我们为不同的需求选择最优的数据结构。</p>
+<ol>
+<li><p><strong>处理 FIFO 和内存限制</strong>：<code>addPacket</code> 和 <code>forwardPacket</code> 方法共同描述了一个先进先出 (FIFO) 的队列行为。当队列满了之后，需要从队头移除元素。Python 中的 <code>collections.deque</code> (双端队列) 是实现这种操作的完美选择，它支持 O(1) 时间复杂度的队头移除和队尾添加。我们将用一个 <code>deque</code> 来存储所有的数据包，记为 <code>pq</code>。</p>
+</li>
+<li><p><strong>处理重复数据包</strong>：<code>addPacket</code> 方法要求我们能快速判断一个数据包 <code>(source, destination, timestamp)</code> 是否已经存在。为了实现 O(1) 级别的平均查找效率，哈希集合 <code>set</code> 是不二之选。我们将用一个 <code>set</code> 来存储所有当前存在的数据包，记为 <code>ps</code>。</p>
+</li>
+<li><p><strong>处理计数查询</strong>：<code>getCount</code> 是本题的性能关键点。对于一个给定的 <code>destination</code>，我们需要快速统计出在 <code>[startTime, endTime]</code> 时间范围内的数据包数量。</p>
+<ul>
+<li>一个朴素的想法是遍历整个 <code>pq</code> 队列，检查每个数据包的目的地和时间戳，但这样做的时间复杂度是 O(L)（L 为 <code>memoryLimit</code>），在大量调用下会超时。</li>
+<li>更好的方法是将数据包按目的地进行分组。我们可以使用一个哈希表（<code>defaultdict</code>），键是 <code>destination</code>，值是一个列表，存储该目的地的所有数据包的时间戳。</li>
+<li>注意到题目给出的关键线索：“<code>addPacket</code> 的查询，<code>timestamp</code> 按非递减顺序给出”。这意味着，当我们向某个目的地的列表中添加时间戳时，这个列表天然就是<strong>有序的</strong>！</li>
+<li>对于一个有序的列表，查找某个范围内元素的个数，正是<strong>二分查找</strong>的经典应用场景。我们可以通过 <code>bisect_left</code> 找到范围的左边界，通过 <code>bisect_right</code> 找到范围的右边界，两者相减即可得到结果，时间复杂度为 O(log K)，其中 K 是该目的地的数据包数量。</li>
+</ul>
+</li>
+</ol>
+<p>综上，我们的整体方案是：</p>
+<ul>
+<li>使用 <code>deque</code> (<code>pq</code>) 维护数据包的 FIFO 顺序。</li>
+<li>使用 <code>set</code> (<code>ps</code>) 快速检查数据包是否重复。</li>
+<li>使用 <code>defaultdict(deque)</code> (<code>dt</code>) 将时间戳按目的地分组并保持有序，以供二分查找。</li>
+</ul>
+<h3 id="算法详解"><a href="#算法详解" class="headerlink" title="算法详解"></a>算法详解</h3><ol>
+<li><p><strong>初始化 <code>__init__</code></strong></p>
+<ul>
+<li><code>self.limit</code>: 存储内存限制。</li>
+<li><code>self.pq = deque()</code>: 主队列，按到达顺序存储 <code>(source, destination, timestamp)</code> 元组，用于 FIFO 转发。</li>
+<li><code>self.ps = set()</code>: 集合，同样存储元组，用于 O(1) 去重。</li>
+<li><code>self.dt = defaultdict(deque)</code>: 字典，<code>key</code> 为 <code>destination</code>，<code>value</code> 为一个 <code>deque</code>，按顺序存储该目的地的所有时间戳。</li>
+</ul>
+</li>
+<li><p><strong><code>addPacket</code> 方法</strong></p>
+<ul>
+<li>将传入的参数构造成 <code>packet</code> 元组。</li>
+<li>检查 <code>packet</code> 是否在 <code>self.ps</code> 中，若存在则为重复，返回 <code>False</code>。</li>
+<li>如果不是重复包，将其加入 <code>self.ps</code>。</li>
+<li>检查 <code>len(self.pq)</code> 是否等于 <code>self.limit</code>。如果是，则调用 <code>self.forwardPacket()</code> 移除最旧的数据包。</li>
+<li>将新 <code>packet</code> 添加到 <code>self.pq</code> 的队尾。</li>
+<li>将 <code>packet</code> 的 <code>timestamp</code> 添加到 <code>self.dt[destination]</code> 的队尾。</li>
+<li>返回 <code>True</code>。</li>
+</ul>
+</li>
+<li><p><strong><code>forwardPacket</code> 方法</strong></p>
+<ul>
+<li>检查 <code>self.pq</code> 是否为空，若为空则返回 <code>[]</code>。</li>
+<li>从 <code>self.pq</code> 的队首弹出一个最旧的 <code>packet</code>。</li>
+<li>将该 <code>packet</code> 从 <code>self.ps</code> 中移除。</li>
+<li>从 <code>self.dt[packet[1]]</code> (即该包的目的地对应的时间戳队列) 的队首弹出一个时间戳。</li>
+<li>返回这个 <code>packet</code>。</li>
+</ul>
+</li>
+<li><p><strong><code>getCount</code> 方法</strong></p>
+<ul>
+<li>通过 <code>self.dt[destination]</code> 获取目标地址所有的时间戳队列 <code>timestamp</code>。</li>
+<li>使用 <code>bisect_left(timestamp, startTime)</code> 查找第一个大于等于 <code>startTime</code> 的元素索引 <code>l</code>。</li>
+<li>使用 <code>bisect_right(timestamp, endTime)</code> 查找第一个严格大于 <code>endTime</code> 的元素索引 <code>r</code>。</li>
+<li><code>r - l</code> 的值即为时间戳在 <code>[startTime, endTime]</code> 区间内的元素数量。返回这个差值。</li>
+</ul>
+</li>
+</ol>
+<h3 id="Python-代码实现"><a href="#Python-代码实现" class="headerlink" title="Python 代码实现"></a>Python 代码实现</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> deque, defaultdict</span><br><span class="line"><span class="keyword">from</span> bisect <span class="keyword">import</span> bisect_left, bisect_right</span><br><span class="line"><span class="keyword">from</span> typing <span class="keyword">import</span> <span class="type">List</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Router</span>:</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, memoryLimit: <span class="built_in">int</span></span>):</span><br><span class="line">        <span class="comment"># 内存限制</span></span><br><span class="line">        <span class="variable language_">self</span>.limit = memoryLimit</span><br><span class="line">        <span class="comment"># 主队列，维护所有数据包的FIFO顺序</span></span><br><span class="line">        <span class="variable language_">self</span>.pq = deque()</span><br><span class="line">        <span class="comment"># 集合，用于快速去重</span></span><br><span class="line">        <span class="variable language_">self</span>.ps = <span class="built_in">set</span>()</span><br><span class="line">        <span class="comment"># 按目的地分组的时间戳队列，用于高效范围查询</span></span><br><span class="line">        <span class="variable language_">self</span>.dt = defaultdict(deque)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">addPacket</span>(<span class="params">self, source: <span class="built_in">int</span>, destination: <span class="built_in">int</span>, timestamp: <span class="built_in">int</span></span>) -&gt; <span class="built_in">bool</span>:</span><br><span class="line">        packet = (source, destination, timestamp)</span><br><span class="line">        <span class="comment"># 检查是否重复</span></span><br><span class="line">        <span class="keyword">if</span> packet <span class="keyword">in</span> <span class="variable language_">self</span>.ps:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">        </span><br><span class="line">        <span class="variable language_">self</span>.ps.add(packet)</span><br><span class="line">        <span class="comment"># 如果内存已满，转发最旧的数据包</span></span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">len</span>(<span class="variable language_">self</span>.pq) == <span class="variable language_">self</span>.limit:</span><br><span class="line">            <span class="variable language_">self</span>.forwardPacket()</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 添加新数据包到各个数据结构</span></span><br><span class="line">        <span class="variable language_">self</span>.pq.append(packet)</span><br><span class="line">        <span class="variable language_">self</span>.dt[destination].append(timestamp)</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forwardPacket</span>(<span class="params">self</span>) -&gt; <span class="type">List</span>[<span class="built_in">int</span>]:</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> <span class="variable language_">self</span>.pq:</span><br><span class="line">            <span class="keyword">return</span> []</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 从队首取出最旧的数据包</span></span><br><span class="line">        packet = <span class="variable language_">self</span>.pq.popleft()</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 从所有数据结构中移除该包的信息</span></span><br><span class="line">        <span class="variable language_">self</span>.ps.remove(packet)</span><br><span class="line">        <span class="variable language_">self</span>.dt[packet[<span class="number">1</span>]].popleft()</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">list</span>(packet)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">getCount</span>(<span class="params">self, destination: <span class="built_in">int</span>, startTime: <span class="built_in">int</span>, endTime: <span class="built_in">int</span></span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        <span class="comment"># 获取该目的地对应的有序时间戳列表</span></span><br><span class="line">        timestamp_q = <span class="variable language_">self</span>.dt[destination]</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 使用二分查找定位区间的左右边界</span></span><br><span class="line">        <span class="comment"># l 是第一个 &gt;= startTime 的位置</span></span><br><span class="line">        l = bisect_left(timestamp_q, startTime)</span><br><span class="line">        <span class="comment"># r 是第一个 &gt; endTime 的位置</span></span><br><span class="line">        r = bisect_right(timestamp_q, endTime)</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># r - l 即为区间内元素个数</span></span><br><span class="line">        <span class="keyword">return</span> r - l</span><br></pre></td></tr></table></figure>
+
+<h3 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h3><ul>
+<li><p><strong>时间复杂度</strong>:<code>O(log(min(q, memoryLimit)))</code>，其中 q 是 <code>addPacket</code> 的总调用次数。</p>
+</li>
+<li><p><strong>空间复杂度</strong>: <code>O(min(q, memoryLimit))</code></p>
+</li>
+</ul>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>本题是一个优秀的数据结构设计问题，它考验了我们根据不同操作需求选择和组合多种数据结构的能力。通过使用 <code>deque</code> 满足 FIFO 要求，使用 <code>set</code> 实现快速去重，并巧妙地利用题目中“时间戳非递减”这一隐藏条件，将目的地的时间戳维护成一个有序序列，最终通过二分查找将最复杂的范围查询操作优化到了对数时间复杂度。这个思路清晰地展示了如何通过分析问题特性来设计高效的算法。</p>
+
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE/" rel="tag"># 二分查找</a>
+              <a href="/tags/%E5%93%88%E5%B8%8C%E8%A1%A8/" rel="tag"># 哈希表</a>
+              <a href="/tags/%E8%AE%BE%E8%AE%A1/" rel="tag"># 设计</a>
+              <a href="/tags/%E6%9C%89%E5%BA%8F%E9%9B%86%E5%90%88/" rel="tag"># 有序集合</a>
+              <a href="/tags/%E9%98%9F%E5%88%97/" rel="tag"># 队列</a>
+              <a href="/tags/%E7%AC%AC444%E5%9C%BA%E5%91%A8%E8%B5%9B/" rel="tag"># 第444场周赛</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/posts/leetcode-1146/" rel="prev" title="LeetCode 1146 | 二分查找实现“快照数组”">
+      <i class="fa fa-chevron-left"></i> LeetCode 1146 | 二分查找实现“快照数组”
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/posts/leetcode-1818/" rel="next" title="LeetCode 1818 | 二分查找优化绝对差值和">
+      LeetCode 1818 | 二分查找优化绝对差值和 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E8%A7%A3%E8%AF%BB"><span class="nav-number">1.</span> <span class="nav-text">问题解读</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E6%80%9D%E8%B7%AF%EF%BC%9A%E7%BB%84%E5%90%88%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE"><span class="nav-number">2.</span> <span class="nav-text">核心思路：组合数据结构 + 二分查找</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E8%AF%A6%E8%A7%A3"><span class="nav-number">3.</span> <span class="nav-text">算法详解</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Python-%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0"><span class="nav-number">4.</span> <span class="nav-text">Python 代码实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%8D%E6%9D%82%E5%BA%A6%E5%88%86%E6%9E%90"><span class="nav-number">5.</span> <span class="nav-text">复杂度分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">6.</span> <span class="nav-text">总结</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Changan"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Changan</p>
+  <div class="site-description" itemprop="description">Good things take time</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">101</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">22</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">107</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/qiyuanlanniao" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;qiyuanlanniao"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:hmca09502@gmail.com" title="E-Mail → mailto:hmca09502@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Changan</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('https://cdn.jsdelivr.net/npm/valine@1.5.3/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'fNBvdCThX5dQrppj7znaQ3xJ-gzGzoHsz',
+      appKey     : 'Mom6ApPuWkqQu8UwakobSJqh',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

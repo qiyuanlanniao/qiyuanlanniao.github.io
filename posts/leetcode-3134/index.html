@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"github.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"valine","storage":true,"lazyload":false,"nav":null,"activeClass":"valine"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="LeetCode 第 3134 题：找出唯一性数组的中位数。我们需要在 O(N²) 的子数组空间中，高效地找到第 K 小的唯一性计数。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LeetCode 3134 | 找出唯一性数组的中位数">
+<meta property="og:url" content="http://github.com/posts/leetcode-3134/index.html">
+<meta property="og:site_name" content="Changan&#39;s Blog">
+<meta property="og:description" content="LeetCode 第 3134 题：找出唯一性数组的中位数。我们需要在 O(N²) 的子数组空间中，高效地找到第 K 小的唯一性计数。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-11-30T09:00:00.000Z">
+<meta property="article:modified_time" content="2025-11-30T09:00:00.000Z">
+<meta property="article:author" content="Changan">
+<meta property="article:tag" content="数组">
+<meta property="article:tag" content="二分查找">
+<meta property="article:tag" content="哈希表">
+<meta property="article:tag" content="滑动窗口">
+<meta property="article:tag" content="第395场周赛">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://github.com/posts/leetcode-3134/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>LeetCode 3134 | 找出唯一性数组的中位数 | Changan's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Changan's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+    <a href="https://github.com/qiyuanlanniao" class="github-corner" aria-label="View source on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#151513; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"/><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"/><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"/></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Changan's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://github.com/posts/leetcode-3134/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Changan">
+      <meta itemprop="description" content="Good things take time">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Changan's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          LeetCode 3134 | 找出唯一性数组的中位数
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2025-11-30 17:00:00" itemprop="dateCreated datePublished" datetime="2025-11-30T17:00:00+08:00">2025-11-30</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%AE%97%E6%B3%95%E9%A2%98%E8%A7%A3/" itemprop="url" rel="index"><span itemprop="name">算法题解</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%AE%97%E6%B3%95%E9%A2%98%E8%A7%A3/%E4%BA%8C%E5%88%86%E7%AE%97%E6%B3%95/" itemprop="url" rel="index"><span itemprop="name">二分算法</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%AE%97%E6%B3%95%E9%A2%98%E8%A7%A3/%E4%BA%8C%E5%88%86%E7%AE%97%E6%B3%95/%E4%BA%8C%E5%88%86%E7%AD%94%E6%A1%88/" itemprop="url" rel="index"><span itemprop="name">二分答案</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%AE%97%E6%B3%95%E9%A2%98%E8%A7%A3/%E4%BA%8C%E5%88%86%E7%AE%97%E6%B3%95/%E4%BA%8C%E5%88%86%E7%AD%94%E6%A1%88/%E7%AC%ACK%E5%B0%8F-%E5%A4%A7/" itemprop="url" rel="index"><span itemprop="name">第K小/大</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/posts/leetcode-3134/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/posts/leetcode-3134/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <blockquote class="blockquote-center">
+            <i class="fa fa-quote-left"></i>
+            <p>LeetCode 第 3134 题：<a target="_blank" rel="noopener" href="https://leetcode.cn/problems/find-the-median-of-the-uniqueness-array/">找出唯一性数组的中位数</a>。<br>我们需要在 O(N²) 的子数组空间中，高效地找到第 K 小的唯一性计数。</p>
+
+            <i class="fa fa-quote-right"></i>
+          </blockquote>
+<span id="more"></span>
+
+<h3 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h3><p>给定一个整数数组 <code>nums</code>。<br>数组的 <strong>唯一性数组</strong> 是一个数组，包含 <code>nums</code> 的所有非空子数组中不同元素的个数。<br>换句话说，对于 <code>nums</code> 的每一个子数组，计算其不同元素的个数，将这些值收集起来形成一个新的数组。</p>
+<p>需要返回这个 <strong>唯一性数组</strong> 的 <strong>中位数</strong>。</p>
+<p>注意：</p>
+<ul>
+<li>子数组是数组中连续的一段。</li>
+<li>如果数组长度为偶数，中位数是排序后中间两个数的较小者（即第 <code>(total + 1) / 2</code> 个数，向上取整的逻辑）。</li>
+</ul>
+<p><strong>示例 1：</strong></p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">输入：nums = [1, 2, 3]</span><br><span class="line">输出：1</span><br><span class="line">解释：</span><br><span class="line">子数组及其不同元素个数：</span><br><span class="line">[1]: 1</span><br><span class="line">[2]: 1</span><br><span class="line">[3]: 1</span><br><span class="line">[1, 2]: 2</span><br><span class="line">[2, 3]: 2</span><br><span class="line">[1, 2, 3]: 3</span><br><span class="line">唯一性数组为 [1, 1, 1, 2, 2, 3]。</span><br><span class="line">排序后为 [1, 1, 1, 2, 2, 3]，中位数是 1。</span><br></pre></td></tr></table></figure>
+
+<p><strong>提示：</strong></p>
+<ul>
+<li><code>1 &lt;= nums.length &lt;= 10^5</code></li>
+<li><code>1 &lt;= nums[i] &lt;= 10^5</code></li>
+</ul>
+<h3 id="解题思路"><a href="#解题思路" class="headerlink" title="解题思路"></a>解题思路</h3><h4 id="1-问题转化：二分答案"><a href="#1-问题转化：二分答案" class="headerlink" title="1. 问题转化：二分答案"></a>1. 问题转化：二分答案</h4><p>直接暴力生成所有子数组的唯一性值需要 O(N²) 的时间，这在 <code>N = 10^5</code> 的数据规模下是不可接受的。<br>我们需要找到一个数 <code>x</code>，使得唯一性数组中 <strong>小于等于</strong> <code>x</code> 的元素个数至少占总数的一半。</p>
+<p>这就具备了单调性：</p>
+<ul>
+<li>如果我们允许子数组包含更多种类的元素（即 <code>x</code> 变大），那么满足条件的子数组数量一定会增加或持平。</li>
+</ul>
+<p>因此，我们可以对答案（即子数组中不同元素的个数）进行 <strong>二分查找</strong>。<br>答案的范围是 <code>[1, N]</code>（或者更精确地说是 <code>[1, len(set(nums))]</code>）。</p>
+<h4 id="2-中位数的定义"><a href="#2-中位数的定义" class="headerlink" title="2. 中位数的定义"></a>2. 中位数的定义</h4><p>对于长度为 <code>n</code> 的数组，非空子数组的总数 <code>Total</code> 为 <code>n * (n + 1) / 2</code>。<br>题目要求的中位数，本质上是求第 <code>k</code> 小的数，其中 <code>k = (Total + 1) / 2</code>（整数除法）。</p>
+<p>我们需要找到最小的 <code>limit</code>，使得：<br><strong>不同元素个数 ≤ limit 的子数组数量 ≥ k</strong></p>
+<h4 id="3-计数检查：滑动窗口（双指针）"><a href="#3-计数检查：滑动窗口（双指针）" class="headerlink" title="3. 计数检查：滑动窗口（双指针）"></a>3. 计数检查：滑动窗口（双指针）</h4><p>核心问题变成了：如何快速计算“不同元素个数 ≤ limit”的子数组有多少个？<br>我们可以使用 <strong>滑动窗口</strong> 在 O(N) 时间内完成统计：</p>
+<ol>
+<li>维护一个窗口 <code>[l, r]</code> 和一个哈希表 <code>freq</code> 记录窗口内元素的出现次数。</li>
+<li>遍历右端点 <code>r</code>，将 <code>nums[r]</code> 加入窗口。</li>
+<li>如果窗口内不同元素的个数（即 <code>len(freq)</code>）超过了 <code>limit</code>，则移动左端点 <code>l</code>，直到窗口恢复合法。</li>
+<li>对于当前固定的右端点 <code>r</code>，所有以 <code>r</code> 结尾且起始位置在 <code>[l, r]</code> 之间的子数组都是合法的。这样的子数组个数为 <code>r - l + 1</code>。</li>
+<li>累加这些个数。</li>
+</ol>
+<h3 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h3><div class="tabs" id="code_block"><ul class="nav-tabs"><li class="tab active"><a href="#code_block-1">Python</a></li><li class="tab"><a href="#code_block-2">Go</a></li></ul><div class="tab-content"><div class="tab-pane active" id="code_block-1"><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">medianOfUniquenessArray</span>(<span class="params">self, nums: <span class="type">List</span>[<span class="built_in">int</span>]</span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        n = <span class="built_in">len</span>(nums)</span><br><span class="line">        <span class="comment"># 计算子数组总数 n*(n+1)/2，并确定中位数的位置 k</span></span><br><span class="line">        <span class="comment"># 这里使用的是向上取整的逻辑，即第 (Total + 1) // 2 小的数</span></span><br><span class="line">        k = (n * (n + <span class="number">1</span>) // <span class="number">2</span> + <span class="number">1</span>) // <span class="number">2</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># 核心校验函数：检查是否存在至少 k 个子数组，</span></span><br><span class="line">        <span class="comment"># 其不同元素个数小于等于 upper</span></span><br><span class="line">        <span class="keyword">def</span> <span class="title function_">check</span>(<span class="params">upper: <span class="built_in">int</span></span>) -&gt; <span class="built_in">bool</span>:</span><br><span class="line">            cnt = l = <span class="number">0</span></span><br><span class="line">            freq = defaultdict(<span class="built_in">int</span>)</span><br><span class="line">            <span class="keyword">for</span> r, in_ <span class="keyword">in</span> <span class="built_in">enumerate</span>(nums):</span><br><span class="line">                freq[in_] += <span class="number">1</span>  <span class="comment"># 移入右端点，更新计数</span></span><br><span class="line">                </span><br><span class="line">                <span class="comment"># 当窗口内不同元素的个数超过上限时，收缩左边界</span></span><br><span class="line">                <span class="keyword">while</span> <span class="built_in">len</span>(freq) &gt; upper:  <span class="comment"># 窗口内元素过多</span></span><br><span class="line">                    out = nums[l]</span><br><span class="line">                    freq[out] -= <span class="number">1</span>  <span class="comment"># 移出左端点</span></span><br><span class="line">                    <span class="keyword">if</span> freq[out] == <span class="number">0</span>:</span><br><span class="line">                        <span class="keyword">del</span> freq[out] <span class="comment"># 如果次数归零，从 map 中移除，len(freq) 会减少</span></span><br><span class="line">                    l += <span class="number">1</span></span><br><span class="line">                </span><br><span class="line">                <span class="comment"># 对于当前的右端点 r，合法的左端点范围是 [l, r]</span></span><br><span class="line">                <span class="comment"># 因此以 r 结尾且满足条件的子数组个数为 r - l + 1</span></span><br><span class="line">                cnt += r - l + <span class="number">1</span></span><br><span class="line">                </span><br><span class="line">                <span class="comment"># 剪枝：如果计数已经达到 k，提前返回 True</span></span><br><span class="line">                <span class="keyword">if</span> cnt &gt;= k:</span><br><span class="line">                    <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line">            <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># 在 [1, len(set(nums))] 范围内二分查找</span></span><br><span class="line">        <span class="comment"># bisect_left 会寻找第一个使得 check(val) 为 True 的值</span></span><br><span class="line">        <span class="comment"># range 的范围需要覆盖可能的解空间</span></span><br><span class="line">        <span class="keyword">return</span> bisect_left(<span class="built_in">range</span>(<span class="built_in">len</span>(<span class="built_in">set</span>(nums))), <span class="literal">True</span>, <span class="number">1</span>, key=check)</span><br></pre></td></tr></table></figure></div><div class="tab-pane" id="code_block-2"><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">medianOfUniquenessArray</span><span class="params">(nums []<span class="type">int</span>)</span></span> <span class="type">int</span> &#123;</span><br><span class="line">	n := <span class="built_in">len</span>(nums)</span><br><span class="line">    <span class="comment">// 计算中位数是第 k 小的数</span></span><br><span class="line">    <span class="comment">// 总子数组数为 n*(n+1)/2</span></span><br><span class="line">	k := (n*(n+<span class="number">1</span>)/<span class="number">2</span> + <span class="number">1</span>) / <span class="number">2</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 使用 sort.Search 进行二分查找</span></span><br><span class="line">    <span class="comment">// Search(n) 会在 [0, n) 范围内查找，我们查找的实际范围与数组长度相关</span></span><br><span class="line">    <span class="comment">// 但答案上限是不同元素的个数，这里用 n-1 作为搜索空间的基数</span></span><br><span class="line">	ans := <span class="number">1</span> + sort.Search(n<span class="number">-1</span>, <span class="function"><span class="keyword">func</span><span class="params">(upper <span class="type">int</span>)</span></span> <span class="type">bool</span> &#123;</span><br><span class="line">		upper++ <span class="comment">// sort.Search 的参数是从 0 开始的，实际含义需要 +1</span></span><br><span class="line">		cnt := <span class="number">0</span></span><br><span class="line">		l := <span class="number">0</span></span><br><span class="line">		freq := <span class="keyword">map</span>[<span class="type">int</span>]<span class="type">int</span>&#123;&#125; <span class="comment">// 哈希表记录窗口内元素频率</span></span><br><span class="line">		<span class="keyword">for</span> r, in := <span class="keyword">range</span> nums &#123;</span><br><span class="line">			freq[in]++ <span class="comment">// 移入右端点</span></span><br><span class="line">            </span><br><span class="line">            <span class="comment">// 如果窗口内不同元素数量超过 upper，则收缩左端点</span></span><br><span class="line">			<span class="keyword">for</span> <span class="built_in">len</span>(freq) &gt; upper &#123; <span class="comment">// 窗口内元素过多</span></span><br><span class="line">				out := nums[l]</span><br><span class="line">				freq[out]-- <span class="comment">// 移出左端点</span></span><br><span class="line">				<span class="keyword">if</span> freq[out] == <span class="number">0</span> &#123;</span><br><span class="line">					<span class="built_in">delete</span>(freq, out) <span class="comment">// 彻底移除元素，确保 len(freq) 正确</span></span><br><span class="line">				&#125;</span><br><span class="line">				l++</span><br><span class="line">			&#125;</span><br><span class="line">            </span><br><span class="line">            <span class="comment">// 累加当前右端点 r 对应的合法子数组数量</span></span><br><span class="line">			cnt += r - l + <span class="number">1</span> <span class="comment">// 右端点固定为 r 时，有 r-l+1 个合法左端点</span></span><br><span class="line">            </span><br><span class="line">            <span class="comment">// 如果计数满足要求，返回 true，二分查找会尝试更小的值</span></span><br><span class="line">			<span class="keyword">if</span> cnt &gt;= k &#123;</span><br><span class="line">				<span class="keyword">return</span> <span class="literal">true</span></span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">	&#125;)</span><br><span class="line">	<span class="keyword">return</span> ans</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div></div></div>
+
+<h3 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h3><ul>
+<li><p><strong>时间复杂度</strong>: O(N * log(M))</p>
+<ul>
+<li>其中 N 是数组 <code>nums</code> 的长度，M 是数组中不同元素的个数（最坏情况下 M &#x3D; N）。</li>
+<li>二分查找进行 O(log M) 次迭代。</li>
+<li>每次 <code>check</code> 函数中使用滑动窗口遍历整个数组，时间复杂度为 O(N)。</li>
+<li>总复杂度为 O(N log M)。</li>
+</ul>
+</li>
+<li><p><strong>空间复杂度</strong>: O(M)</p>
+<ul>
+<li>主要消耗在于滑动窗口中的哈希表 <code>freq</code>，其大小最多存储 M 个不同的元素。</li>
+</ul>
+</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%95%B0%E7%BB%84/" rel="tag"># 数组</a>
+              <a href="/tags/%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE/" rel="tag"># 二分查找</a>
+              <a href="/tags/%E5%93%88%E5%B8%8C%E8%A1%A8/" rel="tag"># 哈希表</a>
+              <a href="/tags/%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3/" rel="tag"># 滑动窗口</a>
+              <a href="/tags/%E7%AC%AC395%E5%9C%BA%E5%91%A8%E8%B5%9B/" rel="tag"># 第395场周赛</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/posts/leetcode-3116/" rel="prev" title="LeetCode 3116 | 单面值组合的第 K 小金额">
+      <i class="fa fa-chevron-left"></i> LeetCode 3116 | 单面值组合的第 K 小金额
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/posts/leetcode-1515/" rel="next" title="LeetCode 1515 | 服务中心的最佳位置">
+      LeetCode 1515 | 服务中心的最佳位置 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text">问题描述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E9%A2%98%E6%80%9D%E8%B7%AF"><span class="nav-number">2.</span> <span class="nav-text">解题思路</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-%E9%97%AE%E9%A2%98%E8%BD%AC%E5%8C%96%EF%BC%9A%E4%BA%8C%E5%88%86%E7%AD%94%E6%A1%88"><span class="nav-number">2.1.</span> <span class="nav-text">1. 问题转化：二分答案</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-%E4%B8%AD%E4%BD%8D%E6%95%B0%E7%9A%84%E5%AE%9A%E4%B9%89"><span class="nav-number">2.2.</span> <span class="nav-text">2. 中位数的定义</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-%E8%AE%A1%E6%95%B0%E6%A3%80%E6%9F%A5%EF%BC%9A%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%EF%BC%88%E5%8F%8C%E6%8C%87%E9%92%88%EF%BC%89"><span class="nav-number">2.3.</span> <span class="nav-text">3. 计数检查：滑动窗口（双指针）</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0"><span class="nav-number">3.</span> <span class="nav-text">代码实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%8D%E6%9D%82%E5%BA%A6%E5%88%86%E6%9E%90"><span class="nav-number">4.</span> <span class="nav-text">复杂度分析</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Changan"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Changan</p>
+  <div class="site-description" itemprop="description">Good things take time</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">101</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">22</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">107</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/qiyuanlanniao" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;qiyuanlanniao"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:hmca09502@gmail.com" title="E-Mail → mailto:hmca09502@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Changan</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('https://cdn.jsdelivr.net/npm/valine@1.5.3/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'fNBvdCThX5dQrppj7znaQ3xJ-gzGzoHsz',
+      appKey     : 'Mom6ApPuWkqQu8UwakobSJqh',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

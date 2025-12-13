@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"github.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"valine","storage":true,"lazyload":false,"nav":null,"activeClass":"valine"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="LeetCode 第 3116 题：单面值组合的第 K 小金额。一道结合了“二分答案”与“容斥原理”的经典数论题目。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LeetCode 3116 | 单面值组合的第 K 小金额">
+<meta property="og:url" content="http://github.com/posts/leetcode-3116/index.html">
+<meta property="og:site_name" content="Changan&#39;s Blog">
+<meta property="og:description" content="LeetCode 第 3116 题：单面值组合的第 K 小金额。一道结合了“二分答案”与“容斥原理”的经典数论题目。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-11-29T09:22:00.000Z">
+<meta property="article:modified_time" content="2025-11-29T09:22:00.000Z">
+<meta property="article:author" content="Changan">
+<meta property="article:tag" content="数组">
+<meta property="article:tag" content="二分查找">
+<meta property="article:tag" content="位运算">
+<meta property="article:tag" content="数学">
+<meta property="article:tag" content="组合数学">
+<meta property="article:tag" content="数论">
+<meta property="article:tag" content="第393场周赛">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://github.com/posts/leetcode-3116/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>LeetCode 3116 | 单面值组合的第 K 小金额 | Changan's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Changan's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+    <a href="https://github.com/qiyuanlanniao" class="github-corner" aria-label="View source on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#151513; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"/><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"/><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"/></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Changan's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://github.com/posts/leetcode-3116/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Changan">
+      <meta itemprop="description" content="Good things take time">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Changan's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          LeetCode 3116 | 单面值组合的第 K 小金额
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2025-11-29 17:22:00" itemprop="dateCreated datePublished" datetime="2025-11-29T17:22:00+08:00">2025-11-29</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%AE%97%E6%B3%95%E9%A2%98%E8%A7%A3/" itemprop="url" rel="index"><span itemprop="name">算法题解</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%AE%97%E6%B3%95%E9%A2%98%E8%A7%A3/%E4%BA%8C%E5%88%86%E7%AE%97%E6%B3%95/" itemprop="url" rel="index"><span itemprop="name">二分算法</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%AE%97%E6%B3%95%E9%A2%98%E8%A7%A3/%E4%BA%8C%E5%88%86%E7%AE%97%E6%B3%95/%E4%BA%8C%E5%88%86%E7%AD%94%E6%A1%88/" itemprop="url" rel="index"><span itemprop="name">二分答案</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%AE%97%E6%B3%95%E9%A2%98%E8%A7%A3/%E4%BA%8C%E5%88%86%E7%AE%97%E6%B3%95/%E4%BA%8C%E5%88%86%E7%AD%94%E6%A1%88/%E7%AC%ACK%E5%B0%8F-%E5%A4%A7/" itemprop="url" rel="index"><span itemprop="name">第K小/大</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/posts/leetcode-3116/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/posts/leetcode-3116/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <blockquote class="blockquote-center">
+            <i class="fa fa-quote-left"></i>
+            <p>LeetCode 第 3116 题：<a target="_blank" rel="noopener" href="https://leetcode.cn/problems/kth-smallest-amount-with-single-denomination-combination/">单面值组合的第 K 小金额</a>。<br>一道结合了“二分答案”与“容斥原理”的经典数论题目。</p>
+
+            <i class="fa fa-quote-right"></i>
+          </blockquote>
+<span id="more"></span>
+
+<h3 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h3><p>给你一个整数数组 <code>coins</code> 表示不同面额的硬币，另给你一个整数 <code>k</code>。<br>你有无限量的每种面额的硬币。但是，你 <strong>不能</strong> 组合使用不同面额的硬币。<br>也就是说，如果你选择面额为 <code>c</code> 的硬币，你只能制造 <code>c, 2c, 3c, ...</code> 这些金额。<br>返回使用这些硬币能制造的 <strong>第 k 小</strong> 的金额。</p>
+<p><strong>示例 1：</strong></p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">输入：coins = [3,6,9], k = 3</span><br><span class="line">输出：9</span><br><span class="line">解释：</span><br><span class="line">3元硬币产生：3, 6, 9, 12...</span><br><span class="line">6元硬币产生：6, 12, 18...</span><br><span class="line">9元硬币产生：9, 18, 27...</span><br><span class="line">去重合并后：3, 6, 9, 12...</span><br><span class="line">第3小的是9。</span><br></pre></td></tr></table></figure>
+
+<p><strong>提示：</strong></p>
+<ul>
+<li>1 &lt;&#x3D; coins.length &lt;&#x3D; 15</li>
+<li>1 &lt;&#x3D; coins[i] &lt;&#x3D; 25</li>
+<li>1 &lt;&#x3D; k &lt;&#x3D; 2 * 10^9</li>
+<li>coins 包含两两不同的整数。</li>
+</ul>
+<h3 id="解题思路"><a href="#解题思路" class="headerlink" title="解题思路"></a>解题思路</h3><h4 id="1-预处理：去重与排序"><a href="#1-预处理：去重与排序" class="headerlink" title="1. 预处理：去重与排序"></a>1. 预处理：去重与排序</h4><p>首先观察示例 1：<code>coins = [3, 6, 9]</code>。</p>
+<ul>
+<li><code>6</code> 是 <code>3</code> 的倍数，所有能由 <code>6</code> 产生的金额（6, 12…）一定都能由 <code>3</code> 产生。</li>
+<li>同理，<code>9</code> 也是 <code>3</code> 的倍数。</li>
+<li>因此，集合 <code>[3, 6, 9]</code> 等价于 <code>[3]</code>。</li>
+</ul>
+<p>为了减少容斥原理计算时的集合数量（指数级复杂度），我们首先应该对 <code>coins</code> 进行排序，并移除那些“本身是其他较小面额倍数”的硬币。</p>
+<h4 id="2-二分答案"><a href="#2-二分答案" class="headerlink" title="2. 二分答案"></a>2. 二分答案</h4><p>类似于求“第 K 小”的题目，通常具有单调性：</p>
+<ul>
+<li>如果金额 <code>m</code> 能够覆盖至少 <code>k</code> 个生成数，那么比 <code>m</code> 大的金额也能覆盖至少 <code>k</code> 个。</li>
+<li>我们需要找到满足 <code>count(m) &gt;= k</code> 的最小 <code>m</code>。</li>
+</ul>
+<p><strong>搜索范围：</strong></p>
+<ul>
+<li>下界：<code>k</code>（假设最小面额是1）。</li>
+<li>上界：<code>min(coins) * k</code>（最坏情况只使用最小面额）。</li>
+</ul>
+<h4 id="3-容斥原理"><a href="#3-容斥原理" class="headerlink" title="3. 容斥原理"></a>3. 容斥原理</h4><p>核心难点在于 <code>check(m)</code> 函数：计算小于等于 <code>m</code> 的金额中有多少个是给定硬币的倍数。<br>假设去重后的硬币集合为 <code>A</code>，我们需要计算 $|A_0 \cup A_1 \cup \dots \cup A_{n-1}|$。</p>
+<p>根据容斥原理：<br><code>Count = Σ(奇数个集合的交集大小) - Σ(偶数个集合的交集大小)</code></p>
+<ul>
+<li>集合 <code>coin_i</code> 在范围 <code>m</code> 内的元素个数为 <code>m // coin_i</code>。</li>
+<li>多个集合的交集，即这些硬币的 <strong>最小公倍数 (LCM)</strong> 的倍数个数：<code>m // lcm(c1, c2, ...)</code>。</li>
+</ul>
+<p>由于 <code>coins</code> 长度最多为 15，我们可以预处理所有子集的 LCM。<br>使用位掩码（Bitmask）<code>1</code> 到 <code>(1 &lt;&lt; n) - 1</code> 来表示所有子集。</p>
+<h3 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h3><div class="tabs" id="code_block"><ul class="nav-tabs"><li class="tab active"><a href="#code_block-1">Python</a></li><li class="tab"><a href="#code_block-2">Go</a></li></ul><div class="tab-content"><div class="tab-pane active" id="code_block-1"><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> math</span><br><span class="line"><span class="keyword">from</span> bisect <span class="keyword">import</span> bisect_left</span><br><span class="line"><span class="keyword">from</span> typing <span class="keyword">import</span> <span class="type">List</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">findKthSmallest</span>(<span class="params">self, coins: <span class="type">List</span>[<span class="built_in">int</span>], k: <span class="built_in">int</span></span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        coins.sort()</span><br><span class="line">        a = []</span><br><span class="line">        <span class="comment"># 预处理：去除倍数关系的冗余硬币</span></span><br><span class="line">        <span class="comment"># 例如 [2, 4] -&gt; [2]，因为 4 的倍数一定是 2 的倍数</span></span><br><span class="line">        <span class="keyword">for</span> x <span class="keyword">in</span> coins:</span><br><span class="line">            <span class="keyword">if</span> <span class="built_in">all</span>(x % y <span class="keyword">for</span> y <span class="keyword">in</span> a):</span><br><span class="line">                a.append(x)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 预处理所有子集的 LCM</span></span><br><span class="line">        <span class="comment"># subset_lcm[mask] 存储掩码为 mask 的子集的最小公倍数</span></span><br><span class="line">        n = <span class="built_in">len</span>(a)</span><br><span class="line">        subset_lcm = [<span class="number">1</span>] * (<span class="number">1</span> &lt;&lt; n)</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 动态规划计算子集 LCM</span></span><br><span class="line">        <span class="comment"># 外层遍历每一个硬币，内层遍历已有的掩码</span></span><br><span class="line">        <span class="keyword">for</span> i, x <span class="keyword">in</span> <span class="built_in">enumerate</span>(a):</span><br><span class="line">            bit = <span class="number">1</span> &lt;&lt; i</span><br><span class="line">            <span class="keyword">for</span> mask <span class="keyword">in</span> <span class="built_in">range</span>(bit):</span><br><span class="line">                <span class="comment"># 新的 LCM = lcm(旧子集 LCM, 新加入的硬币)</span></span><br><span class="line">                subset_lcm[bit | mask] = math.lcm(subset_lcm[mask], x)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 二分查找的 check 函数</span></span><br><span class="line">        <span class="keyword">def</span> <span class="title function_">check</span>(<span class="params">m: <span class="built_in">int</span></span>) -&gt; <span class="built_in">bool</span>:</span><br><span class="line">            cnt = <span class="number">0</span></span><br><span class="line">            <span class="comment"># 遍历所有非空子集</span></span><br><span class="line">            <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, <span class="built_in">len</span>(subset_lcm)):  </span><br><span class="line">                <span class="comment"># 容斥原理：</span></span><br><span class="line">                <span class="comment"># 奇数个元素的集合（bit_count 为奇数）：加</span></span><br><span class="line">                <span class="comment"># 偶数个元素的集合（bit_count 为偶数）：减</span></span><br><span class="line">                <span class="keyword">if</span> i.bit_count() % <span class="number">2</span>:</span><br><span class="line">                    cnt += m // subset_lcm[i]</span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    cnt -= m // subset_lcm[i]</span><br><span class="line">            <span class="keyword">return</span> cnt &gt;= k</span><br><span class="line">            </span><br><span class="line">        <span class="comment"># 二分查找左边界</span></span><br><span class="line">        <span class="comment"># 搜索范围从 0 到 a[0] * k</span></span><br><span class="line">        <span class="comment"># key=check 会寻找第一个使 check(m) 为 True 的位置</span></span><br><span class="line">        <span class="keyword">return</span> bisect_left(<span class="built_in">range</span>(a[<span class="number">0</span>] * k), <span class="literal">True</span>, k, key=check)</span><br></pre></td></tr></table></figure></div><div class="tab-pane" id="code_block-2"><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">&quot;math/bits&quot;</span></span><br><span class="line">	<span class="string">&quot;slices&quot;</span></span><br><span class="line">	<span class="string">&quot;sort&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">findKthSmallest</span><span class="params">(coins []<span class="type">int</span>, k <span class="type">int</span>)</span></span> <span class="type">int64</span> &#123;</span><br><span class="line">	slices.Sort(coins)</span><br><span class="line">	<span class="comment">// 预处理：去除冗余硬币</span></span><br><span class="line">	<span class="comment">// 使用切片过滤技巧，a 存储过滤后的硬币</span></span><br><span class="line">	a := coins[:<span class="number">0</span>]</span><br><span class="line">next:</span><br><span class="line">	<span class="keyword">for</span> _, x := <span class="keyword">range</span> coins &#123;</span><br><span class="line">		<span class="keyword">for</span> _, y := <span class="keyword">range</span> a &#123;</span><br><span class="line">			<span class="keyword">if</span> x%y == <span class="number">0</span> &#123;</span><br><span class="line">				<span class="keyword">continue</span> next</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		a = <span class="built_in">append</span>(a, x)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 预处理所有子集的 LCM</span></span><br><span class="line">	subsetLcm := <span class="built_in">make</span>([]<span class="type">int</span>, <span class="number">1</span>&lt;&lt;<span class="built_in">len</span>(a))</span><br><span class="line">	subsetLcm[<span class="number">0</span>] = <span class="number">1</span></span><br><span class="line">	<span class="keyword">for</span> i, x := <span class="keyword">range</span> a &#123;</span><br><span class="line">		bit := <span class="number">1</span> &lt;&lt; i</span><br><span class="line">		<span class="comment">// 遍历当前已生成的子集掩码</span></span><br><span class="line">		<span class="keyword">for</span> mask, l := <span class="keyword">range</span> subsetLcm[:bit] &#123;</span><br><span class="line">			subsetLcm[bit|mask] = lcm(l, x)</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 优化：预处理符号</span></span><br><span class="line">	<span class="comment">// 根据容斥原理，偶数个元素的子集需要减去，奇数个需要加上</span></span><br><span class="line">	<span class="comment">// 这里直接将偶数个元素的 LCM 设为负数，方便后续只做加法</span></span><br><span class="line">	<span class="keyword">for</span> i := <span class="keyword">range</span> subsetLcm &#123;</span><br><span class="line">		<span class="keyword">if</span> bits.OnesCount(<span class="type">uint</span>(i))%<span class="number">2</span> == <span class="number">0</span> &#123;</span><br><span class="line">			subsetLcm[i] *= <span class="number">-1</span></span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 二分查找</span></span><br><span class="line">	<span class="comment">// sort.Search 查找 [0, n) 范围内第一个使函数返回 true 的值</span></span><br><span class="line">	ans := sort.Search(a[<span class="number">0</span>]*k, <span class="function"><span class="keyword">func</span><span class="params">(m <span class="type">int</span>)</span></span> <span class="type">bool</span> &#123;</span><br><span class="line">		cnt := <span class="number">0</span></span><br><span class="line">		<span class="comment">// 遍历除空集外的所有子集 LCM</span></span><br><span class="line">		<span class="keyword">for</span> _, l := <span class="keyword">range</span> subsetLcm[<span class="number">1</span>:] &#123;</span><br><span class="line">			<span class="comment">// 如果 l 是正数（奇数个元素），加</span></span><br><span class="line">			<span class="comment">// 如果 l 是负数（偶数个元素），相当于减去绝对值</span></span><br><span class="line">			cnt += m / l</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> cnt &gt;= k</span><br><span class="line">	&#125;)</span><br><span class="line">	<span class="keyword">return</span> <span class="type">int64</span>(ans)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">gcd</span><span class="params">(a, b <span class="type">int</span>)</span></span> <span class="type">int</span> &#123;</span><br><span class="line">	<span class="keyword">for</span> a != <span class="number">0</span> &#123;</span><br><span class="line">		a, b = b%a, a</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> b</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">lcm</span><span class="params">(a, b <span class="type">int</span>)</span></span> <span class="type">int</span> &#123;</span><br><span class="line">	<span class="keyword">if</span> a == <span class="number">0</span> || b == <span class="number">0</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> a / gcd(a, b) * b</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div></div></div>
+
+<h3 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h3><p>假设 <code>coins</code> 去重后的长度为 <code>M</code> (M &lt;&#x3D; 15)。</p>
+<ul>
+<li><p><strong>时间复杂度</strong>: </p>
+<ul>
+<li><strong>预处理 LCM</strong>: <code>O(2^M)</code>。我们需要遍历所有可能的子集来计算 LCM。</li>
+<li><strong>二分查找</strong>: 搜索范围上限约为 <code>min(coins) * k</code>，二分次数为 <code>O(log(min(coins) * k))</code>。</li>
+<li><strong>Check 函数</strong>: 每次 check 需要遍历 <code>2^M</code> 个子集。</li>
+<li>总时间复杂度：<code>O(2^M · log(C·K))</code>。对于 <code>M=15</code>，<code>2^15 ≈ 3.2万</code>，二分约 60 次，总计算量在 200万次左右，完全可以通过。</li>
+</ul>
+</li>
+<li><p><strong>空间复杂度</strong>: <code>O(2^M)</code><br>需要一个数组来存储所有子集的 LCM 值。</p>
+</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%95%B0%E7%BB%84/" rel="tag"># 数组</a>
+              <a href="/tags/%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE/" rel="tag"># 二分查找</a>
+              <a href="/tags/%E4%BD%8D%E8%BF%90%E7%AE%97/" rel="tag"># 位运算</a>
+              <a href="/tags/%E6%95%B0%E5%AD%A6/" rel="tag"># 数学</a>
+              <a href="/tags/%E7%BB%84%E5%90%88%E6%95%B0%E5%AD%A6/" rel="tag"># 组合数学</a>
+              <a href="/tags/%E6%95%B0%E8%AE%BA/" rel="tag"># 数论</a>
+              <a href="/tags/%E7%AC%AC393%E5%9C%BA%E5%91%A8%E8%B5%9B/" rel="tag"># 第393场周赛</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/posts/leetcode-786/" rel="prev" title="LeetCode 786 | 第 K 个最小的质数分数">
+      <i class="fa fa-chevron-left"></i> LeetCode 786 | 第 K 个最小的质数分数
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/posts/leetcode-3134/" rel="next" title="LeetCode 3134 | 找出唯一性数组的中位数">
+      LeetCode 3134 | 找出唯一性数组的中位数 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text">问题描述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E9%A2%98%E6%80%9D%E8%B7%AF"><span class="nav-number">2.</span> <span class="nav-text">解题思路</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-%E9%A2%84%E5%A4%84%E7%90%86%EF%BC%9A%E5%8E%BB%E9%87%8D%E4%B8%8E%E6%8E%92%E5%BA%8F"><span class="nav-number">2.1.</span> <span class="nav-text">1. 预处理：去重与排序</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-%E4%BA%8C%E5%88%86%E7%AD%94%E6%A1%88"><span class="nav-number">2.2.</span> <span class="nav-text">2. 二分答案</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-%E5%AE%B9%E6%96%A5%E5%8E%9F%E7%90%86"><span class="nav-number">2.3.</span> <span class="nav-text">3. 容斥原理</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0"><span class="nav-number">3.</span> <span class="nav-text">代码实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%8D%E6%9D%82%E5%BA%A6%E5%88%86%E6%9E%90"><span class="nav-number">4.</span> <span class="nav-text">复杂度分析</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Changan"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Changan</p>
+  <div class="site-description" itemprop="description">Good things take time</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">101</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">22</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">107</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/qiyuanlanniao" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;qiyuanlanniao"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:hmca09502@gmail.com" title="E-Mail → mailto:hmca09502@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Changan</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('https://cdn.jsdelivr.net/npm/valine@1.5.3/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'fNBvdCThX5dQrppj7znaQ3xJ-gzGzoHsz',
+      appKey     : 'Mom6ApPuWkqQu8UwakobSJqh',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

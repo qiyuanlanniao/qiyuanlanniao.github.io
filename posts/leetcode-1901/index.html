@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"github.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"valine","storage":true,"lazyload":false,"nav":null,"activeClass":"valine"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="LeetCode 第 1901 题：寻找峰值 II。题目要求时间复杂度为 O(m log n) 或 O(n log m)，这提示我们需要在一个维度上进行二分查找，在另一个维度上进行线性扫描。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LeetCode 1901 | 寻找峰值 II">
+<meta property="og:url" content="http://github.com/posts/leetcode-1901/index.html">
+<meta property="og:site_name" content="Changan&#39;s Blog">
+<meta property="og:description" content="LeetCode 第 1901 题：寻找峰值 II。题目要求时间复杂度为 O(m log n) 或 O(n log m)，这提示我们需要在一个维度上进行二分查找，在另一个维度上进行线性扫描。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-12-02T11:20:00.000Z">
+<meta property="article:modified_time" content="2025-12-02T11:20:00.000Z">
+<meta property="article:author" content="Changan">
+<meta property="article:tag" content="数组">
+<meta property="article:tag" content="二分查找">
+<meta property="article:tag" content="矩阵">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://github.com/posts/leetcode-1901/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>LeetCode 1901 | 寻找峰值 II | Changan's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Changan's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+    <a href="https://github.com/qiyuanlanniao" class="github-corner" aria-label="View source on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#151513; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"/><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"/><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"/></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Changan's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://github.com/posts/leetcode-1901/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Changan">
+      <meta itemprop="description" content="Good things take time">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Changan's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          LeetCode 1901 | 寻找峰值 II
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2025-12-02 19:20:00" itemprop="dateCreated datePublished" datetime="2025-12-02T19:20:00+08:00">2025-12-02</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%AE%97%E6%B3%95%E9%A2%98%E8%A7%A3/" itemprop="url" rel="index"><span itemprop="name">算法题解</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%AE%97%E6%B3%95%E9%A2%98%E8%A7%A3/%E4%BA%8C%E5%88%86%E7%AE%97%E6%B3%95/" itemprop="url" rel="index"><span itemprop="name">二分算法</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%AE%97%E6%B3%95%E9%A2%98%E8%A7%A3/%E4%BA%8C%E5%88%86%E7%AE%97%E6%B3%95/%E5%85%B6%E4%BB%96/" itemprop="url" rel="index"><span itemprop="name">其他</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/posts/leetcode-1901/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/posts/leetcode-1901/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <blockquote class="blockquote-center">
+            <i class="fa fa-quote-left"></i>
+            <p>LeetCode 第 1901 题：<a target="_blank" rel="noopener" href="https://leetcode.cn/problems/find-a-peak-element-ii/">寻找峰值 II</a>。<br>题目要求时间复杂度为 O(m log n) 或 O(n log m)，这提示我们需要在一个维度上进行二分查找，在另一个维度上进行线性扫描。</p>
+
+            <i class="fa fa-quote-right"></i>
+          </blockquote>
+<span id="more"></span>
+
+<h3 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h3><p>一个 2D 网格中的 <strong>峰值</strong> 是指那些 <strong>严格大于</strong> 其相邻格子(上、下、左、右)的元素。</p>
+<p>给你一个 从 0 开始编号 的 <code>m x n</code> 矩阵 <code>mat</code> ，其中任意两个相邻格子的值都 <strong>不相同</strong> 。找出 <strong>任意一个</strong> 峰值 <code>mat[i][j]</code> 并 返回其位置 <code>[i,j]</code> 。</p>
+<p>你可以假设整个矩阵周边环绕着一圈值为 -1 的格子。</p>
+<p><strong>示例 1:</strong></p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">输入: mat = [[1,4],[3,2]]</span><br><span class="line">输出: [0,1]</span><br><span class="line">解释: 3 和 4 都是峰值，所以[1,0]和[0,1]都是可接受的答案。</span><br></pre></td></tr></table></figure>
+
+<p><strong>示例 2:</strong></p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">输入: mat = [[10,20,15],[21,30,14],[7,16,32]]</span><br><span class="line">输出: [1,1]</span><br><span class="line">解释: 30 和 32 都是峰值，所以[1,1]和[2,2]都是可接受的答案。</span><br></pre></td></tr></table></figure>
+
+<p><strong>提示：</strong></p>
+<ul>
+<li>m &#x3D;&#x3D; mat.length</li>
+<li>n &#x3D;&#x3D; mat[i].length</li>
+<li>1 &lt;&#x3D; m, n &lt;&#x3D; 500</li>
+<li>1 &lt;&#x3D; mat[i][j] &lt;&#x3D; 10^5</li>
+<li>任意两个相邻元素均不相等</li>
+</ul>
+<h3 id="解题思路"><a href="#解题思路" class="headerlink" title="解题思路"></a>解题思路</h3><h4 id="1-为什么不能暴力遍历？"><a href="#1-为什么不能暴力遍历？" class="headerlink" title="1. 为什么不能暴力遍历？"></a>1. 为什么不能暴力遍历？</h4><p>如果直接遍历整个矩阵寻找峰值，时间复杂度是 O(m * n)。虽然对于 500x500 的数据规模来说可以通过，但题目明确要求 O(m log n) 或 O(n log m) 的复杂度，这意味着我们必须利用二分查找的思想。</p>
+<h4 id="2-行二分查找策略"><a href="#2-行二分查找策略" class="headerlink" title="2. 行二分查找策略"></a>2. 行二分查找策略</h4><p>我们可以对 <strong>行</strong> 进行二分查找，具体步骤如下：</p>
+<ol>
+<li><strong>二分行号</strong>：在行索引 <code>0</code> 到 <code>m-1</code> 之间进行二分，设当前中间行为 <code>i</code>。</li>
+<li><strong>寻找行最大值</strong>：在第 <code>i</code> 行中找到最大值 <code>mat[i][j]</code>。<ul>
+<li>为什么找行最大值？因为如果一个位置是该行的最大值，那么它一定严格大于它的左边和右边（如果存在）。此时要判断它是不是峰值，只需要看它的 <strong>上</strong> 和 <strong>下</strong> 两个邻居。</li>
+</ul>
+</li>
+<li><strong>比较相邻行</strong>：将 <code>mat[i][j]</code> 与它下方的元素 <code>mat[i+1][j]</code> 进行比较：<ul>
+<li><strong>情况 A</strong>：<code>mat[i][j] &gt; mat[i+1][j]</code>。<br>说明从第 <code>i</code> 行往下走是“下坡”。根据爬坡理论，如果我们往数值大的方向走一定能找到峰值。既然下方变小了，说明峰值不可能在下方（或者说上方一定存在一个峰值，可能是 <code>mat[i][j]</code> 自己，也可能是更上面的某处）。因此，我们可以舍弃 <code>i</code> 下面的所有行，将搜索范围缩小到上这半部分（包含第 <code>i</code> 行）。</li>
+<li><strong>情况 B</strong>：<code>mat[i][j] &lt; mat[i+1][j]</code>。<br>说明从第 <code>i</code> 行往下走是“上坡”。这意味着第 <code>i</code> 行肯定不是峰值所在行（因为有个邻居比它大），且下方一定存在一个峰值。因此，我们将搜索范围缩小到 <code>i</code> 的下方。</li>
+</ul>
+</li>
+</ol>
+<h4 id="3-算法复杂度"><a href="#3-算法复杂度" class="headerlink" title="3. 算法复杂度"></a>3. 算法复杂度</h4><ul>
+<li><strong>二分过程</strong>：我们对行号 <code>0</code> 到 <code>m-1</code> 进行二分，次数为 O(log m)。</li>
+<li><strong>查找最大值</strong>：每次二分内部，我们需要遍历当前行的 <code>n</code> 个元素找到最大值，耗时 O(n)。</li>
+<li><strong>总复杂度</strong>：O(n log m)。这完全符合题目要求。</li>
+</ul>
+<h3 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h3><div class="tabs" id="code_block"><ul class="nav-tabs"><li class="tab active"><a href="#code_block-1">Python</a></li><li class="tab"><a href="#code_block-2">Go</a></li></ul><div class="tab-content"><div class="tab-pane active" id="code_block-1"><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">findPeakGrid</span>(<span class="params">self, mat: <span class="type">List</span>[<span class="type">List</span>[<span class="built_in">int</span>]]</span>) -&gt; <span class="type">List</span>[<span class="built_in">int</span>]:</span><br><span class="line">        <span class="comment"># 二分查找的上下界</span></span><br><span class="line">        <span class="comment"># 采用开区间写法 (l, r)，l 和 r 分别是这一轮不可能的边界和可能的边界</span></span><br><span class="line">        <span class="comment"># 初始 l = -1 (假想的上边界), r = len(mat) - 1 (最后一行索引)</span></span><br><span class="line">        l, r = -<span class="number">1</span>, <span class="built_in">len</span>(mat) - <span class="number">1</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 当 l + 1 &lt; r 时，说明区间内至少还有一个待检查的元素</span></span><br><span class="line">        <span class="keyword">while</span> l + <span class="number">1</span> &lt; r:</span><br><span class="line">            <span class="comment"># 取中间行</span></span><br><span class="line">            i = (l + r) // <span class="number">2</span></span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 找到第 i 行的最大值</span></span><br><span class="line">            <span class="comment"># 时间复杂度 O(n)</span></span><br><span class="line">            mx = <span class="built_in">max</span>(mat[i])</span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 找到最大值所在的列索引</span></span><br><span class="line">            j = mat[i].index(mx)</span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 比较当前行最大值与下一行对应位置的值</span></span><br><span class="line">            <span class="comment"># 如果当前行最大值 &gt; 下一行对应值，说明峰值在当前行或上方</span></span><br><span class="line">            <span class="comment"># 注意：i 是二分的中点，由于 l+1 &lt; r，i 至少比 r 小 1，</span></span><br><span class="line">            <span class="comment"># 只有当 len(mat) &gt; 1 时才会进入循环，此时 i+1 不会越界</span></span><br><span class="line">            <span class="comment"># 实际上若只有一行，循环不执行，直接返回第0行结果</span></span><br><span class="line">            <span class="keyword">if</span> mx &gt; mat[i+<span class="number">1</span>][j]:</span><br><span class="line">                r = i  <span class="comment"># 峰值行号 &lt;= i，缩小右边界</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                l = i  <span class="comment"># 峰值行号 &gt; i，缩小左边界（mat[i][j] &lt; mat[i+1][j]）</span></span><br><span class="line">                </span><br><span class="line">        <span class="comment"># 循环结束后，r 指向满足条件的行</span></span><br><span class="line">        <span class="comment"># 重新找到该行的最大值位置并返回</span></span><br><span class="line">        <span class="keyword">return</span> [r, mat[r].index(<span class="built_in">max</span>(mat[r]))]</span><br></pre></td></tr></table></figure></div><div class="tab-pane" id="code_block-2"><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">findPeakGrid</span><span class="params">(mat [][]<span class="type">int</span>)</span></span> []<span class="type">int</span> &#123;</span><br><span class="line">    <span class="comment">// 初始化二分查找的上下边界</span></span><br><span class="line">    <span class="comment">// left 为开区间左边界（不包含），right 为闭区间右边界（包含）</span></span><br><span class="line">    left, right := <span class="number">-1</span>, <span class="built_in">len</span>(mat)<span class="number">-1</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 开区间二分查找模板</span></span><br><span class="line">    <span class="keyword">for</span> left+<span class="number">1</span> &lt; right &#123;</span><br><span class="line">        <span class="comment">// 计算中间行索引</span></span><br><span class="line">        i := left + (right-left)/<span class="number">2</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 找到第 i 行最大值的列索引 j</span></span><br><span class="line">        j := indexOfMax(mat[i])</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 比较当前值与它下方邻居的值</span></span><br><span class="line">        <span class="comment">// 注意：由于是向下取整且 left+1 &lt; right，i+1 不会越界</span></span><br><span class="line">        <span class="keyword">if</span> mat[i][j] &gt; mat[i+<span class="number">1</span>][j] &#123;</span><br><span class="line">            right = i <span class="comment">// 当前值更大，说明峰值可能在第 i 行或其上方</span></span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            left = i <span class="comment">// 下方值更大，说明第 i 行不是峰值行，峰值在下方</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// right 最终指向峰值所在的行</span></span><br><span class="line">    <span class="keyword">return</span> []<span class="type">int</span>&#123;right, indexOfMax(mat[right])&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 辅助函数：返回切片中最大值的索引</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">indexOfMax</span><span class="params">(a []<span class="type">int</span>)</span></span> (idx <span class="type">int</span>) &#123;</span><br><span class="line">    <span class="keyword">for</span> i, x := <span class="keyword">range</span> a &#123;</span><br><span class="line">        <span class="keyword">if</span> x &gt; a[idx] &#123;</span><br><span class="line">            idx = i</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div></div></div>
+
+<h3 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h3><ul>
+<li><p><strong>时间复杂度</strong>: <code>O(n log m)</code><br>我们需要对 <code>m</code> 行进行二分查找，这需要 <code>log m</code> 次迭代。在每一次迭代中，我们需要遍历一行 <code>n</code> 个元素来找到最大值。因此总的时间复杂度是 <code>n * log m</code>。</p>
+</li>
+<li><p><strong>空间复杂度</strong>: <code>O(1)</code><br>我们只使用了常数个变量（如 <code>left</code>, <code>right</code>, <code>i</code>, <code>mx</code> 等）来存储状态，不需要额外的存储空间（除了输入矩阵本身）。</p>
+</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%95%B0%E7%BB%84/" rel="tag"># 数组</a>
+              <a href="/tags/%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE/" rel="tag"># 二分查找</a>
+              <a href="/tags/%E7%9F%A9%E9%98%B5/" rel="tag"># 矩阵</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/posts/leetcode-74/" rel="prev" title="LeetCode 74 | 搜索二维矩阵">
+      <i class="fa fa-chevron-left"></i> LeetCode 74 | 搜索二维矩阵
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/posts/leetcode-154/" rel="next" title="LeetCode 154 | 寻找旋转排序数组中的最小值 II">
+      LeetCode 154 | 寻找旋转排序数组中的最小值 II <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text">问题描述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E9%A2%98%E6%80%9D%E8%B7%AF"><span class="nav-number">2.</span> <span class="nav-text">解题思路</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-%E4%B8%BA%E4%BB%80%E4%B9%88%E4%B8%8D%E8%83%BD%E6%9A%B4%E5%8A%9B%E9%81%8D%E5%8E%86%EF%BC%9F"><span class="nav-number">2.1.</span> <span class="nav-text">1. 为什么不能暴力遍历？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-%E8%A1%8C%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE%E7%AD%96%E7%95%A5"><span class="nav-number">2.2.</span> <span class="nav-text">2. 行二分查找策略</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-%E7%AE%97%E6%B3%95%E5%A4%8D%E6%9D%82%E5%BA%A6"><span class="nav-number">2.3.</span> <span class="nav-text">3. 算法复杂度</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0"><span class="nav-number">3.</span> <span class="nav-text">代码实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%8D%E6%9D%82%E5%BA%A6%E5%88%86%E6%9E%90"><span class="nav-number">4.</span> <span class="nav-text">复杂度分析</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Changan"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Changan</p>
+  <div class="site-description" itemprop="description">Good things take time</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">101</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">22</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">107</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/qiyuanlanniao" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;qiyuanlanniao"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:hmca09502@gmail.com" title="E-Mail → mailto:hmca09502@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Changan</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('https://cdn.jsdelivr.net/npm/valine@1.5.3/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'fNBvdCThX5dQrppj7znaQ3xJ-gzGzoHsz',
+      appKey     : 'Mom6ApPuWkqQu8UwakobSJqh',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

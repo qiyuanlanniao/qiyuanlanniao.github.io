@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"github.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"valine","storage":true,"lazyload":false,"nav":null,"activeClass":"valine"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="LeetCode 第 275 题：H 指数 II。本文将深入探讨解决此问题的四种不同二分查找区间写法。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LeetCode 275 | H 指数 II">
+<meta property="og:url" content="http://github.com/posts/leetcode-275/index.html">
+<meta property="og:site_name" content="Changan&#39;s Blog">
+<meta property="og:description" content="LeetCode 第 275 题：H 指数 II。本文将深入探讨解决此问题的四种不同二分查找区间写法。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-10-27T03:30:00.000Z">
+<meta property="article:modified_time" content="2025-10-27T03:30:00.000Z">
+<meta property="article:author" content="Changan">
+<meta property="article:tag" content="数组">
+<meta property="article:tag" content="二分查找">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://github.com/posts/leetcode-275/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>LeetCode 275 | H 指数 II | Changan's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Changan's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+    <a href="https://github.com/qiyuanlanniao" class="github-corner" aria-label="View source on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#151513; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"/><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"/><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"/></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Changan's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://github.com/posts/leetcode-275/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Changan">
+      <meta itemprop="description" content="Good things take time">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Changan's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          LeetCode 275 | H 指数 II
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2025-10-27 11:30:00" itemprop="dateCreated datePublished" datetime="2025-10-27T11:30:00+08:00">2025-10-27</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%AE%97%E6%B3%95%E9%A2%98%E8%A7%A3/" itemprop="url" rel="index"><span itemprop="name">算法题解</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%AE%97%E6%B3%95%E9%A2%98%E8%A7%A3/%E4%BA%8C%E5%88%86%E7%AE%97%E6%B3%95/" itemprop="url" rel="index"><span itemprop="name">二分算法</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%AE%97%E6%B3%95%E9%A2%98%E8%A7%A3/%E4%BA%8C%E5%88%86%E7%AE%97%E6%B3%95/%E4%BA%8C%E5%88%86%E7%AD%94%E6%A1%88/" itemprop="url" rel="index"><span itemprop="name">二分答案</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%AE%97%E6%B3%95%E9%A2%98%E8%A7%A3/%E4%BA%8C%E5%88%86%E7%AE%97%E6%B3%95/%E4%BA%8C%E5%88%86%E7%AD%94%E6%A1%88/%E6%B1%82%E6%9C%80%E5%A4%A7/" itemprop="url" rel="index"><span itemprop="name">求最大</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/posts/leetcode-275/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/posts/leetcode-275/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <blockquote class="blockquote-center">
+            <i class="fa fa-quote-left"></i>
+            <p>LeetCode 第 275 题：<a target="_blank" rel="noopener" href="https://leetcode.cn/problems/h-index-ii/description/">H 指数 II</a>。<br>本文将深入探讨解决此问题的四种不同二分查找区间写法。</p>
+
+            <i class="fa fa-quote-right"></i>
+          </blockquote>
+<span id="more"></span>
+
+<h3 id="问题解读"><a href="#问题解读" class="headerlink" title="问题解读"></a>问题解读</h3><p>我们需要计算一位研究者的 h 指数。h 指数的定义是：一名科研人员的 n 篇论文中，有<strong>至少</strong> <code>h</code> 篇论文分别被引用了<strong>至少</strong> <code>h</code> 次。</p>
+<p>题目给出了一个整数数组 <code>citations</code>，其中 <code>citations[i]</code> 是第 <code>i</code> 篇论文的被引次数，并且该数组已经<strong>按非降序（升序）排列</strong>。我们的目标是设计一个时间复杂度为对数级别的算法来找出这个 h 指数。</p>
+<p>例如，对于 <code>citations = [0, 1, 3, 5, 6]</code>：</p>
+<ul>
+<li>我们有 5 篇论文。</li>
+<li>检查 h&#x3D;3：是否有至少 3 篇论文的引用次数都 &gt;&#x3D; 3？<ul>
+<li>引用次数最高的 3 篇论文是 <code>[3, 5, 6]</code>。</li>
+<li>这三篇论文的引用次数都满足 &gt;&#x3D; 3 的条件。所以 h&#x3D;3 是一个可能的答案。</li>
+</ul>
+</li>
+<li>检查 h&#x3D;4：是否有至少 4 篇论文的引用次数都 &gt;&#x3D; 4？<ul>
+<li>引用次数最高的 4 篇论文是 <code>[1, 3, 5, 6]</code>。</li>
+<li>其中 <code>1 &lt; 4</code> 且 <code>3 &lt; 4</code>，不满足条件。</li>
+</ul>
+</li>
+<li>因此，最大的满足条件的 h 值是 3，所以 h 指数就是 3。</li>
+</ul>
+<h3 id="核心思路：在“答案”上进行二分查找"><a href="#核心思路：在“答案”上进行二分查找" class="headerlink" title="核心思路：在“答案”上进行二分查找"></a>核心思路：在“答案”上进行二分查找</h3><p>直接寻找这个 h 指数似乎需要逐个尝试。但我们可以观察到答案 <code>h</code> 具有<strong>单调性</strong>：</p>
+<ul>
+<li>如果一个值 <code>h</code> 满足 h 指数的定义，那么所有小于 <code>h</code> 的值（例如 <code>h-1</code>）也一定满足。</li>
+<li>如果一个值 <code>h</code> 不满足 h 指数的定义，那么所有大于 <code>h</code> 的值（例如 <code>h+1</code>）也一定不满足。</li>
+</ul>
+<p>这种单调性是应用二分查找的完美信号。我们可以不直接在 <code>citations</code> 数组的索引上进行二分，而是在<strong>可能的答案 <code>h</code></strong> 上进行二分。<code>h</code> 的取值范围是 <code>[0, n]</code>，其中 <code>n</code> 是论文总数。</p>
+<p>我们的目标就变成了：在 <code>[0, n]</code> 这个答案空间中，找到满足条件的最大的 <code>h</code>。</p>
+<p>为了实现二分查找，我们需要一个<strong>判定函数</strong> <code>check(h)</code>，来判断任意一个猜测的 <code>h</code> 值是否满足条件。</p>
+<ul>
+<li><strong>如何判定 <code>h</code> 是否可行？</strong><ul>
+<li>根据定义，我们需要检查是否存在 <code>h</code> 篇论文，其引用次数都大于或等于 <code>h</code>。</li>
+<li>由于 <code>citations</code> 数组是升序的，引用次数最高的 <code>h</code> 篇论文必然是数组末尾的 <code>h</code> 个元素。</li>
+<li>我们只需要检查这 <code>h</code> 篇论文中被引次数最少的那一篇，即 <code>citations[n-h]</code>，是否满足 <code>&gt;= h</code>。</li>
+<li>如果 <code>citations[n-h] &gt;= h</code>，那么它后面的所有论文引用次数也都大于等于 <code>h</code>，总共就有 <code>h</code> 篇满足条件。</li>
+<li>因此，判定条件可以简化为 <code>citations[n-h] &gt;= mid</code> (其中 <code>mid</code> 是我们猜测的 <code>h</code> 值)。</li>
+</ul>
+</li>
+</ul>
+<p>有了这个 O(1) 的判定函数，我们就可以在 <code>[0, n]</code> 的答案空间内高效地进行二分查找了。</p>
+<h3 id="四种二分算法的-Python-代码实现"><a href="#四种二分算法的-Python-代码实现" class="headerlink" title="四种二分算法的 Python 代码实现"></a>四种二分算法的 Python 代码实现</h3><p>下面将展示四种经典的二分查找区间写法，它们在边界处理和循环条件上略有不同，但最终都能得到正确答案。</p>
+<h4 id="解法一：闭区间-left-right"><a href="#解法一：闭区间-left-right" class="headerlink" title="解法一：闭区间 [left, right]"></a>解法一：闭区间 <code>[left, right]</code></h4><p>这是最常见的一种写法，搜索区间两端都包含在内。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> typing <span class="keyword">import</span> <span class="type">List</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">hIndex</span>(<span class="params">self, citations: <span class="type">List</span>[<span class="built_in">int</span>]</span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        n = <span class="built_in">len</span>(citations)</span><br><span class="line">        <span class="comment"># 在区间 [left, right] 内询问</span></span><br><span class="line">        left = <span class="number">0</span></span><br><span class="line">        right = n</span><br><span class="line">        <span class="keyword">while</span> left &lt;= right:  <span class="comment"># 区间不为空</span></span><br><span class="line">            <span class="comment"># 循环不变量：</span></span><br><span class="line">            <span class="comment"># left-1 的回答一定为「是」（即 h=left-1 满足条件）</span></span><br><span class="line">            <span class="comment"># right+1 的回答一定为「否」（即 h=right+1 不满足条件）</span></span><br><span class="line">            mid = (left + right) // <span class="number">2</span></span><br><span class="line">            <span class="keyword">if</span> mid == <span class="number">0</span>: <span class="comment"># h=0 恒成立，特殊处理或调整 left 初始值</span></span><br><span class="line">                left = mid + <span class="number">1</span></span><br><span class="line">                <span class="keyword">continue</span></span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 检查 h=mid 是否可行：</span></span><br><span class="line">            <span class="comment"># 引用次数最多的 mid 篇论文，其引用次数均需 &gt;= mid</span></span><br><span class="line">            <span class="comment"># 相当于检查第 n-mid 篇论文（引用最少的）是否 citations[n-mid] &gt;= mid</span></span><br><span class="line">            <span class="keyword">if</span> citations[n - mid] &gt;= mid:</span><br><span class="line">                <span class="comment"># mid 可行，尝试更大的 h</span></span><br><span class="line">                left = mid + <span class="number">1</span>  <span class="comment"># 询问范围缩小到 [mid+1, right]</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="comment"># mid 不可行，需要减小 h</span></span><br><span class="line">                right = mid - <span class="number">1</span>  <span class="comment"># 询问范围缩小到 [left, mid-1]</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 循环结束后 right 等于 left-1</span></span><br><span class="line">        <span class="comment"># 根据循环不变量，right 现在是最大的回答为「是」的数</span></span><br><span class="line">        <span class="keyword">return</span> right</span><br><span class="line">```**逻辑解读**：当 `check(mid)` 成功时，意味着 `mid` 是一个潜在的答案，但我们想找最大的 `h`，所以我们向右搜索 `[mid+<span class="number">1</span>, right]`；反之，`mid` 太大了，向左搜索 `[left, mid-<span class="number">1</span>]`。循环结束时 `left = right + <span class="number">1</span>`，`right` 指向的是最后一个满足条件的 `h`。</span><br><span class="line"></span><br><span class="line">---</span><br><span class="line"></span><br><span class="line"><span class="comment">#### 解法二：左闭右开区间 `[left, right)`</span></span><br><span class="line"></span><br><span class="line">这种写法中，`right` 边界是“开”的，即不包含在搜索区间内。`right` 通常被看作是第一个“不满足”条件的位置。</span><br><span class="line"></span><br><span class="line">```python</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">hIndex</span>(<span class="params">self, citations: <span class="type">List</span>[<span class="built_in">int</span>]</span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        n = <span class="built_in">len</span>(citations)</span><br><span class="line">        <span class="comment"># 在区间 [left, right) 内询问</span></span><br><span class="line">        left = <span class="number">0</span></span><br><span class="line">        right = n + <span class="number">1</span></span><br><span class="line">        <span class="keyword">while</span> left &lt; right:  <span class="comment"># 区间不为空</span></span><br><span class="line">            <span class="comment"># 循环不变量：</span></span><br><span class="line">            <span class="comment"># left-1 的回答一定为「是」</span></span><br><span class="line">            <span class="comment"># right 的回答一定为「否」</span></span><br><span class="line">            mid = (left + right) // <span class="number">2</span></span><br><span class="line">            <span class="keyword">if</span> mid == <span class="number">0</span>: <span class="comment"># h=0 恒成立</span></span><br><span class="line">                left = mid + <span class="number">1</span></span><br><span class="line">                <span class="keyword">continue</span></span><br><span class="line"></span><br><span class="line">            <span class="comment"># 引用次数最多的 mid 篇论文，引用次数均 &gt;= mid</span></span><br><span class="line">            <span class="keyword">if</span> citations[n - mid] &gt;= mid:</span><br><span class="line">                left = mid + <span class="number">1</span>  <span class="comment"># 询问范围缩小到 [mid+1, right)</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                right = mid  <span class="comment"># 询问范围缩小到 [left, mid)</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 循环结束时 left == right，它指向第一个回答为「否」的数</span></span><br><span class="line">        <span class="comment"># 根据循环不变量，left-1 现在是最大的回答为「是」的数</span></span><br><span class="line">        <span class="keyword">return</span> left - <span class="number">1</span></span><br></pre></td></tr></table></figure>
+<p><strong>逻辑解读</strong>：当 <code>check(mid)</code> 成功时，我们更新 <code>left = mid + 1</code>，继续向右探索。当 <code>check(mid)</code> 失败时，<code>mid</code> 本身就是一个“不满足”的值，所以我们更新 <code>right = mid</code>，将这个“第一个不满足”的边界向左移动。循环结束时 <code>left</code> 就是那个第一个不满足条件的 <code>h</code>，因此 <code>left - 1</code> 就是答案。</p>
+<hr>
+<h4 id="解法三：左开右闭区间-left-right"><a href="#解法三：左开右闭区间-left-right" class="headerlink" title="解法三：左开右闭区间 (left, right]"></a>解法三：左开右闭区间 <code>(left, right]</code></h4><p>与上一种相反，这种写法的 <code>left</code> 边界是“开”的。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">hIndex</span>(<span class="params">self, citations: <span class="type">List</span>[<span class="built_in">int</span>]</span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        n = <span class="built_in">len</span>(citations)</span><br><span class="line">        <span class="comment"># 在区间 (left, right] 内询问</span></span><br><span class="line">        left = <span class="number">0</span></span><br><span class="line">        right = n</span><br><span class="line">        <span class="keyword">while</span> left &lt; right:  <span class="comment"># 区间不为空</span></span><br><span class="line">            <span class="comment"># 循环不变量：</span></span><br><span class="line">            <span class="comment"># left 的回答一定为「是」</span></span><br><span class="line">            <span class="comment"># right+1 的回答一定为「否」</span></span><br><span class="line">            mid = (left + right + <span class="number">1</span>) // <span class="number">2</span>  <span class="comment"># 向上取整，避免死循环</span></span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 引用次数最多的 mid 篇论文，引用次数均 &gt;= mid</span></span><br><span class="line">            <span class="keyword">if</span> citations[n - mid] &gt;= mid:</span><br><span class="line">                left = mid  <span class="comment"># 询问范围缩小到 (mid, right]</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                right = mid - <span class="number">1</span>  <span class="comment"># 询问范围缩小到 (left, mid-1]</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 循环结束时 left == right</span></span><br><span class="line">        <span class="comment"># 根据循环不变量，left 现在是最大的回答为「是」的数</span></span><br><span class="line">        <span class="keyword">return</span> left</span><br></pre></td></tr></table></figure>
+<p><strong>逻辑解读</strong>：这里 <code>mid</code> 的计算方式是 <code>(left + right + 1) // 2</code> 向上取整，这是为了防止当 <code>left = right - 1</code> 且 <code>check</code> 成功时，<code>mid</code> 仍等于 <code>left</code> 导致无限循环。当 <code>check(mid)</code> 成功时，<code>mid</code> 成为新的“最后一个满足条件”的候选，所以 <code>left = mid</code>；反之，则收缩右边界 <code>right = mid - 1</code>。循环结束时 <code>left</code> 即为答案。</p>
+<hr>
+<h4 id="解法四：开区间-left-right"><a href="#解法四：开区间-left-right" class="headerlink" title="解法四：开区间 (left, right)"></a>解法四：开区间 <code>(left, right)</code></h4><p>这种写法保证 <code>left</code> 和 <code>right</code> 之间始终有空间，循环条件是 <code>left + 1 &lt; right</code>。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">hIndex</span>(<span class="params">self, citations: <span class="type">List</span>[<span class="built_in">int</span>]</span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        n = <span class="built_in">len</span>(citations)</span><br><span class="line">        <span class="comment"># 在区间 (left, right) 内询问</span></span><br><span class="line">        left = <span class="number">0</span></span><br><span class="line">        right = n + <span class="number">1</span></span><br><span class="line">        <span class="keyword">while</span> left + <span class="number">1</span> &lt; right:  <span class="comment"># 区间不为空</span></span><br><span class="line">            <span class="comment"># 循环不变量：</span></span><br><span class="line">            <span class="comment"># left 的回答一定为「是」</span></span><br><span class="line">            <span class="comment"># right 的回答一定为「否」</span></span><br><span class="line">            mid = (left + right) // <span class="number">2</span></span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 引用次数最多的 mid 篇论文，引用次数均 &gt;= mid</span></span><br><span class="line">            <span class="keyword">if</span> citations[n - mid] &gt;= mid:</span><br><span class="line">                left = mid  <span class="comment"># 询问范围缩小到 (mid, right)</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                right = mid  <span class="comment"># 询问范围缩小到 (left, mid)</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 循环结束后 left + 1 == right</span></span><br><span class="line">        <span class="comment"># 根据循环不变量，left 现在是最大的回答为「是」的数</span></span><br><span class="line">        <span class="keyword">return</span> left</span><br></pre></td></tr></table></figure>
+<p><strong>逻辑解读</strong>：<code>left</code> 始终维护“已知的满足条件的最大值”，而 <code>right</code> 始终维护“已知的第一个不满足条件的值”。循环不断地用 <code>mid</code> 来更新这两个边界，直到它们相邻。最终的答案就是 <code>left</code>。</p>
+<h3 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h3><ul>
+<li><strong>时间复杂度</strong>: O(log N)<ul>
+<li><code>N</code> 是论文的总数 <code>len(citations)</code>。</li>
+<li>二分查找在大小为 <code>N+1</code> 的答案空间 <code>[0, N]</code> 中进行。</li>
+<li>每次迭代，判定函数 <code>check(mid)</code> 的时间复杂度为 O(1)，因为它只需要访问数组中的一个元素。</li>
+<li>因此，总的时间复杂度为 O(log N)。</li>
+</ul>
+</li>
+<li><strong>空间复杂度</strong>: O(1)<ul>
+<li>我们只使用了有限的几个变量（<code>left</code>, <code>right</code>, <code>mid</code>, <code>n</code>），没有使用与输入大小成比例的额外空间。</li>
+</ul>
+</li>
+</ul>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>H 指数 II 是一个典型的“二分答案”问题。当问题的解具有单调性，并且我们可以高效地对任意一个猜测的解进行“判定”时，就可以考虑使用二分查找。本文通过四种不同的区间写法，展示了二分查找在实现细节上的灵活性。理解每种写法的循环不变量是掌握二分查找、避免边界错误的关键。</p>
+
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%95%B0%E7%BB%84/" rel="tag"># 数组</a>
+              <a href="/tags/%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE/" rel="tag"># 二分查找</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/posts/leetcode-3453/" rel="prev" title="LeetCode 3453 | 分割正方形 I">
+      <i class="fa fa-chevron-left"></i> LeetCode 3453 | 分割正方形 I
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/posts/leetcode-2576/" rel="next" title="LeetCode 2576 | 求出最多标记下标">
+      LeetCode 2576 | 求出最多标记下标 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E8%A7%A3%E8%AF%BB"><span class="nav-number">1.</span> <span class="nav-text">问题解读</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E6%80%9D%E8%B7%AF%EF%BC%9A%E5%9C%A8%E2%80%9C%E7%AD%94%E6%A1%88%E2%80%9D%E4%B8%8A%E8%BF%9B%E8%A1%8C%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE"><span class="nav-number">2.</span> <span class="nav-text">核心思路：在“答案”上进行二分查找</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9B%9B%E7%A7%8D%E4%BA%8C%E5%88%86%E7%AE%97%E6%B3%95%E7%9A%84-Python-%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0"><span class="nav-number">3.</span> <span class="nav-text">四种二分算法的 Python 代码实现</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%A7%A3%E6%B3%95%E4%B8%80%EF%BC%9A%E9%97%AD%E5%8C%BA%E9%97%B4-left-right"><span class="nav-number">3.1.</span> <span class="nav-text">解法一：闭区间 [left, right]</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%A7%A3%E6%B3%95%E4%B8%89%EF%BC%9A%E5%B7%A6%E5%BC%80%E5%8F%B3%E9%97%AD%E5%8C%BA%E9%97%B4-left-right"><span class="nav-number">3.2.</span> <span class="nav-text">解法三：左开右闭区间 (left, right]</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%A7%A3%E6%B3%95%E5%9B%9B%EF%BC%9A%E5%BC%80%E5%8C%BA%E9%97%B4-left-right"><span class="nav-number">3.3.</span> <span class="nav-text">解法四：开区间 (left, right)</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%8D%E6%9D%82%E5%BA%A6%E5%88%86%E6%9E%90"><span class="nav-number">4.</span> <span class="nav-text">复杂度分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">5.</span> <span class="nav-text">总结</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Changan"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Changan</p>
+  <div class="site-description" itemprop="description">Good things take time</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">101</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">22</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">107</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/qiyuanlanniao" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;qiyuanlanniao"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:hmca09502@gmail.com" title="E-Mail → mailto:hmca09502@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Changan</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('https://cdn.jsdelivr.net/npm/valine@1.5.3/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'fNBvdCThX5dQrppj7znaQ3xJ-gzGzoHsz',
+      appKey     : 'Mom6ApPuWkqQu8UwakobSJqh',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

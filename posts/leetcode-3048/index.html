@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"github.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"valine","storage":true,"lazyload":false,"nav":null,"activeClass":"valine"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="LeetCode 第 3048 题：标记所有下标的最早秒数 I。本题的关键在于识别出答案（秒数）具备单调性，从而可以将求解“最早秒数”这个最优化问题，转化为一个判定“给定秒数是否可行”的问题，并利用二分查找高效求解。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LeetCode 3048 | 标记所有下标的最早秒数 I">
+<meta property="og:url" content="http://github.com/posts/leetcode-3048/index.html">
+<meta property="og:site_name" content="Changan&#39;s Blog">
+<meta property="og:description" content="LeetCode 第 3048 题：标记所有下标的最早秒数 I。本题的关键在于识别出答案（秒数）具备单调性，从而可以将求解“最早秒数”这个最优化问题，转化为一个判定“给定秒数是否可行”的问题，并利用二分查找高效求解。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-10-25T07:40:00.000Z">
+<meta property="article:modified_time" content="2025-10-25T07:40:00.000Z">
+<meta property="article:author" content="Changan">
+<meta property="article:tag" content="数组">
+<meta property="article:tag" content="二分查找">
+<meta property="article:tag" content="贪心">
+<meta property="article:tag" content="第386场周赛">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://github.com/posts/leetcode-3048/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>LeetCode 3048 | 标记所有下标的最早秒数 I | Changan's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Changan's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+    <a href="https://github.com/qiyuanlanniao" class="github-corner" aria-label="View source on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#151513; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"/><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"/><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"/></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Changan's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://github.com/posts/leetcode-3048/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Changan">
+      <meta itemprop="description" content="Good things take time">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Changan's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          LeetCode 3048 | 标记所有下标的最早秒数 I
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2025-10-25 15:40:00" itemprop="dateCreated datePublished" datetime="2025-10-25T15:40:00+08:00">2025-10-25</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%AE%97%E6%B3%95%E9%A2%98%E8%A7%A3/" itemprop="url" rel="index"><span itemprop="name">算法题解</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%AE%97%E6%B3%95%E9%A2%98%E8%A7%A3/%E4%BA%8C%E5%88%86%E7%AE%97%E6%B3%95/" itemprop="url" rel="index"><span itemprop="name">二分算法</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%AE%97%E6%B3%95%E9%A2%98%E8%A7%A3/%E4%BA%8C%E5%88%86%E7%AE%97%E6%B3%95/%E4%BA%8C%E5%88%86%E7%AD%94%E6%A1%88/" itemprop="url" rel="index"><span itemprop="name">二分答案</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%AE%97%E6%B3%95%E9%A2%98%E8%A7%A3/%E4%BA%8C%E5%88%86%E7%AE%97%E6%B3%95/%E4%BA%8C%E5%88%86%E7%AD%94%E6%A1%88/%E6%B1%82%E6%9C%80%E5%B0%8F/" itemprop="url" rel="index"><span itemprop="name">求最小</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/posts/leetcode-3048/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/posts/leetcode-3048/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <blockquote class="blockquote-center">
+            <i class="fa fa-quote-left"></i>
+            <p>LeetCode 第 3048 题：<a target="_blank" rel="noopener" href="https://leetcode.cn/problems/earliest-second-to-mark-indices-i/description/">标记所有下标的最早秒数 I</a>。<br>本题的关键在于识别出答案（秒数）具备单调性，从而可以将求解“最早秒数”这个最优化问题，转化为一个判定“给定秒数是否可行”的问题，并利用二分查找高效求解。</p>
+
+            <i class="fa fa-quote-right"></i>
+          </blockquote>
+<span id="more"></span>
+
+<h3 id="问题解读"><a href="#问题解读" class="headerlink" title="问题解读"></a>问题解读</h3><p>我们有两个数组，<code>nums</code> 和 <code>changeIndices</code>，长度分别为 <code>n</code> 和 <code>m</code>。我们的目标是找到一个<strong>最早</strong>的秒数，在此时刻之前（含），能够将 <code>nums</code> 数组的所有 <code>n</code> 个下标都“标记”一遍。</p>
+<p>每一秒，我们有三种选择：</p>
+<ol>
+<li>将任意一个 <code>nums[i]</code> 的值减 1。</li>
+<li>如果 <code>nums[changeIndices[s]-1]</code> 的值恰好为 0，我们可以标记 <code>changeIndices[s]-1</code> 这个下标。</li>
+<li>什么都不做。</li>
+</ol>
+<p>核心约束是：</p>
+<ul>
+<li>标记操作只能在特定秒数 <code>s</code> 对特定的下标 <code>changeIndices[s]-1</code> 进行。</li>
+<li>标记一个下标 <code>i</code> 的前提是 <code>nums[i]</code> 必须已经被减为 0。</li>
+</ul>
+<p>我们需要在 <code>m</code> 秒的时间窗口内，找到满足条件的最小秒数。如果无法完成任务，则返回 -1。</p>
+<h3 id="核心思路：将“求解问题”转化为“判定问题”与二分查找"><a href="#核心思路：将“求解问题”转化为“判定问题”与二分查找" class="headerlink" title="核心思路：将“求解问题”转化为“判定问题”与二分查找"></a>核心思路：将“求解问题”转化为“判定问题”与二分查找</h3><p>直接求解“最早秒数”比较复杂，因为它涉及到一系列操作的最优调度。但这类“求最小值&#x2F;最大值”的问题，通常可以尝试使用二分查找来解决。</p>
+<p>我们可以对<strong>答案（秒数 <code>s</code>）<strong>进行二分查找。为此，我们需要验证答案的</strong>单调性</strong>：</p>
+<ul>
+<li>如果在 <code>s</code> 秒内可以标记所有下标，那么在 <code>s+1</code> 秒内，我们拥有更多的时间和操作机会，必然也可以完成任务。</li>
+<li>反之，如果在 <code>s</code> 秒内无法完成任务，那么在更短的 <code>s-1</code> 秒内，也必然无法完成。</li>
+</ul>
+<p>这种单调性是应用二分查找的完美前提。我们可以将原问题从“找到<strong>最早</strong>的那个秒数”，转化为一个更简单的判定问题：“给定 <code>s</code> 秒，我们能<strong>不能</strong>标记所有下标？”</p>
+<p>我们可以设计一个辅助函数 <code>check(s)</code> 来回答这个判定问题。如果能高效地实现 <code>check(s)</code>，就可以通过二分查找在 <code>[1, m]</code> 的范围内快速定位到最小的可行秒数。</p>
+<h3 id="算法详解"><a href="#算法详解" class="headerlink" title="算法详解"></a>算法详解</h3><h4 id="1-确定二分查找的范围"><a href="#1-确定二分查找的范围" class="headerlink" title="1. 确定二分查找的范围"></a>1. 确定二分查找的范围</h4><ul>
+<li><strong>下界 (left)</strong>：至少需要 1 秒，所以下界是 <code>1</code>。</li>
+<li><strong>上界 (right)</strong>：最多有 <code>m</code> 秒可用，所以上界是 <code>m</code>。</li>
+</ul>
+<p>我们就在 <code>[1, m]</code> 这个区间内对秒数 <code>s</code> 进行二分查找。</p>
+<h4 id="2-check-s-函数的设计（贪心策略）"><a href="#2-check-s-函数的设计（贪心策略）" class="headerlink" title="2. check(s) 函数的设计（贪心策略）"></a>2. <code>check(s)</code> 函数的设计（贪心策略）</h4><p><code>check(s)</code> 是整个算法的核心。给定 <code>s</code> 秒，我们如何判断是否能完成任务？这需要一个明智的策略来安排我们的操作。</p>
+<p><strong>核心贪心思想</strong>：对于任何一个需要标记的下标 <code>i</code>，为了给“减 1”操作留出尽可能多的时间，我们应该选择在 <code>s</code> 秒内<strong>最后一次</strong>出现 <code>i</code> 的机会来标记它。这样做可以最大化在该标记操作之前可用的、能够自由支配的“减 1”秒数。</p>
+<p>基于这个思想，<code>check(s)</code> 的步骤如下：</p>
+<ol>
+<li><p><strong>找到最后的标记时机</strong>：</p>
+<ul>
+<li>遍历 <code>changeIndices</code> 的前 <code>s</code> 个元素（即从第 1 秒到第 <code>s</code> 秒）。</li>
+<li>使用一个哈希表或数组 <code>last_pos</code>，记录每个下标 <code>i</code> (1 到 n) 在这 <code>s</code> 秒内最后一次出现的时间点。</li>
+<li>如果在遍历后，发现某个下标 <code>i</code> 从未在 <code>changeIndices</code> 的前 <code>s</code> 秒中出现过，那么它就不可能被标记，<code>check(s)</code> 直接返回 <code>False</code>。</li>
+</ul>
+</li>
+<li><p><strong>模拟过程，检查资源是否足够</strong>：</p>
+<ul>
+<li>我们从第 1 秒开始，一直模拟到第 <code>s</code> 秒。维护一个计数器 <code>ops</code>，表示我们积累了多少可以自由使用的“减 1”操作次数。</li>
+<li>在第 <code>t</code> 秒 (<code>1 &lt;= t &lt;= s</code>)：<ul>
+<li>查看 <code>changeIndices</code> 在这一秒指向的下标 <code>idx</code>。</li>
+<li>判断当前秒 <code>t</code> 是否是 <code>idx</code> 的预定标记时间（即 <code>t == last_pos[idx]</code>）。<ul>
+<li><strong>如果是</strong>：我们必须在这一秒标记 <code>idx</code>。为此，我们需要确保 <code>nums[idx-1]</code> 已经归零。这需要 <code>nums[idx-1]</code> 次“减 1”操作。我们检查积累的 <code>ops</code> 是否足够（<code>ops &gt;= nums[idx-1]</code>）。<ul>
+<li>如果不够，说明时间不够，<code>check(s)</code> 返回 <code>False</code>。</li>
+<li>如果足够，我们就“消耗”掉这些操作次数：<code>ops -= nums[idx-1]</code>。</li>
+</ul>
+</li>
+<li><strong>如果不是</strong>：这一秒不是 <code>idx</code> 的最后标记机会。根据我们的贪心策略，我们不会在此时标记它，而是将这一秒视为一个宝贵的、可用于“减 1”的空闲时间。因此，<code>ops</code> 加 1。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>返回结果</strong>：</p>
+<ul>
+<li>如果整个模拟过程（从第 1 秒到第 <code>s</code> 秒）都能顺利进行，没有因为 <code>ops</code> 不足而提前退出，那么就说明 <code>s</code> 秒是可行的，<code>check(s)</code> 返回 <code>True</code>。</li>
+</ul>
+</li>
+</ol>
+<h4 id="3-执行二分查找"><a href="#3-执行二分查找" class="headerlink" title="3. 执行二分查找"></a>3. 执行二分查找</h4><ul>
+<li>当 <code>left &lt;= right</code> 时，循环继续。</li>
+<li>计算中间值 <code>mid = left + (right - left) // 2</code> 作为当前的“猜测秒数”。</li>
+<li>调用 <code>check(mid)</code> 来判定：<ul>
+<li><strong>如果 <code>check(mid)</code> 返回 <code>True</code></strong>：说明 <code>mid</code> 秒是可行的。这可能是答案，但我们还想找一个更早的时间。因此，我们记录 <code>ans = mid</code>，并尝试在左半部分继续寻找：<code>right = mid - 1</code>。</li>
+<li><strong>如果 <code>check(mid)</code> 返回 <code>False</code></strong>：说明 <code>mid</code> 秒不够，我们需要更多的时间。因此，去右半部分寻找：<code>left = mid + 1</code>。</li>
+</ul>
+</li>
+<li>循环结束后，<code>ans</code> 中存储的就是满足条件的最早秒数。</li>
+</ul>
+<h3 id="Python-代码实现"><a href="#Python-代码实现" class="headerlink" title="Python 代码实现"></a>Python 代码实现</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> typing <span class="keyword">import</span> <span class="type">List</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">earliestSecondToMarkIndices</span>(<span class="params">self, nums: <span class="type">List</span>[<span class="built_in">int</span>], changeIndices: <span class="type">List</span>[<span class="built_in">int</span>]</span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        n = <span class="built_in">len</span>(nums)</span><br><span class="line">        m = <span class="built_in">len</span>(changeIndices)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># check(s) 函数用于判断在 s 秒内是否能完成所有标记任务</span></span><br><span class="line">        <span class="comment"># s 是秒数 (1-based), 对应 changeIndices 的前 s 个元素 (0-indexed: 0 to s-1)</span></span><br><span class="line">        <span class="keyword">def</span> <span class="title function_">check</span>(<span class="params">s: <span class="built_in">int</span></span>) -&gt; <span class="built_in">bool</span>:</span><br><span class="line">            <span class="comment"># last[i] 记录下标 i (1-based) 在前 s 秒内最后一次出现的时间点 (0-indexed)</span></span><br><span class="line">            last = [-<span class="number">1</span>] * (n + <span class="number">1</span>)</span><br><span class="line">            <span class="keyword">for</span> t <span class="keyword">in</span> <span class="built_in">range</span>(s):</span><br><span class="line">                <span class="comment"># changeIndices 中的值是 1-based 的</span></span><br><span class="line">                last[changeIndices[t]] = t</span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 如果在前 s 秒内，有的下标从未出现过，则不可能被标记</span></span><br><span class="line">            <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, n + <span class="number">1</span>):</span><br><span class="line">                <span class="keyword">if</span> last[i] == -<span class="number">1</span>:</span><br><span class="line">                    <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">            </span><br><span class="line">            <span class="comment"># ops 记录可用于“减 1”操作的空闲秒数</span></span><br><span class="line">            ops = <span class="number">0</span></span><br><span class="line">            <span class="comment"># 遍历前 s 秒</span></span><br><span class="line">            <span class="keyword">for</span> t <span class="keyword">in</span> <span class="built_in">range</span>(s):</span><br><span class="line">                idx = changeIndices[t]</span><br><span class="line">                <span class="comment"># 如果当前时间 t 是标记下标 idx 的最后时机</span></span><br><span class="line">                <span class="keyword">if</span> t == last[idx]:</span><br><span class="line">                    <span class="comment"># 获取将 nums[idx-1] 降为 0 所需的“减 1”操作次数</span></span><br><span class="line">                    cost = nums[idx - <span class="number">1</span>]</span><br><span class="line">                    <span class="comment"># 如果空闲操作数不够，则 s 秒内无法完成任务</span></span><br><span class="line">                    <span class="keyword">if</span> ops &lt; cost:</span><br><span class="line">                        <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">                    <span class="comment"># 消耗掉 cost 次空闲操作</span></span><br><span class="line">                    ops -= cost</span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    <span class="comment"># 如果当前时间 t 不是最后标记时机，则可视为一次空闲操作</span></span><br><span class="line">                    ops += <span class="number">1</span></span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 如果成功遍历完 s 秒，说明 s 秒是可行的</span></span><br><span class="line">            <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># 二分查找答案</span></span><br><span class="line">        <span class="comment"># 搜索范围是 [1, m]，即最早可能的时间和最晚可能的时间</span></span><br><span class="line">        left, right = <span class="number">1</span>, m</span><br><span class="line">        ans = -<span class="number">1</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">while</span> left &lt;= right:</span><br><span class="line">            mid = left + (right - left) // <span class="number">2</span></span><br><span class="line">            <span class="keyword">if</span> check(mid):</span><br><span class="line">                <span class="comment"># 如果 mid 秒可行，说明它是一个潜在的答案</span></span><br><span class="line">                <span class="comment"># 我们尝试寻找更早的时间，所以向左收缩范围</span></span><br><span class="line">                ans = mid</span><br><span class="line">                right = mid - <span class="number">1</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="comment"># 如果 mid 秒不可行，说明时间太少，需要更多时间</span></span><br><span class="line">                <span class="comment"># 向右收缩范围</span></span><br><span class="line">                left = mid + <span class="number">1</span></span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> ans</span><br></pre></td></tr></table></figure>
+
+<h3 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h3><ul>
+<li><strong>时间复杂度</strong>: O((N + M) * log(M))。<ul>
+<li><code>N</code> 是 <code>nums</code> 的长度，<code>M</code> 是 <code>changeIndices</code> 的长度。</li>
+<li>二分查找的搜索空间大小为 <code>M</code>，因此需要 <code>log(M)</code> 次迭代。</li>
+<li>在每次迭代中，我们调用 <code>check(s)</code> 函数。该函数需要遍历 <code>changeIndices</code> 的前 <code>s</code> 个元素（最多 <code>M</code> 个）和 <code>n</code> 个下标，时间复杂度为 O(N + s)，即 O(N + M)。</li>
+<li>因此，总时间复杂度是这两者的乘积。</li>
+</ul>
+</li>
+<li><strong>空间复杂度</strong>: O(N)。<ul>
+<li>在 <code>check</code> 函数中，我们使用了 <code>last</code> 数组来存储每个下标的最后出现位置，其大小为 <code>N+1</code>。因此空间复杂度为 O(N)。</li>
+</ul>
+</li>
+</ul>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>本题是“二分答案”思想的又一个经典应用。当问题的目标是求解一个符合条件的“最小值”或“最大值”，并且该问题的可行性具有单调性时，我们应该优先考虑能否将其转化为一个判定问题，并通过二分查找来加速求解。本题的难点在于设计 <code>check</code> 函数，通过采用“将困难的标记操作尽可能延后”的贪心策略，我们可以高效地判断出在给定的时间限制下任务是否可行。</p>
+
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%95%B0%E7%BB%84/" rel="tag"># 数组</a>
+              <a href="/tags/%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE/" rel="tag"># 二分查找</a>
+              <a href="/tags/%E8%B4%AA%E5%BF%83/" rel="tag"># 贪心</a>
+              <a href="/tags/%E7%AC%AC386%E5%9C%BA%E5%91%A8%E8%B5%9B/" rel="tag"># 第386场周赛</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/posts/leetcode-3639/" rel="prev" title="LeetCode 3639 | 变为活跃状态的最小时间">
+      <i class="fa fa-chevron-left"></i> LeetCode 3639 | 变为活跃状态的最小时间
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/posts/leetcode-3453/" rel="next" title="LeetCode 3453 | 分割正方形 I">
+      LeetCode 3453 | 分割正方形 I <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E8%A7%A3%E8%AF%BB"><span class="nav-number">1.</span> <span class="nav-text">问题解读</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E6%80%9D%E8%B7%AF%EF%BC%9A%E5%B0%86%E2%80%9C%E6%B1%82%E8%A7%A3%E9%97%AE%E9%A2%98%E2%80%9D%E8%BD%AC%E5%8C%96%E4%B8%BA%E2%80%9C%E5%88%A4%E5%AE%9A%E9%97%AE%E9%A2%98%E2%80%9D%E4%B8%8E%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE"><span class="nav-number">2.</span> <span class="nav-text">核心思路：将“求解问题”转化为“判定问题”与二分查找</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E8%AF%A6%E8%A7%A3"><span class="nav-number">3.</span> <span class="nav-text">算法详解</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-%E7%A1%AE%E5%AE%9A%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE%E7%9A%84%E8%8C%83%E5%9B%B4"><span class="nav-number">3.1.</span> <span class="nav-text">1. 确定二分查找的范围</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-check-s-%E5%87%BD%E6%95%B0%E7%9A%84%E8%AE%BE%E8%AE%A1%EF%BC%88%E8%B4%AA%E5%BF%83%E7%AD%96%E7%95%A5%EF%BC%89"><span class="nav-number">3.2.</span> <span class="nav-text">2. check(s) 函数的设计（贪心策略）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-%E6%89%A7%E8%A1%8C%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE"><span class="nav-number">3.3.</span> <span class="nav-text">3. 执行二分查找</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Python-%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0"><span class="nav-number">4.</span> <span class="nav-text">Python 代码实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%8D%E6%9D%82%E5%BA%A6%E5%88%86%E6%9E%90"><span class="nav-number">5.</span> <span class="nav-text">复杂度分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">6.</span> <span class="nav-text">总结</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Changan"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Changan</p>
+  <div class="site-description" itemprop="description">Good things take time</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">101</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">22</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">107</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/qiyuanlanniao" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;qiyuanlanniao"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:hmca09502@gmail.com" title="E-Mail → mailto:hmca09502@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Changan</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('https://cdn.jsdelivr.net/npm/valine@1.5.3/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'fNBvdCThX5dQrppj7znaQ3xJ-gzGzoHsz',
+      appKey     : 'Mom6ApPuWkqQu8UwakobSJqh',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

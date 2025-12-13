@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"github.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"valine","storage":true,"lazyload":false,"nav":null,"activeClass":"valine"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="LeetCode 第 3296 题：移山所需的最少秒数。本题的关键在于识别出答案（最少秒数）具有单调性，从而将一个求解最小值的问题，转化为一个“判定”问题，并利用二分查找高效地找到答案的临界点。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LeetCode 3296 | 移山所需的最少秒数">
+<meta property="og:url" content="http://github.com/posts/leetcode-3296/index.html">
+<meta property="og:site_name" content="Changan&#39;s Blog">
+<meta property="og:description" content="LeetCode 第 3296 题：移山所需的最少秒数。本题的关键在于识别出答案（最少秒数）具有单调性，从而将一个求解最小值的问题，转化为一个“判定”问题，并利用二分查找高效地找到答案的临界点。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-10-24T12:30:00.000Z">
+<meta property="article:modified_time" content="2025-10-24T12:30:00.000Z">
+<meta property="article:author" content="Changan">
+<meta property="article:tag" content="数组">
+<meta property="article:tag" content="二分查找">
+<meta property="article:tag" content="贪心">
+<meta property="article:tag" content="数学">
+<meta property="article:tag" content="堆（优先队列）">
+<meta property="article:tag" content="第416场周赛">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://github.com/posts/leetcode-3296/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>LeetCode 3296 | 移山所需的最少秒数 | Changan's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Changan's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+    <a href="https://github.com/qiyuanlanniao" class="github-corner" aria-label="View source on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#151513; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"/><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"/><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"/></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Changan's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://github.com/posts/leetcode-3296/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Changan">
+      <meta itemprop="description" content="Good things take time">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Changan's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          LeetCode 3296 | 移山所需的最少秒数
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2025-10-24 20:30:00" itemprop="dateCreated datePublished" datetime="2025-10-24T20:30:00+08:00">2025-10-24</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%AE%97%E6%B3%95%E9%A2%98%E8%A7%A3/" itemprop="url" rel="index"><span itemprop="name">算法题解</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%AE%97%E6%B3%95%E9%A2%98%E8%A7%A3/%E4%BA%8C%E5%88%86%E7%AE%97%E6%B3%95/" itemprop="url" rel="index"><span itemprop="name">二分算法</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%AE%97%E6%B3%95%E9%A2%98%E8%A7%A3/%E4%BA%8C%E5%88%86%E7%AE%97%E6%B3%95/%E4%BA%8C%E5%88%86%E7%AD%94%E6%A1%88/" itemprop="url" rel="index"><span itemprop="name">二分答案</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%AE%97%E6%B3%95%E9%A2%98%E8%A7%A3/%E4%BA%8C%E5%88%86%E7%AE%97%E6%B3%95/%E4%BA%8C%E5%88%86%E7%AD%94%E6%A1%88/%E6%B1%82%E6%9C%80%E5%B0%8F/" itemprop="url" rel="index"><span itemprop="name">求最小</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/posts/leetcode-3296/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/posts/leetcode-3296/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <blockquote class="blockquote-center">
+            <i class="fa fa-quote-left"></i>
+            <p>LeetCode 第 3296 题：<a target="_blank" rel="noopener" href="https://leetcode.cn/problems/minimum-number-of-seconds-to-make-mountain-height-zero/description/">移山所需的最少秒数</a>。<br>本题的关键在于识别出答案（最少秒数）具有单调性，从而将一个求解最小值的问题，转化为一个“判定”问题，并利用二分查找高效地找到答案的临界点。</p>
+
+            <i class="fa fa-quote-right"></i>
+          </blockquote>
+<span id="more"></span>
+
+<h3 id="问题解读"><a href="#问题解读" class="headerlink" title="问题解读"></a>问题解读</h3><p>我们需要计算，在一群工人同时工作的情况下，将一座给定高度 <code>mountainHeight</code> 的山夷为平地（高度降为 0），所需要的最少时间是多少秒。</p>
+<p>每个工人的工作效率不同，由 <code>workerTimes</code> 数组定义。工人 <code>i</code> 降低山 <code>x</code> 高度所花费的时间是一个等差数列的和：<code>workerTimes[i] * (1 + 2 + ... + x)</code>，也就是 <code>workerTimes[i] * x * (x + 1) / 2</code>。</p>
+<p>这里的核心约束条件是：</p>
+<ol>
+<li>所有工人<strong>同时</strong>开始工作。</li>
+<li>总的耗时由工作最久的那个工人决定。换句话说，如果我们设定一个总时间 <code>T</code>，那么所有工人都在这 <code>T</code> 秒内尽其所能地降低山的高度。</li>
+<li>所有工人降低的高度之和必须至少等于 <code>mountainHeight</code>。</li>
+</ol>
+<p>我们的目标是找到满足条件的<strong>最小</strong>时间 <code>T</code>。</p>
+<p>举个例子，<code>mountainHeight = 4</code>, <code>workerTimes = [2,1,1]</code>。<br>假设我们给工人们 3 秒钟。</p>
+<ul>
+<li>对于工人 0 (<code>wt=2</code>)：在 3 秒内，他最多能降低多少高度？<ul>
+<li>降低 1，耗时 <code>2*1 = 2 &lt;= 3</code> (可行)。</li>
+<li>降低 2，耗时 <code>2*(1+2) = 6 &gt; 3</code> (不可行)。所以他最多降低 1。</li>
+</ul>
+</li>
+<li>对于工人 1 (<code>wt=1</code>)：在 3 秒内，他最多能降低多少高度？<ul>
+<li>降低 1，耗时 <code>1*1 = 1 &lt;= 3</code>。</li>
+<li>降低 2，耗时 <code>1*(1+2) = 3 &lt;= 3</code> (可行)。</li>
+<li>降低 3，耗时 <code>1*(1+2+3) = 6 &gt; 3</code> (不可行)。所以他最多降低 2。</li>
+</ul>
+</li>
+<li>对于工人 2 (<code>wt=1</code>)：同理，最多能降低 2。</li>
+</ul>
+<p>在 3 秒内，总降低高度为 <code>1 + 2 + 2 = 5</code>，因为 <code>5 &gt;= mountainHeight(4)</code>，所以 3 秒是一个可行的时间。我们的任务就是找到这样的可行时间中的最小值。</p>
+<h3 id="核心思路：将“求解问题”转化为“判定问题”与二分查找"><a href="#核心思路：将“求解问题”转化为“判定问题”与二分查找" class="headerlink" title="核心思路：将“求解问题”转化为“判定问题”与二分查找"></a>核心思路：将“求解问题”转化为“判定问题”与二分查找</h3><p>直接求解“最少秒数”非常棘手。但我们可以换一个角度：如果我们<strong>假设</strong>一个工作时间 <code>T</code>，能否判断出所有工人能否在这段时间内完成任务？</p>
+<p>这个“判定”问题相对简单。我们可以写一个辅助函数 <code>can_finish(T)</code>：<br>对于任意一个工人 <code>i</code>，在给定的时间 <code>T</code> 内，他能降低的最大高度 <code>x</code> 满足不等式：<br><code>workerTimes[i] * x * (x + 1) / 2 &lt;= T</code></p>
+<p>这是一个关于 <code>x</code> 的一元二次不等式：<code>workerTimes[i]*x^2 + workerTimes[i]*x - 2*T &lt;= 0</code>。通过求解对应的二次方程，我们可以找到 <code>x</code> 的最大整数解。<br>更简单地，可以变形为 <code>x^2 + x - (2*T / workerTimes[i]) &lt;= 0</code>。利用求根公式 <code>x = (-b ± sqrt(b^2 - 4ac)) / 2a</code>，我们可以得到 <code>x</code> 的最大值为 <code>floor((-1 + sqrt(1 + 8*T / workerTimes[i])) / 2)</code>。</p>
+<p>得到每个工人在 <code>T</code> 时间内能降低的最大高度后，我们将它们全部加起来，得到总降低高度 <code>total_reduction</code>。如果 <code>total_reduction &gt;= mountainHeight</code>，那么时间 <code>T</code> 就是一个可行解。</p>
+<p>现在，我们有了一个判定方法。并且可以发现，这个判定结果具有<strong>单调性</strong>：</p>
+<ul>
+<li>如果时间 <code>T</code> 内可以完成任务，那么任何大于 <code>T</code> 的时间 <code>T&#39;</code> 也一定可以完成。</li>
+<li>反之，如果 <code>T</code> 内无法完成，任何小于 <code>T</code> 的时间也必然无法完成。</li>
+</ul>
+<p>这种单调性正是应用二分查找的绝佳场景。我们可以对“时间 <code>T</code>”进行二分查找，来快速定位到那个“最小可行”的临界点。</p>
+<p>二分查找的搜索范围是什么呢？</p>
+<ul>
+<li><strong>下界 (l)</strong>：最少是 0 秒。</li>
+<li><strong>上界 (r)</strong>：一个足够大的数。在最坏的情况下，只有一个工人，<code>workerTimes</code> 和 <code>mountainHeight</code> 都很大。例如 <code>wt=10^6</code>, <code>mh=10^5</code>，所需时间大约是 <code>10^6 * (10^5)^2 / 2</code>，这是一个非常大的数字（约为 <code>5 * 10^15</code>）。为了保险起见，我们可以选择一个更大的上界，比如 <code>2 * 10^16</code>。</li>
+</ul>
+<p>因此，我们就在 <code>[0, 2 * 10^16]</code> 这个巨大的区间内，对时间 <code>T</code> 进行二分查找。</p>
+<h3 id="算法详解"><a href="#算法详解" class="headerlink" title="算法详解"></a>算法详解</h3><ol>
+<li><p><strong>确定二分查找的范围</strong></p>
+<ul>
+<li><code>l = 0</code>：可能的最小时间。</li>
+<li><code>r = 2 * 10^16</code>：一个足够大的、确保能完成任务的时间上界。</li>
+<li><code>ans</code> 初始化为 <code>r</code>，用来记录我们找到的可行解。</li>
+</ul>
+</li>
+<li><p><strong>执行二分查找</strong></p>
+<ul>
+<li>当 <code>l &lt;= r</code> 时，循环继续。</li>
+<li>计算中间值 <code>mid = l + (r - l) // 2</code> 作为当前的“猜测时间”。</li>
+<li>调用辅助函数 <code>can_finish(mid)</code> 来判定这个猜测值是否可行。<ul>
+<li><strong>如果 <code>can_finish(mid)</code> 返回 <code>True</code></strong> (即 <code>mid</code> 秒内可以完成任务)：<ul>
+<li>说明 <code>mid</code> 是一个潜在的答案，我们记录下来 <code>ans = mid</code>。</li>
+<li>但我们想找的是“最少”时间，所以我们尝试一个更小的值，将搜索范围缩小到左半边：<code>r = mid - 1</code>。</li>
+</ul>
+</li>
+<li><strong>如果 <code>can_finish(mid)</code> 返回 <code>False</code></strong> (即 <code>mid</code> 秒不够)：<ul>
+<li>说明我们需要更多的时间，将搜索范围缩小到右半边：<code>l = mid + 1</code>。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>返回结果</strong></p>
+<ul>
+<li>循环结束后，<code>ans</code> 中存储的就是满足条件的最少秒数。</li>
+</ul>
+</li>
+</ol>
+<h3 id="Python-代码实现"><a href="#Python-代码实现" class="headerlink" title="Python 代码实现"></a>Python 代码实现</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> math</span><br><span class="line"><span class="keyword">from</span> typing <span class="keyword">import</span> <span class="type">List</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">minNumberOfSeconds</span>(<span class="params">self, mountainHeight: <span class="built_in">int</span>, workerTimes: <span class="type">List</span>[<span class="built_in">int</span>]</span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 辅助函数：判定在 T 秒内能否完成任务</span></span><br><span class="line">        <span class="keyword">def</span> <span class="title function_">can_finish</span>(<span class="params">T: <span class="built_in">int</span></span>) -&gt; <span class="built_in">bool</span>:</span><br><span class="line">            total_reduction = <span class="number">0</span></span><br><span class="line">            <span class="keyword">if</span> T &lt; <span class="number">0</span>:</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 计算每个工人在 T 秒内能降低的最大高度</span></span><br><span class="line">            <span class="keyword">for</span> wt <span class="keyword">in</span> workerTimes:</span><br><span class="line">                <span class="comment"># 求解 x^2 + x - 2*T/wt &lt;= 0 的最大整数解 x</span></span><br><span class="line">                <span class="comment"># 对应的一元二次方程求根公式为 x = (-1 + sqrt(1 + 8*T/wt)) / 2</span></span><br><span class="line">                val = <span class="number">1</span> + <span class="number">8</span> * T / wt</span><br><span class="line">                reduction = <span class="built_in">int</span>((-<span class="number">1</span> + math.sqrt(val)) / <span class="number">2</span>)</span><br><span class="line">                total_reduction += reduction</span><br><span class="line">                </span><br><span class="line">                <span class="comment"># 提前剪枝：如果已经满足要求，无需继续计算</span></span><br><span class="line">                <span class="keyword">if</span> total_reduction &gt;= mountainHeight:</span><br><span class="line">                    <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line">            </span><br><span class="line">            <span class="keyword">return</span> total_reduction &gt;= mountainHeight</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 确定二分查找的左右边界</span></span><br><span class="line">        <span class="comment"># 下限为 0</span></span><br><span class="line">        l, r = <span class="number">0</span>, <span class="number">2</span> * <span class="number">10</span>**<span class="number">16</span>  <span class="comment"># 上限为一个足够大的数</span></span><br><span class="line">        ans = r</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 二分查找</span></span><br><span class="line">        <span class="keyword">while</span> l &lt;= r:</span><br><span class="line">            mid = l + (r - l) // <span class="number">2</span></span><br><span class="line">            <span class="keyword">if</span> can_finish(mid):</span><br><span class="line">                <span class="comment"># 如果 mid 可行，它可能就是答案，</span></span><br><span class="line">                <span class="comment"># 或者还有更小的可行值，所以我们记录答案并尝试在左半部分继续寻找</span></span><br><span class="line">                ans = mid </span><br><span class="line">                r = mid - <span class="number">1</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="comment"># 如果 mid 不可行，说明时间太少，</span></span><br><span class="line">                <span class="comment"># 必须增加时间，所以去右半部分寻找</span></span><br><span class="line">                l = mid + <span class="number">1</span></span><br><span class="line">                </span><br><span class="line">        <span class="keyword">return</span> ans</span><br></pre></td></tr></table></figure>
+
+<h3 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h3><ul>
+<li><strong>时间复杂度</strong>: O(L * log(R))。<ul>
+<li><code>L</code> 是工人数量，即 <code>len(workerTimes)</code>。</li>
+<li><code>R</code> 是二分查找的搜索空间大小 (约为 <code>2 * 10^16</code>)。</li>
+<li>二分查找本身需要 <code>log(R)</code> 次迭代。</li>
+<li>在每次迭代中，我们都需要调用 <code>can_finish</code> 函数，该函数需要遍历一次 <code>workerTimes</code> 数组，时间复杂度为 O(L)。</li>
+<li>因此，总时间复杂度是这两者的乘积。</li>
+</ul>
+</li>
+<li><strong>空间复杂度</strong>: O(1)。<ul>
+<li>我们只使用了几个变量来存储边界、中间值和计算结果，没有使用与输入规模相关的额外空间。</li>
+</ul>
+</li>
+</ul>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>本题是“二分答案”思想的典型应用。当我们面对一个求解“最小可能值”或“最大可能值”的问题，并且答案满足单调性时，就可以考虑使用二分查找。通过将原始的求解问题转化为一个更简单的、可以在多项式时间内解决的“判定问题”，我们可以将巨大的搜索空间不断折半，从而在对数级别的时间复杂度内锁定最终的答案，这是一种非常强大且高效的算法思想。</p>
+
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%95%B0%E7%BB%84/" rel="tag"># 数组</a>
+              <a href="/tags/%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE/" rel="tag"># 二分查找</a>
+              <a href="/tags/%E8%B4%AA%E5%BF%83/" rel="tag"># 贪心</a>
+              <a href="/tags/%E6%95%B0%E5%AD%A6/" rel="tag"># 数学</a>
+              <a href="/tags/%E5%A0%86%EF%BC%88%E4%BC%98%E5%85%88%E9%98%9F%E5%88%97%EF%BC%89/" rel="tag"># 堆（优先队列）</a>
+              <a href="/tags/%E7%AC%AC416%E5%9C%BA%E5%91%A8%E8%B5%9B/" rel="tag"># 第416场周赛</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/posts/leetcode-1011/" rel="prev" title="LeetCode 1011 | 在 D 天内送达包裹的能力">
+      <i class="fa fa-chevron-left"></i> LeetCode 1011 | 在 D 天内送达包裹的能力
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/posts/leetcode-3639/" rel="next" title="LeetCode 3639 | 变为活跃状态的最小时间">
+      LeetCode 3639 | 变为活跃状态的最小时间 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E8%A7%A3%E8%AF%BB"><span class="nav-number">1.</span> <span class="nav-text">问题解读</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E6%80%9D%E8%B7%AF%EF%BC%9A%E5%B0%86%E2%80%9C%E6%B1%82%E8%A7%A3%E9%97%AE%E9%A2%98%E2%80%9D%E8%BD%AC%E5%8C%96%E4%B8%BA%E2%80%9C%E5%88%A4%E5%AE%9A%E9%97%AE%E9%A2%98%E2%80%9D%E4%B8%8E%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE"><span class="nav-number">2.</span> <span class="nav-text">核心思路：将“求解问题”转化为“判定问题”与二分查找</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E8%AF%A6%E8%A7%A3"><span class="nav-number">3.</span> <span class="nav-text">算法详解</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Python-%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0"><span class="nav-number">4.</span> <span class="nav-text">Python 代码实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%8D%E6%9D%82%E5%BA%A6%E5%88%86%E6%9E%90"><span class="nav-number">5.</span> <span class="nav-text">复杂度分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">6.</span> <span class="nav-text">总结</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Changan"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Changan</p>
+  <div class="site-description" itemprop="description">Good things take time</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">101</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">22</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">107</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/qiyuanlanniao" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;qiyuanlanniao"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:hmca09502@gmail.com" title="E-Mail → mailto:hmca09502@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Changan</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('https://cdn.jsdelivr.net/npm/valine@1.5.3/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'fNBvdCThX5dQrppj7znaQ3xJ-gzGzoHsz',
+      appKey     : 'Mom6ApPuWkqQu8UwakobSJqh',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

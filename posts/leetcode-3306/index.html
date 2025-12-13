@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"github.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"valine","storage":true,"lazyload":false,"nav":null,"activeClass":"valine"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="LeetCode 第 3306 题：元音辅音字符串计数 II。这道题要求我们统计一个字符串中，满足“包含所有五种元音”并且“恰好包含 k 个辅音”的子字符串数量。这类问题的思路之一是将其转化为更易于处理的“至多”问题。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LeetCode 3306 | 滑动窗口精解“元音辅音字符串计数 II”">
+<meta property="og:url" content="http://github.com/posts/leetcode-3306/index.html">
+<meta property="og:site_name" content="Changan&#39;s Blog">
+<meta property="og:description" content="LeetCode 第 3306 题：元音辅音字符串计数 II。这道题要求我们统计一个字符串中，满足“包含所有五种元音”并且“恰好包含 k 个辅音”的子字符串数量。这类问题的思路之一是将其转化为更易于处理的“至多”问题。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-10-16T03:05:00.000Z">
+<meta property="article:modified_time" content="2025-10-16T03:05:00.000Z">
+<meta property="article:author" content="Changan">
+<meta property="article:tag" content="字符串">
+<meta property="article:tag" content="哈希表">
+<meta property="article:tag" content="滑动窗口">
+<meta property="article:tag" content="三指针">
+<meta property="article:tag" content="第417场周赛">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://github.com/posts/leetcode-3306/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>LeetCode 3306 | 滑动窗口精解“元音辅音字符串计数 II” | Changan's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Changan's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+    <a href="https://github.com/qiyuanlanniao" class="github-corner" aria-label="View source on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#151513; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"/><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"/><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"/></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Changan's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://github.com/posts/leetcode-3306/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Changan">
+      <meta itemprop="description" content="Good things take time">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Changan's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          LeetCode 3306 | 滑动窗口精解“元音辅音字符串计数 II”
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2025-10-16 11:05:00" itemprop="dateCreated datePublished" datetime="2025-10-16T11:05:00+08:00">2025-10-16</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%AE%97%E6%B3%95%E9%A2%98%E8%A7%A3/" itemprop="url" rel="index"><span itemprop="name">算法题解</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%AE%97%E6%B3%95%E9%A2%98%E8%A7%A3/%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%E4%B8%8E%E5%8F%8C%E6%8C%87%E9%92%88/" itemprop="url" rel="index"><span itemprop="name">滑动窗口与双指针</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%AE%97%E6%B3%95%E9%A2%98%E8%A7%A3/%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%E4%B8%8E%E5%8F%8C%E6%8C%87%E9%92%88/%E4%B8%8D%E5%AE%9A%E9%95%BF%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3/" itemprop="url" rel="index"><span itemprop="name">不定长滑动窗口</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/posts/leetcode-3306/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/posts/leetcode-3306/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <blockquote class="blockquote-center">
+            <i class="fa fa-quote-left"></i>
+            <p>LeetCode 第 3306 题：<a target="_blank" rel="noopener" href="https://leetcode.cn/problems/count-of-substrings-containing-every-vowel-and-k-consonants-ii/description/">元音辅音字符串计数 II</a>。<br>这道题要求我们统计一个字符串中，满足“包含所有五种元音”并且“恰好包含 k 个辅音”的子字符串数量。这类问题的思路之一是将其转化为更易于处理的“至多”问题。</p>
+
+            <i class="fa fa-quote-right"></i>
+          </blockquote>
+<span id="more"></span>
+<h3 id="问题解读"><a href="#问题解读" class="headerlink" title="问题解读"></a>问题解读</h3><p>题目给定一个字符串 <code>word</code> 和一个整数 <code>k</code>。我们需要找到 <code>word</code> 中所有满足以下两个条件的子字符串的总数：</p>
+<ol>
+<li>子字符串中必须包含所有五个元音字母：’a’, ‘e’, ‘i’, ‘o’, ‘u’。</li>
+<li>子字符串中必须<strong>恰好</strong>包含 <code>k</code> 个辅音字母。</li>
+</ol>
+<p>例如，对于 <code>word = &quot;ieaouqqieaouqq&quot;, k = 1</code>：</p>
+<ul>
+<li>子字符串 <code>&quot;ieaouq&quot;</code> (word[0..5]) 包含了所有元音，且有 1 个辅音 ‘q’，符合条件。</li>
+<li>子字符串 <code>&quot;ieaouqq&quot;</code> (word[0..6]) 包含了所有元音，但有 2 个辅音，不符合。</li>
+<li>子字符串 <code>&quot;qieaou&quot;</code> (word[6..11]) 也符合条件。</li>
+<li>子字符串 <code>&quot;ieaouq&quot;</code> (word[7..12]) 也符合条件。<br>总共有 3 个这样的子字符串。</li>
+</ul>
+<p>直接枚举所有子字符串并检查条件，时间复杂度会达到 O(N^2)，对于 N 高达 2 * 10^5 的情况是无法接受的。我们需要一个更高效的，最好是线性的解决方案，而滑动窗口正是为此而生的利器。</p>
+<h3 id="核心思路：“恰好-k”转化为“至多-k”"><a href="#核心思路：“恰好-k”转化为“至多-k”" class="headerlink" title="核心思路：“恰好 k”转化为“至多 k”"></a>核心思路：“恰好 k”转化为“至多 k”</h3><p>“恰好 k 个”这个条件在滑动窗口中通常难以直接处理，因为窗口的伸缩会不断改变计数。一个经典的处理技巧是：<br><strong>恰好 k 个 &#x3D; (至多 k 个) - (至多 k-1 个)</strong></p>
+<p>我们可以定义一个辅助函数 <code>countAtMost(consonants_limit)</code>，它用来计算“包含所有元音且辅音数量<strong>至多</strong>为 <code>consonants_limit</code>”的子字符串数量。<br>那么，原问题的答案就可以通过 <code>countAtMost(k) - countAtMost(k-1)</code> 得出。</p>
+<p>然而，我们可以更进一步，在一次遍历中同时计算这两个值。我们可以维护两个滑动窗口（或者说，一个右指针 <code>r</code> 和两个左指针 <code>l1</code>, <code>l2</code>），一个用于计算“至多 k”，另一个用于计算“至多 k-1”。</p>
+<p>假设我们固定了子字符串的右端点 <code>r</code>，我们的目标是找到所有有效的左端点 <code>l</code>。</p>
+<ul>
+<li>我们用一个左指针 <code>l2</code> 来找到满足“至多 k 个辅音”（且包含所有元音）的最靠左的起始位置。</li>
+<li>我们用另一个左指针 <code>l1</code> 来找到满足“至多 k-1 个辅音”（且包含所有元音）的最靠左的起始位置。</li>
+</ul>
+<p>对于固定的 <code>r</code>，任何起始于 <code>l</code>（<code>l2 &lt;= l &lt; l1</code>）的子字符串 <code>word[l..r]</code> 都将包含所有元音，并且其辅音数量恰好为 <code>k</code>。因此，对于当前右端点 <code>r</code>，新增的有效子字符串数量就是 <code>l1 - l2</code>。</p>
+<p><em>上图展示了两个窗口如何界定出“恰好 k 个辅音”的有效起始点范围</em></p>
+<h3 id="算法详解"><a href="#算法详解" class="headerlink" title="算法详解"></a>算法详解</h3><ol>
+<li><p><strong>初始化</strong>：</p>
+<ul>
+<li>定义元音集合 <code>vowels</code>。</li>
+<li>初始化两个左指针 <code>l1 = 0</code>, <code>l2 = 0</code>。</li>
+<li>为两个概念上的窗口分别设置计数器：<ul>
+<li><code>w1</code>, <code>cnt1</code>：用于追踪 <code>[l1, r]</code> 窗口内的元音和辅音计数（目标：辅音数 &lt; k）。</li>
+<li><code>w2</code>, <code>cnt2</code>：用于追踪 <code>[l2, r]</code> 窗口内的元音和辅音计数（目标：辅音数 &lt;&#x3D; k）。</li>
+</ul>
+</li>
+<li>初始化总数 <code>ans = 0</code>。</li>
+</ul>
+</li>
+<li><p><strong>遍历字符串</strong>：</p>
+<ul>
+<li>使用右指针 <code>r</code> 从左到右遍历 <code>word</code>。</li>
+<li>在每次循环中，将 <code>word[r]</code> 添加到两个窗口的计数中。如果 <code>word[r]</code> 是元音，更新元音哈希表 <code>w1</code>, <code>w2</code>；如果是辅音，增加辅音计数器 <code>cnt1</code>, <code>cnt2</code>。</li>
+</ul>
+</li>
+<li><p><strong>收缩窗口 1 (至多 k-1)</strong>：</p>
+<ul>
+<li>检查 <code>[l1, r]</code> 窗口是否需要收缩。收缩条件是：窗口已包含所有 5 个元音，并且辅音数量<strong>大于等于 k</strong> (<code>cnt1 &gt;= k</code>)。</li>
+<li>如果满足条件，就从窗口左侧移除字符（<code>l1++</code>），并更新 <code>w1</code> 和 <code>cnt1</code>，直到不再满足收缩条件。</li>
+<li>循环结束后，<code>l1</code> 指向的位置是满足“至多 k-1 个辅音”的子字符串的最左起始点。</li>
+</ul>
+</li>
+<li><p><strong>收缩窗口 2 (至多 k)</strong>：</p>
+<ul>
+<li>类似地，检查 <code>[l2, r]</code> 窗口是否需要收缩。收缩条件是：窗口已包含所有 5 个元音，并且辅音数量<strong>大于 k</strong> (<code>cnt2 &gt; k</code>)。</li>
+<li>如果满足条件，就从窗口左侧移除字符（<code>l2++</code>），并更新 <code>w2</code> 和 <code>cnt2</code>，直到不再满足收缩条件。</li>
+<li>循环结束后，<code>l2</code> 指向的位置是满足“至多 k 个辅音”的子字符串的最左起始点。</li>
+</ul>
+</li>
+<li><p><strong>更新结果</strong>：</p>
+<ul>
+<li>如核心思路所述，对于当前右端点 <code>r</code>，有效的左端点 <code>l</code> 的范围是 <code>[l2, l1 - 1]</code>。</li>
+<li>因此，有效子字符串的数量为 <code>l1 - l2</code>。将这个值累加到 <code>ans</code> 中。</li>
+</ul>
+</li>
+<li><p><strong>返回结果</strong>：</p>
+<ul>
+<li>遍历结束后，<code>ans</code> 即为所求的总数。</li>
+</ul>
+</li>
+</ol>
+<h3 id="Python-代码实现"><a href="#Python-代码实现" class="headerlink" title="Python 代码实现"></a>Python 代码实现</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> defaultdict, namedtuple</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">countOfSubstrings</span>(<span class="params">self, word: <span class="built_in">str</span>, k: <span class="built_in">int</span></span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        <span class="comment"># 使用一个具名元组来存储输入，以演示 frandelios 变量的使用</span></span><br><span class="line">        InputHolder = namedtuple(<span class="string">&#x27;InputHolder&#x27;</span>, [<span class="string">&#x27;word&#x27;</span>, <span class="string">&#x27;k&#x27;</span>])</span><br><span class="line">        frandelios = InputHolder(word, k)</span><br><span class="line"></span><br><span class="line">        vow = <span class="string">&quot;aeiou&quot;</span></span><br><span class="line">        <span class="comment"># w1, cnt1, l1 用于计算 &quot;至多 k-1 个辅音&quot; 的情况</span></span><br><span class="line">        w1 = defaultdict(<span class="built_in">int</span>)</span><br><span class="line">        cnt1 = <span class="number">0</span></span><br><span class="line">        l1 = <span class="number">0</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment"># w2, cnt2, l2 用于计算 &quot;至多 k 个辅音&quot; 的情况</span></span><br><span class="line">        w2 = defaultdict(<span class="built_in">int</span>)</span><br><span class="line">        cnt2 = <span class="number">0</span></span><br><span class="line">        l2 = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">        ans = <span class="number">0</span></span><br><span class="line">        <span class="comment"># 右指针 r 遍历字符串</span></span><br><span class="line">        <span class="keyword">for</span> r_char <span class="keyword">in</span> frandelios.word:</span><br><span class="line">            <span class="comment"># 将新字符加入两个窗口</span></span><br><span class="line">            <span class="keyword">if</span> r_char <span class="keyword">in</span> vow:</span><br><span class="line">                w1[r_char] += <span class="number">1</span></span><br><span class="line">                w2[r_char] += <span class="number">1</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                cnt1 += <span class="number">1</span></span><br><span class="line">                cnt2 += <span class="number">1</span></span><br><span class="line"></span><br><span class="line">            <span class="comment"># 收缩窗口1，使其满足辅音数 &lt; k</span></span><br><span class="line">            <span class="keyword">while</span> <span class="built_in">len</span>(w1) == <span class="number">5</span> <span class="keyword">and</span> cnt1 &gt;= frandelios.k:</span><br><span class="line">                l_char = frandelios.word[l1]</span><br><span class="line">                <span class="keyword">if</span> l_char <span class="keyword">in</span> vow:</span><br><span class="line">                    w1[l_char] -= <span class="number">1</span></span><br><span class="line">                    <span class="keyword">if</span> w1[l_char] == <span class="number">0</span>:</span><br><span class="line">                        <span class="keyword">del</span> w1[l_char]</span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    cnt1 -= <span class="number">1</span></span><br><span class="line">                l1 += <span class="number">1</span></span><br><span class="line"></span><br><span class="line">            <span class="comment"># 收缩窗口2，使其满足辅音数 &lt;= k</span></span><br><span class="line">            <span class="keyword">while</span> <span class="built_in">len</span>(w2) == <span class="number">5</span> <span class="keyword">and</span> cnt2 &gt; frandelios.k:</span><br><span class="line">                l_char = frandelios.word[l2]</span><br><span class="line">                <span class="keyword">if</span> l_char <span class="keyword">in</span> vow:</span><br><span class="line">                    w2[l_char] -= <span class="number">1</span></span><br><span class="line">                    <span class="keyword">if</span> w2[l_char] == <span class="number">0</span>:</span><br><span class="line">                        <span class="keyword">del</span> w2[l_char]</span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    cnt2 -= <span class="number">1</span></span><br><span class="line">                l2 += <span class="number">1</span></span><br><span class="line"></span><br><span class="line">            <span class="comment"># 对于当前右端点，有效的左端点范围是 [l2, l1-1]</span></span><br><span class="line">            <span class="comment"># 数量即 l1 - l2</span></span><br><span class="line">            ans += l1 - l2</span><br><span class="line">            </span><br><span class="line">        <span class="keyword">return</span> ans</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h3><ul>
+<li><strong>时间复杂度</strong>: O(N)。其中 N 是 <code>word</code> 的长度。虽然代码里有嵌套的 <code>while</code> 循环，但每个指针 <code>r</code>, <code>l1</code>, <code>l2</code> 都只会从头到尾遍历一次字符串，因此总的时间复杂度是线性的。</li>
+<li><strong>空间复杂度</strong>: O(C)。其中 C 是字符集的大小。我们使用了两个哈希表来存储元音的计数，最多只存 5 个元音，因此空间复杂度是 O(1) 的常数空间。</li>
+</ul>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>本题是滑动窗口思想的一个绝佳应用。通过将“恰好 k”的精确约束巧妙地转化为两个“至多 k”和“至多 k-1”的范围约束，我们将一个看似复杂的问题分解为两个可以用标准滑动窗口解决的子问题。更进一步，我们通过维护两套指针和计数器，在一次遍历中就完成了两个子问题的求解和整合，最终得到了一个既高效又优雅的解决方案。这个“范围之差”的技巧在处理计数类问题时非常实用，值得牢记。</p>
+
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E5%AD%97%E7%AC%A6%E4%B8%B2/" rel="tag"># 字符串</a>
+              <a href="/tags/%E5%93%88%E5%B8%8C%E8%A1%A8/" rel="tag"># 哈希表</a>
+              <a href="/tags/%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3/" rel="tag"># 滑动窗口</a>
+              <a href="/tags/%E4%B8%89%E6%8C%87%E9%92%88/" rel="tag"># 三指针</a>
+              <a href="/tags/%E7%AC%AC417%E5%9C%BA%E5%91%A8%E8%B5%9B/" rel="tag"># 第417场周赛</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/posts/leetcode-930/" rel="prev" title="LeetCode 930 | 滑动窗口求解“和相同的二元子数组”">
+      <i class="fa fa-chevron-left"></i> LeetCode 930 | 滑动窗口求解“和相同的二元子数组”
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/posts/leetcode-2401/" rel="next" title="LeetCode 2401 | 滑动窗口求解“最长优雅子数组”">
+      LeetCode 2401 | 滑动窗口求解“最长优雅子数组” <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E8%A7%A3%E8%AF%BB"><span class="nav-number">1.</span> <span class="nav-text">问题解读</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E6%80%9D%E8%B7%AF%EF%BC%9A%E2%80%9C%E6%81%B0%E5%A5%BD-k%E2%80%9D%E8%BD%AC%E5%8C%96%E4%B8%BA%E2%80%9C%E8%87%B3%E5%A4%9A-k%E2%80%9D"><span class="nav-number">2.</span> <span class="nav-text">核心思路：“恰好 k”转化为“至多 k”</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E8%AF%A6%E8%A7%A3"><span class="nav-number">3.</span> <span class="nav-text">算法详解</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Python-%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0"><span class="nav-number">4.</span> <span class="nav-text">Python 代码实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%8D%E6%9D%82%E5%BA%A6%E5%88%86%E6%9E%90"><span class="nav-number">5.</span> <span class="nav-text">复杂度分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">6.</span> <span class="nav-text">总结</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Changan"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Changan</p>
+  <div class="site-description" itemprop="description">Good things take time</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">101</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">22</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">107</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/qiyuanlanniao" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;qiyuanlanniao"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:hmca09502@gmail.com" title="E-Mail → mailto:hmca09502@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Changan</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('https://cdn.jsdelivr.net/npm/valine@1.5.3/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'fNBvdCThX5dQrppj7znaQ3xJ-gzGzoHsz',
+      appKey     : 'Mom6ApPuWkqQu8UwakobSJqh',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

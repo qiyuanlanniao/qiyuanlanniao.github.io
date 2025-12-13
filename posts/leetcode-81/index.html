@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"github.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"valine","storage":true,"lazyload":false,"nav":null,"activeClass":"valine"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="LeetCode 第 81 题：搜索旋转排序数组 II。该题难点在于数组中可能包含 重复元素，这破坏了原本二分查找中严格的单调性判断。当左右边界和中间值相等时，我们无法确定哪一半是有序的，必须退化为线性查找。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LeetCode 81 | 搜索旋转排序数组 II">
+<meta property="og:url" content="http://github.com/posts/leetcode-81/index.html">
+<meta property="og:site_name" content="Changan&#39;s Blog">
+<meta property="og:description" content="LeetCode 第 81 题：搜索旋转排序数组 II。该题难点在于数组中可能包含 重复元素，这破坏了原本二分查找中严格的单调性判断。当左右边界和中间值相等时，我们无法确定哪一半是有序的，必须退化为线性查找。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-12-04T02:04:00.000Z">
+<meta property="article:modified_time" content="2025-12-04T02:04:00.000Z">
+<meta property="article:author" content="Changan">
+<meta property="article:tag" content="数组">
+<meta property="article:tag" content="二分查找">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://github.com/posts/leetcode-81/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>LeetCode 81 | 搜索旋转排序数组 II | Changan's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Changan's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+    <a href="https://github.com/qiyuanlanniao" class="github-corner" aria-label="View source on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#151513; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"/><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"/><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"/></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Changan's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://github.com/posts/leetcode-81/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Changan">
+      <meta itemprop="description" content="Good things take time">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Changan's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          LeetCode 81 | 搜索旋转排序数组 II
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2025-12-04 10:04:00" itemprop="dateCreated datePublished" datetime="2025-12-04T10:04:00+08:00">2025-12-04</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%AE%97%E6%B3%95%E9%A2%98%E8%A7%A3/" itemprop="url" rel="index"><span itemprop="name">算法题解</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%AE%97%E6%B3%95%E9%A2%98%E8%A7%A3/%E4%BA%8C%E5%88%86%E7%AE%97%E6%B3%95/" itemprop="url" rel="index"><span itemprop="name">二分算法</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%AE%97%E6%B3%95%E9%A2%98%E8%A7%A3/%E4%BA%8C%E5%88%86%E7%AE%97%E6%B3%95/%E5%85%B6%E4%BB%96/" itemprop="url" rel="index"><span itemprop="name">其他</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/posts/leetcode-81/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/posts/leetcode-81/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <blockquote class="blockquote-center">
+            <i class="fa fa-quote-left"></i>
+            <p>LeetCode 第 81 题：<a target="_blank" rel="noopener" href="https://leetcode.cn/problems/search-in-rotated-sorted-array-ii/">搜索旋转排序数组 II</a>。<br>该题难点在于数组中可能包含 <strong>重复元素</strong>，这破坏了原本二分查找中严格的单调性判断。当左右边界和中间值相等时，我们无法确定哪一半是有序的，必须退化为线性查找。</p>
+
+            <i class="fa fa-quote-right"></i>
+          </blockquote>
+<span id="more"></span>
+
+<h3 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h3><p>已知存在一个按非降序排列的整数数组 <code>nums</code>，数组中的值不必互不相同。</p>
+<p>在传递给函数之前，<code>nums</code> 在预先未知的某个下标 <code>k</code>（<code>0 &lt;= k &lt; nums.length</code>）上进行了 <strong>旋转</strong>，使数组变为 <code>[nums[k], nums[k+1], ..., nums[n-1], nums[0], nums[1], ..., nums[k-1]]</code>（下标 从 0 开始 计数）。</p>
+<p>例如， <code>[0,1,2,4,4,4,5,6,6,7]</code> 在下标 5 处经旋转后可能变为 <code>[4,5,6,6,7,0,1,2,4,4]</code>。</p>
+<p>给你 <strong>旋转后</strong> 的数组 <code>nums</code> 和一个整数 <code>target</code>，请你编写一个函数来判断给定的目标值是否存在于数组中。如果 <code>nums</code> 中存在这个目标值 <code>target</code>，则返回 <code>true</code>，否则返回 <code>false</code>。</p>
+<p><strong>示例 1：</strong></p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入：nums = [2,5,6,0,0,1,2], target = 0</span><br><span class="line">输出：true</span><br></pre></td></tr></table></figure>
+
+<p><strong>示例 2：</strong></p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入：nums = [2,5,6,0,0,1,2], target = 3</span><br><span class="line">输出：false</span><br></pre></td></tr></table></figure>
+
+<p><strong>提示：</strong></p>
+<ul>
+<li>1 &lt;&#x3D; nums.length &lt;&#x3D; 5000</li>
+<li>-10^4 &lt;&#x3D; nums[i] &lt;&#x3D; 10^4</li>
+<li>题目数据保证 nums 在预先未知的某个下标上进行了旋转</li>
+<li>-10^4 &lt;&#x3D; target &lt;&#x3D; 10^4</li>
+</ul>
+<h3 id="解题思路"><a href="#解题思路" class="headerlink" title="解题思路"></a>解题思路</h3><h4 id="1-旋转数组的特性"><a href="#1-旋转数组的特性" class="headerlink" title="1. 旋转数组的特性"></a>1. 旋转数组的特性</h4><p>旋转后的数组会被分割成两段有序区间：</p>
+<ol>
+<li><strong>左半段（上半段）</strong>：数值较大，且 <code>nums[i] &gt;= nums[0]</code>。</li>
+<li><strong>右半段（下半段）</strong>：数值较小，且 <code>nums[i] &lt;= nums[n-1]</code>。</li>
+</ol>
+<h4 id="2-处理重复元素（核心难点）"><a href="#2-处理重复元素（核心难点）" class="headerlink" title="2. 处理重复元素（核心难点）"></a>2. 处理重复元素（核心难点）</h4><p>在没有重复元素的第 33 题中，我们可以通过比较 <code>nums[mid]</code> 和 <code>nums[r]</code>（或 <code>nums[l]</code>）来确定 <code>mid</code> 落在左半段还是右半段。</p>
+<p>但是，当 <code>nums[mid] == nums[r]</code> 时，我们无法区分 <code>mid</code> 是在左半段（例如 <code>[2, 2, ..., 2, 0, 1]</code>）还是在右半段（例如 <code>[2, 0, 1, 2, ..., 2]</code>）。<br>此时，唯一的办法是 <strong>缩小区间</strong>，将右边界 <code>r</code> 向左移动一位 (<code>r -= 1</code>)，跳过这个重复值，然后再继续二分。这会导致最坏情况下的时间复杂度退化为 O(N)。</p>
+<h4 id="3-二分逻辑（check-函数）"><a href="#3-二分逻辑（check-函数）" class="headerlink" title="3. 二分逻辑（check 函数）"></a>3. 二分逻辑（check 函数）</h4><p>我们将二分判定逻辑封装在 <code>check(i)</code> 函数中，该函数用于判断 <strong>目标值 target 是否可能落在左侧区间 [l, mid] 中</strong>（即是否应该让 <code>r = mid</code>）。</p>
+<p>判定依据如下：</p>
+<ul>
+<li><p><strong>Case 1: <code>nums[mid] &gt; nums[r]</code></strong><br>说明 <code>mid</code> 落在 <strong>左半段</strong>（数值较大的那一段）。</p>
+<ul>
+<li>如果 <code>target &gt; nums[r]</code>（说明 target 也在左半段）且 <code>nums[mid] &gt;= target</code>，则 target 在 <code>mid</code> 的左侧，我们需要向左收缩 (<code>r = mid</code>)。</li>
+</ul>
+</li>
+<li><p><strong>Case 2: <code>nums[mid] &lt;= nums[r]</code></strong><br>说明 <code>mid</code> 落在 <strong>右半段</strong>（数值较小的那一段）或者区间本身是有序的。</p>
+<ul>
+<li>如果 <code>target &gt; nums[r]</code>，说明 target 实际上是在左半段（数值非常大），而当前 <code>mid</code> 在右半段，所以 target 肯定在 <code>mid</code> 的左侧（逻辑上的左侧，其实是回绕过去了），需要向左收缩。</li>
+<li>或者，如果 <code>nums[mid] &gt;= target</code>，说明 target 在右半段且比 <code>mid</code> 小，也需要向左收缩。</li>
+</ul>
+</li>
+</ul>
+<h3 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h3><p>这里采用了开区间二分模板 <code>(l, r)</code>，循环条件为 <code>l + 1 &lt; r</code>。</p>
+<div class="tabs" id="code_block"><ul class="nav-tabs"><li class="tab active"><a href="#code_block-1">Python</a></li><li class="tab"><a href="#code_block-2">Go</a></li></ul><div class="tab-content"><div class="tab-pane active" id="code_block-1"><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> typing <span class="keyword">import</span> <span class="type">List</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">search</span>(<span class="params">self, nums: <span class="type">List</span>[<span class="built_in">int</span>], target: <span class="built_in">int</span></span>) -&gt; <span class="built_in">bool</span>:</span><br><span class="line">        <span class="comment"># check 函数判断是否需要向左收缩区间 (让 r = mid)</span></span><br><span class="line">        <span class="keyword">def</span> <span class="title function_">check</span>(<span class="params">i: <span class="built_in">int</span></span>) -&gt; <span class="built_in">bool</span>:</span><br><span class="line">            x = nums[i]</span><br><span class="line">            <span class="comment"># 情况 1: mid 在左半段（大数值段）</span></span><br><span class="line">            <span class="comment"># 因为旋转特性，左半段的所有值都应该大于 nums[r]（除非没旋转，但逻辑通用）</span></span><br><span class="line">            <span class="keyword">if</span> x &gt; nums[r]:</span><br><span class="line">                <span class="comment"># 如果 target 也在左半段 (target &gt; nums[r]) 并且 target 小于等于 x</span></span><br><span class="line">                <span class="comment"># 说明 target 在 [l...mid] 范围内</span></span><br><span class="line">                <span class="keyword">return</span> target &gt; nums[r] <span class="keyword">and</span> x &gt;= target</span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 情况 2: mid 在右半段（小数值段）</span></span><br><span class="line">            <span class="comment"># 此时我们要找的情况是：什么时候 target 会在 mid 的左边？</span></span><br><span class="line">            <span class="comment"># 1. target 实际上在左半段 (target &gt; nums[r])，而 mid 在右半段，所以 target 在 mid 左侧</span></span><br><span class="line">            <span class="comment"># 2. target 在右半段，且 x &gt;= target，说明 target 在 [l...mid] 范围内</span></span><br><span class="line">            <span class="keyword">return</span> target &gt; nums[r] <span class="keyword">or</span> x &gt;= target</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 定义二分查找的左右边界（开区间写法）</span></span><br><span class="line">        <span class="comment"># l 是左边界的左侧一位，r 是右边界</span></span><br><span class="line">        l, r = -<span class="number">1</span>, <span class="built_in">len</span>(nums) - <span class="number">1</span></span><br><span class="line">        </span><br><span class="line">        <span class="keyword">while</span> l + <span class="number">1</span> &lt; r:</span><br><span class="line">            mid = (l + r) // <span class="number">2</span></span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 核心去重逻辑：</span></span><br><span class="line">            <span class="comment"># 如果中点值等于右边界值，无法判断在左段还是右段</span></span><br><span class="line">            <span class="comment"># 只能线性排除右边界</span></span><br><span class="line">            <span class="keyword">if</span> nums[mid] == nums[r]:</span><br><span class="line">                r -= <span class="number">1</span></span><br><span class="line">            <span class="comment"># 如果 check 返回 True，说明 target 可能在左侧，收缩右边界</span></span><br><span class="line">            <span class="keyword">elif</span> check(mid):</span><br><span class="line">                r = mid</span><br><span class="line">            <span class="comment"># 否则，target 在右侧，收缩左边界</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                l = mid</span><br><span class="line">                </span><br><span class="line">        <span class="comment"># 循环结束后，r 指向的位置就是可能的答案</span></span><br><span class="line">        <span class="comment"># 检查 nums[r] 是否等于 target</span></span><br><span class="line">        <span class="keyword">return</span> nums[r] == target</span><br></pre></td></tr></table></figure></div><div class="tab-pane" id="code_block-2"><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">search</span><span class="params">(nums []<span class="type">int</span>, target <span class="type">int</span>)</span></span> <span class="type">bool</span> &#123;</span><br><span class="line">    <span class="comment">// 定义 check 函数 logic</span></span><br><span class="line">    <span class="comment">// 返回 true 表示 target 可能在 [l, mid] 范围内，需要 r = mid</span></span><br><span class="line">    check := <span class="function"><span class="keyword">func</span><span class="params">(i <span class="type">int</span>, r <span class="type">int</span>)</span></span> <span class="type">bool</span> &#123;</span><br><span class="line">        x := nums[i]</span><br><span class="line">        <span class="comment">// Case 1: mid 在左半段 (值较大的一侧)</span></span><br><span class="line">        <span class="keyword">if</span> x &gt; nums[r] &#123;</span><br><span class="line">            <span class="comment">// target 必须也在左半段，且小于等于 mid 的值</span></span><br><span class="line">            <span class="keyword">return</span> target &gt; nums[r] &amp;&amp; x &gt;= target</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// Case 2: mid 在右半段 (值较小的一侧)</span></span><br><span class="line">        <span class="comment">// 满足以下任一条件则说明 target 在 mid 的左侧：</span></span><br><span class="line">        <span class="comment">// 1. target &gt; nums[r]: target 实际上在左半段，而 mid 在右半段</span></span><br><span class="line">        <span class="comment">// 2. x &gt;= target: target 在右半段且小于等于 mid</span></span><br><span class="line">        <span class="keyword">return</span> target &gt; nums[r] || x &gt;= target</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 初始化左右指针，使用开区间 (l, r] 的思路</span></span><br><span class="line">    <span class="comment">// l 初始为 -1, r 初始为 len-1</span></span><br><span class="line">    l, r := <span class="number">-1</span>, <span class="built_in">len</span>(nums)<span class="number">-1</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> l+<span class="number">1</span> &lt; r &#123;</span><br><span class="line">        mid := l + (r-l)/<span class="number">2</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 如果 mid 和 r 指向的值相同，无法判断区间有序性</span></span><br><span class="line">        <span class="comment">// 此时只能将 r 向左移动一位，退化为线性操作</span></span><br><span class="line">        <span class="keyword">if</span> nums[mid] == nums[r] &#123;</span><br><span class="line">            r--</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> check(mid, r) &#123;</span><br><span class="line">            <span class="comment">// 满足 check 条件，说明 target 在左侧，移动 r</span></span><br><span class="line">            r = mid</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">// 否则 target 在右侧，移动 l</span></span><br><span class="line">            l = mid</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 最终检查 r 指向的位置是否为 target</span></span><br><span class="line">    <span class="comment">// 注意：如果是空数组或越界情况需额外处理，但题目保证 1 &lt;= nums.length</span></span><br><span class="line">    <span class="keyword">return</span> nums[r] == target</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div></div></div>
+
+<h3 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h3><ul>
+<li><strong>时间复杂度</strong>:<ul>
+<li><strong>平均情况</strong>: <code>O(log N)</code>。当数组中重复元素较少时，主要进行二分查找。</li>
+<li><strong>最坏情况</strong>: <code>O(N)</code>。当数组中包含大量重复元素（例如 <code>[1, 1, 1, ..., 1]</code>）时，每次 <code>nums[mid] == nums[r]</code> 都会导致 <code>r</code> 仅减小 1，退化为线性遍历。</li>
+</ul>
+</li>
+<li><strong>空间复杂度</strong>: <code>O(1)</code>。仅使用了常数个变量存储指针和中间值。</li>
+</ul>
+<pre><code>
+</code></pre>
+
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%95%B0%E7%BB%84/" rel="tag"># 数组</a>
+              <a href="/tags/%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE/" rel="tag"># 二分查找</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/posts/leetcode-154/" rel="prev" title="LeetCode 154 | 寻找旋转排序数组中的最小值 II">
+      <i class="fa fa-chevron-left"></i> LeetCode 154 | 寻找旋转排序数组中的最小值 II
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/posts/leetcode-4/" rel="next" title="LeetCode 4 | 寻找两个正序数组的中位数">
+      LeetCode 4 | 寻找两个正序数组的中位数 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text">问题描述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E9%A2%98%E6%80%9D%E8%B7%AF"><span class="nav-number">2.</span> <span class="nav-text">解题思路</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-%E6%97%8B%E8%BD%AC%E6%95%B0%E7%BB%84%E7%9A%84%E7%89%B9%E6%80%A7"><span class="nav-number">2.1.</span> <span class="nav-text">1. 旋转数组的特性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-%E5%A4%84%E7%90%86%E9%87%8D%E5%A4%8D%E5%85%83%E7%B4%A0%EF%BC%88%E6%A0%B8%E5%BF%83%E9%9A%BE%E7%82%B9%EF%BC%89"><span class="nav-number">2.2.</span> <span class="nav-text">2. 处理重复元素（核心难点）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-%E4%BA%8C%E5%88%86%E9%80%BB%E8%BE%91%EF%BC%88check-%E5%87%BD%E6%95%B0%EF%BC%89"><span class="nav-number">2.3.</span> <span class="nav-text">3. 二分逻辑（check 函数）</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0"><span class="nav-number">3.</span> <span class="nav-text">代码实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%8D%E6%9D%82%E5%BA%A6%E5%88%86%E6%9E%90"><span class="nav-number">4.</span> <span class="nav-text">复杂度分析</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Changan"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Changan</p>
+  <div class="site-description" itemprop="description">Good things take time</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">101</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">22</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">107</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/qiyuanlanniao" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;qiyuanlanniao"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:hmca09502@gmail.com" title="E-Mail → mailto:hmca09502@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Changan</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('https://cdn.jsdelivr.net/npm/valine@1.5.3/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'fNBvdCThX5dQrppj7znaQ3xJ-gzGzoHsz',
+      appKey     : 'Mom6ApPuWkqQu8UwakobSJqh',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>
