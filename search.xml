@@ -9148,4 +9148,80 @@
         <tag>贪心</tag>
       </tags>
   </entry>
+  <entry>
+    <title>LeetCode 2342 | 数位和相等数对的最大和</title>
+    <url>//posts/leetcode-2342/</url>
+    <content><![CDATA[<blockquote class="blockquote-center">
+            <i class="fa fa-quote-left"></i>
+            <p>LeetCode 第 2342 题：<a href="https://leetcode.cn/problems/max-sum-of-a-pair-with-equal-sum-of-digits/">数位和相等数对的最大和</a>。<br>这是一道考察哈希表（或数组）应用以及“枚举右，维护左”思想的经典题目。</p>
+
+            <i class="fa fa-quote-right"></i>
+          </blockquote>
+<span id="more"></span>
+
+<h3 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h3><p>给你一个下标从 0 开始的数组 <code>nums</code> ，数组中的元素都是 <strong>正</strong> 整数。请你选出两个下标 <code>i</code> 和 <code>j</code>（<code>i != j</code>），且 <code>nums[i]</code> 的数位和 与 <code>nums[j]</code> 的数位和相等。</p>
+<p>请你找出所有满足条件的下标 <code>i</code> 和 <code>j</code> ，找出并返回 <code>nums[i] + nums[j]</code> 可以得到的 <strong>最大值</strong>。如果不存在这样的下标对，返回 -1。</p>
+<p><strong>示例 1：</strong></p>
+<figure class="highlight text"><table><tr><td class="code"><pre><span class="line">输入：nums = [18,43,36,13,7]</span><br><span class="line">输出：54</span><br><span class="line">解释：满足条件的数对 (i, j) 为：</span><br><span class="line">- (0, 2) ，两个数字的数位和都是 9 ，相加得到 18 + 36 = 54 。</span><br><span class="line">- (1, 4) ，两个数字的数位和都是 7 ，相加得到 43 + 7 = 50 。</span><br><span class="line">所以可以获得的最大和是 54 。</span><br></pre></td></tr></table></figure>
+
+<p><strong>示例 2：</strong></p>
+<figure class="highlight text"><table><tr><td class="code"><pre><span class="line">输入：nums = [10,12,19,14]</span><br><span class="line">输出：-1</span><br><span class="line">解释：不存在满足条件的数对，返回 -1 。</span><br></pre></td></tr></table></figure>
+
+<p><strong>提示：</strong></p>
+<ul>
+<li>1 &lt;&#x3D; nums.length &lt;&#x3D; 10^5</li>
+<li>1 &lt;&#x3D; nums[i] &lt;&#x3D; 10^9</li>
+</ul>
+<h3 id="解题思路"><a href="#解题思路" class="headerlink" title="解题思路"></a>解题思路</h3><h4 id="1-核心思想：枚举右，维护左"><a href="#1-核心思想：枚举右，维护左" class="headerlink" title="1. 核心思想：枚举右，维护左"></a>1. 核心思想：枚举右，维护左</h4><p>题目要求找到数位和相等的两个数，使它们的和最大。<br>我们可以遍历数组，对于当前遍历到的数字 <code>num</code>（我们把它看作是右边的数字），我们希望在之前遍历过的数字中（左边的数字），找到一个数位和与 <code>num</code> 相同的数字，并且这个数字尽可能大。</p>
+<h4 id="2-数位和的计算与范围"><a href="#2-数位和的计算与范围" class="headerlink" title="2. 数位和的计算与范围"></a>2. 数位和的计算与范围</h4><p>首先，我们需要一个辅助逻辑来计算一个整数的数位和。<br>观察数据范围 <code>nums[i] &lt;= 10^9</code>。</p>
+<ul>
+<li>最大可能的数位和出现在 <code>999,999,999</code>，其和为 <code>9 * 9 = 81</code>。</li>
+<li><code>1,000,000,000</code> 的数位和仅为 1。<br>因此，数位和的范围在 0 到 81 之间。这意味着我们可以使用一个长度为 82 的固定数组来代替哈希表，效率更高。</li>
+</ul>
+<h4 id="3-算法流程"><a href="#3-算法流程" class="headerlink" title="3. 算法流程"></a>3. 算法流程</h4><ol>
+<li>初始化一个结果变量 <code>ans = -1</code>。</li>
+<li>初始化一个长度为 82 的数组 <code>mx</code>，<code>mx[s]</code> 用于存储数位和为 <code>s</code> 的所有数字中，<strong>当前遇到的最大值</strong>。</li>
+<li>遍历数组 <code>nums</code> 中的每个元素 <code>num</code>：<ul>
+<li>计算 <code>num</code> 的数位和 <code>s</code>。</li>
+<li>检查 <code>mx[s]</code> 是否非零：<ul>
+<li>如果非零，说明之前已经遇到过数位和同为 <code>s</code> 的数字。此时，<code>mx[s]</code> 是之前遇到的最大的那个数。计算 <code>mx[s] + num</code> 并尝试更新全局最大和 <code>ans</code>。</li>
+</ul>
+</li>
+<li>更新 <code>mx[s]</code>：我们需要维护该数位和下的最大值，以便后续的数字能匹配到最大的“另一半”。即 <code>mx[s] = max(mx[s], num)</code>。</li>
+</ul>
+</li>
+<li>返回 <code>ans</code>。</li>
+</ol>
+<h3 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h3><div class="tabs" id="code_block"><ul class="nav-tabs"><li class="tab active"><a href="#code_block-1">Python</a></li><li class="tab"><a href="#code_block-2">Go</a></li></ul><div class="tab-content"><div class="tab-pane active" id="code_block-1"><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">maximumSum</span>(<span class="params">self, nums: <span class="type">List</span>[<span class="built_in">int</span>]</span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        ans = -<span class="number">1</span></span><br><span class="line">        <span class="comment"># 数据范围最大为 10^9，最大数位和为 999,999,999 的数位和 81</span></span><br><span class="line">        <span class="comment"># 所以开辟大小为 82 的数组即可代替哈希表</span></span><br><span class="line">        mx = [<span class="number">0</span>] * <span class="number">82</span></span><br><span class="line">        </span><br><span class="line">        <span class="keyword">for</span> num <span class="keyword">in</span> nums:</span><br><span class="line">            <span class="comment"># 计算当前数字的数位和</span></span><br><span class="line">            s = <span class="number">0</span></span><br><span class="line">            x = num</span><br><span class="line">            <span class="keyword">while</span> x:</span><br><span class="line">                s += x % <span class="number">10</span></span><br><span class="line">                x //= <span class="number">10</span></span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 如果之前已经出现过数位和为 s 的数字</span></span><br><span class="line">            <span class="comment"># mx[s] 存储的是之前遍历过的数位和为 s 的最大值</span></span><br><span class="line">            <span class="keyword">if</span> mx[s]:</span><br><span class="line">                <span class="comment"># 尝试更新最大数对和</span></span><br><span class="line">                ans = <span class="built_in">max</span>(ans, mx[s] + num)</span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 维护数位和为 s 的最大值</span></span><br><span class="line">            <span class="comment"># 这样保证了后续匹配时，取到的一定是当前最大的配对数</span></span><br><span class="line">            mx[s] = <span class="built_in">max</span>(mx[s], num)</span><br><span class="line">            </span><br><span class="line">        <span class="keyword">return</span> ans</span><br></pre></td></tr></table></figure></div><div class="tab-pane" id="code_block-2"><figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">maximumSum</span><span class="params">(nums []<span class="type">int</span>)</span></span> <span class="type">int</span> &#123;</span><br><span class="line">    ans := <span class="number">-1</span></span><br><span class="line">    <span class="comment">// 数据范围最大为 10^9，最大数位和为 81</span></span><br><span class="line">    <span class="comment">// 使用数组作为哈希表，索引为数位和，值为拥有该数位和的最大数字</span></span><br><span class="line">    mx := [<span class="number">82</span>]<span class="type">int</span>&#123;&#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> _, num := <span class="keyword">range</span> nums &#123;</span><br><span class="line">        <span class="comment">// 计算当前数字的数位和</span></span><br><span class="line">        s := <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> x := num; x &gt; <span class="number">0</span>; x /= <span class="number">10</span> &#123;</span><br><span class="line">            s += x % <span class="number">10</span></span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 如果 mx[s] &gt; 0，说明之前遇到过数位和为 s 的数字</span></span><br><span class="line">        <span class="keyword">if</span> mx[s] &gt; <span class="number">0</span> &#123;</span><br><span class="line">            <span class="comment">// 计算当前数字与之前遇到的最大数字之和，并更新答案</span></span><br><span class="line">            ans = max(ans, mx[s] + num)</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 更新数位和为 s 的最大值</span></span><br><span class="line">        <span class="comment">// 确保后续如果有数字也为数位和 s，能匹配到目前为止最大的数字</span></span><br><span class="line">        mx[s] = max(mx[s], num)</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> ans</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 辅助函数：返回两个数中的较大值</span></span><br><span class="line"><span class="comment">// 注意：Go 1.21+ 内置了 max 函数，如果使用旧版本需自行实现</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">max</span><span class="params">(a, b <span class="type">int</span>)</span></span> <span class="type">int</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> a &gt; b &#123;</span><br><span class="line">        <span class="keyword">return</span> a</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> b</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div></div></div>
+
+<h3 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h3><ul>
+<li><p><strong>时间复杂度</strong>: O(N * log M)，其中 N 是数组的长度，M 是数组中元素的最大值（本题中为 10^9）。</p>
+<ul>
+<li>我们需要遍历数组一次。</li>
+<li>对于每个数字，计算数位和的时间与数字的位数成正比，即 log10(M)。</li>
+<li>因为 log10(10^9) ≈ 9，是一个很小的常数，所以整体可以看作 O(N)。</li>
+</ul>
+</li>
+<li><p><strong>空间复杂度</strong>: O(D)，其中 D 是可能的数位和的最大种类数。</p>
+<ul>
+<li>本题中最大数位和为 81，所以空间复杂度为 O(1)（固定大小的数组）。</li>
+</ul>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>算法题解</category>
+        <category>常用数据结构</category>
+        <category>常用枚举技巧</category>
+        <category>枚举右，维护左</category>
+        <category>基础</category>
+      </categories>
+      <tags>
+        <tag>数组</tag>
+        <tag>哈希表</tag>
+        <tag>排序</tag>
+        <tag>堆（优先队列）</tag>
+        <tag>第302场周赛</tag>
+      </tags>
+  </entry>
 </search>
