@@ -9423,4 +9423,66 @@
         <tag>第291场周赛</tag>
       </tags>
   </entry>
+  <entry>
+    <title>LeetCode 2001 | 可互换矩形的组数</title>
+    <url>//posts/leetcode-2001/</url>
+    <content><![CDATA[<blockquote class="blockquote-center">
+            <i class="fa fa-quote-left"></i>
+            <p>LeetCode 第 2001 题：<a href="https://leetcode.cn/problems/number-of-pairs-of-interchangeable-rectangles/">可互换矩形的组数</a>。<br>这是一道结合了哈希表统计与基础数论（最大公约数）的题目，考察如何处理浮点数精度问题以及组合计数的应用。</p>
+
+            <i class="fa fa-quote-right"></i>
+          </blockquote>
+<span id="more"></span>
+
+<h3 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h3><p>用一个下标从 0 开始的二维整数数组 <code>rectangles</code> 来表示 <code>n</code> 个矩形，其中 <code>rectangles[i] = [widthi, heighti]</code> 表示第 <code>i</code> 个矩形的宽度和高度。</p>
+<p>如果两个矩形 <code>i</code> 和 <code>j</code>（<code>i &lt; j</code>）的宽高比相同，则认为这两个矩形 <strong>可互换</strong> 。更规范的说法是，两个矩形满足 <code>widthi/heighti == widthj/heightj</code>（使用实数除法而非整数除法），则认为这两个矩形 <strong>可互换</strong> 。</p>
+<p>计算并返回 <code>rectangles</code> 中有多少对 <strong>可互换</strong> 矩形。</p>
+<p><strong>示例 1：</strong></p>
+<figure class="highlight text"><table><tr><td class="code"><pre><span class="line">输入：rectangles = [[4,8],[3,6],[10,20],[15,30]]</span><br><span class="line">输出：6</span><br><span class="line">解释：下面按下标（从 0 开始）列出可互换矩形的配对情况：</span><br><span class="line">- 矩形 0 和矩形 1 ：4/8 == 3/6</span><br><span class="line">- 矩形 0 和矩形 2 ：4/8 == 10/20</span><br><span class="line">- 矩形 0 和矩形 3 ：4/8 == 15/30</span><br><span class="line">- 矩形 1 和矩形 2 ：3/6 == 10/20</span><br><span class="line">- 矩形 1 和矩形 3 ：3/6 == 15/30</span><br><span class="line">- 矩形 2 和矩形 3 ：10/20 == 15/30</span><br></pre></td></tr></table></figure>
+
+<p><strong>示例 2：</strong></p>
+<figure class="highlight text"><table><tr><td class="code"><pre><span class="line">输入：rectangles = [[4,5],[7,8]]</span><br><span class="line">输出：0</span><br><span class="line">解释：不存在成对的可互换矩形。</span><br></pre></td></tr></table></figure>
+
+<p><strong>提示：</strong></p>
+<ul>
+<li><code>n == rectangles.length</code></li>
+<li><code>1 &lt;= n &lt;= 10^5</code></li>
+<li><code>rectangles[i].length == 2</code></li>
+<li><code>1 &lt;= widthi, heighti &lt;= 10^5</code></li>
+</ul>
+<h3 id="解题思路"><a href="#解题思路" class="headerlink" title="解题思路"></a>解题思路</h3><h4 id="1-浮点数精度的陷阱"><a href="#1-浮点数精度的陷阱" class="headerlink" title="1. 浮点数精度的陷阱"></a>1. 浮点数精度的陷阱</h4><p>题目要求判断两个矩形的宽高比 <code>width / height</code> 是否相等。如果直接使用浮点数除法计算比值，可能会遇到精度问题，导致本该相等的比值被判定为不等（或者反之）。</p>
+<h4 id="2-利用最大公约数-GCD-进行化简"><a href="#2-利用最大公约数-GCD-进行化简" class="headerlink" title="2. 利用最大公约数 (GCD) 进行化简"></a>2. 利用最大公约数 (GCD) 进行化简</h4><p>为了避免浮点数误差，我们可以将宽高比看作一个分数。判断两个分数是否相等，最稳妥的方法是将它们化简为 <strong>最简分数</strong>。<br>例如：矩形 <code>[4, 8]</code> 的比值是 <code>4/8</code>，化简后为 <code>1/2</code>；矩形 <code>[3, 6]</code> 的比值是 <code>3/6</code>，化简后也是 <code>1/2</code>。</p>
+<p>我们可以通过除以分子和分母的最大公约数（Greatest Common Divisor, GCD）来得到最简形式：<br><code>reduced_w = w / gcd(w, h)</code><br><code>reduced_h = h / gcd(w, h)</code></p>
+<p>这样，我们就可以用一个二元组 <code>(reduced_w, reduced_h)</code> 来唯一标识一种宽高比。</p>
+<h4 id="3-哈希表计数与组合数学"><a href="#3-哈希表计数与组合数学" class="headerlink" title="3. 哈希表计数与组合数学"></a>3. 哈希表计数与组合数学</h4><p>算法流程如下：</p>
+<ol>
+<li><strong>遍历与统计</strong>：使用哈希表记录每种“最简宽高比”出现的次数。哈希表的 Key 是化简后的 <code>(宽, 高)</code>，Value 是该比例出现的次数。</li>
+<li><strong>计算对数</strong>：如果某种比例出现了 <code>m</code> 次，那么在这 <code>m</code> 个矩形中，任意选出两个都能组成一对可互换矩形。<br>这是一个组合数问题，即从 <code>m</code> 个元素中选 2 个的组合数：<br><code>Pairs = m * (m - 1) / 2</code></li>
+<li><strong>累加结果</strong>：遍历哈希表，将所有比例对应的组合数累加即为最终答案。</li>
+</ol>
+<h3 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h3><div class="tabs" id="code_block"><ul class="nav-tabs"><li class="tab active"><a href="#code_block-1">Python</a></li><li class="tab"><a href="#code_block-2">Go</a></li></ul><div class="tab-content"><div class="tab-pane active" id="code_block-1"><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">interchangeableRectangles</span>(<span class="params">self, rectangles: <span class="type">List</span>[<span class="type">List</span>[<span class="built_in">int</span>]]</span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        <span class="comment"># 导入 gcd 函数，python 3.9+ 也可以使用 math.gcd</span></span><br><span class="line">        <span class="keyword">from</span> math <span class="keyword">import</span> gcd</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 创建哈希表 cnt 用于存储 &#123;最简宽高比元组: 出现次数&#125;</span></span><br><span class="line">        cnt = &#123;&#125;</span><br><span class="line">        ans = <span class="number">0</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 遍历所有矩形</span></span><br><span class="line">        <span class="keyword">for</span> w, h <span class="keyword">in</span> rectangles:</span><br><span class="line">            <span class="comment"># 计算宽度和高度的最大公约数</span></span><br><span class="line">            g = gcd(w, h)</span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 将宽高分别除以最大公约数，得到最简分数形式</span></span><br><span class="line">            <span class="comment"># 使用元组作为字典的 key</span></span><br><span class="line">            key = (w // g, h // g)</span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 统计该最简比出现的次数</span></span><br><span class="line">            cnt[key] = cnt.get(key, <span class="number">0</span>) + <span class="number">1</span></span><br><span class="line">            </span><br><span class="line">        <span class="comment"># 遍历哈希表，计算每种比例贡献的配对数</span></span><br><span class="line">        <span class="keyword">for</span> m <span class="keyword">in</span> cnt.values():</span><br><span class="line">            <span class="comment"># 从 m 个矩形中任选 2 个的组合数公式：m * (m - 1) / 2</span></span><br><span class="line">            ans += m * (m - <span class="number">1</span>) // <span class="number">2</span></span><br><span class="line">            </span><br><span class="line">        <span class="keyword">return</span> ans</span><br></pre></td></tr></table></figure></div><div class="tab-pane" id="code_block-2"><figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">interchangeableRectangles</span><span class="params">(rectangles [][]<span class="type">int</span>)</span></span> <span class="type">int64</span> &#123;</span><br><span class="line">    <span class="comment">// 创建哈希表，Key 为长度为2的数组表示最简分数的 [宽, 高]</span></span><br><span class="line">    <span class="comment">// Value 为 int64 类型，记录出现次数</span></span><br><span class="line">    cnt := <span class="keyword">map</span>[[<span class="number">2</span>]<span class="type">int</span>]<span class="type">int64</span>&#123;&#125;</span><br><span class="line">    <span class="keyword">var</span> ans <span class="type">int64</span> = <span class="number">0</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 遍历所有矩形数据</span></span><br><span class="line">    <span class="keyword">for</span> _, p := <span class="keyword">range</span> rectangles &#123;</span><br><span class="line">        w, h := p[<span class="number">0</span>], p[<span class="number">1</span>]</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 计算宽和高的最大公约数</span></span><br><span class="line">        g := gcd(w, h)</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 将宽和高化简为最简形式，并存入哈希表计数</span></span><br><span class="line">        <span class="comment">// [2]int&#123;w/g, h/g&#125; 作为 Map 的 Key</span></span><br><span class="line">        cnt[[<span class="number">2</span>]<span class="type">int</span>&#123;w/g, h/g&#125;]++</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 遍历哈希表，根据每种比例出现的次数 m 计算可互换对数</span></span><br><span class="line">    <span class="keyword">for</span> _, m := <span class="keyword">range</span> cnt &#123;</span><br><span class="line">        <span class="comment">// 组合数学公式 C(m, 2) = m * (m - 1) / 2</span></span><br><span class="line">        ans += m * (m - <span class="number">1</span>) / <span class="number">2</span></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> ans</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 辅助函数：计算两个整数的最大公约数</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">gcd</span><span class="params">(a, b <span class="type">int</span>)</span></span> <span class="type">int</span> &#123;</span><br><span class="line">    <span class="keyword">for</span> b != <span class="number">0</span> &#123;</span><br><span class="line">        a, b = b, a%b</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> a</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div></div></div>
+
+<h3 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h3><ul>
+<li><p><strong>时间复杂度</strong>: <code>O(n * log(C))</code><br>其中 <code>n</code> 是矩形的数量，<code>C</code> 是矩形边长的最大值。我们需要遍历 <code>n</code> 个矩形，每次计算 GCD 的时间复杂度为 <code>O(log(min(w, h)))</code>。</p>
+</li>
+<li><p><strong>空间复杂度</strong>: <code>O(n)</code><br>最坏情况下，所有矩形的宽高比都互不相同，哈希表需要存储 <code>n</code> 个键值对。</p>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>算法题解</category>
+        <category>常用数据结构</category>
+        <category>常用枚举技巧</category>
+        <category>枚举右，维护左</category>
+        <category>基础</category>
+      </categories>
+      <tags>
+        <tag>数组</tag>
+        <tag>哈希表</tag>
+        <tag>数学</tag>
+        <tag>数论</tag>
+        <tag>计数</tag>
+        <tag>第258场周赛</tag>
+      </tags>
+  </entry>
 </search>
