@@ -9485,4 +9485,77 @@
         <tag>第258场周赛</tag>
       </tags>
   </entry>
+  <entry>
+    <title>LeetCode 3623 | 统计梯形的数目 I</title>
+    <url>//posts/leetcode-3623/</url>
+    <content><![CDATA[<blockquote class="blockquote-center">
+            <i class="fa fa-quote-left"></i>
+            <p>LeetCode 第 3623 题：<a href="https://leetcode.cn/problems/count-trapezoids-i/">统计梯形的数目 I</a>。<br>这道题核心在于如何利用“水平边”这一特性快速统计符合条件的四边形。</p>
+
+            <i class="fa fa-quote-right"></i>
+          </blockquote>
+<span id="more"></span>
+
+<h3 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h3><p>给你一个二维整数数组 <code>points</code>，其中 <code>points[i] = [xi, yi]</code> 表示第 <code>i</code> 个点在笛卡尔平面上的坐标。</p>
+<p><strong>水平梯形</strong> 是一种凸四边形，具有 <strong>至少一对</strong> 水平边（即平行于 x 轴的边）。两条直线平行当且仅当它们的斜率相同。</p>
+<p>返回可以从 <code>points</code> 中任意选择四个不同点组成的 <strong>水平梯形</strong> 数量。</p>
+<p>由于答案可能非常大，请返回结果对 10^9 + 7 取余数后的值。</p>
+<p><strong>示例 1：</strong></p>
+<figure class="highlight text"><table><tr><td class="code"><pre><span class="line">输入： points = [[1,0],[2,0],[3,0],[2,2],[3,2]]</span><br><span class="line">输出： 3</span><br><span class="line">解释：</span><br><span class="line">有三种不同方式选择四个点组成一个水平梯形：</span><br><span class="line">1. 使用点 [1,0]、[2,0]、[3,2] 和 [2,2]。</span><br><span class="line">2. 使用点 [2,0]、[3,0]、[3,2] 和 [2,2]。</span><br><span class="line">3. 使用点 [1,0]、[3,0]、[3,2] 和 [2,2]。</span><br></pre></td></tr></table></figure>
+
+<p><strong>示例 2：</strong></p>
+<figure class="highlight text"><table><tr><td class="code"><pre><span class="line">输入： points = [[0,0],[1,0],[0,1],[2,1]]</span><br><span class="line">输出： 1</span><br></pre></td></tr></table></figure>
+
+<p><strong>提示：</strong></p>
+<ul>
+<li>4 &lt;&#x3D; points.length &lt;&#x3D; 10^5</li>
+<li>-10^8 &lt;&#x3D; xi, yi &lt;&#x3D; 10^8</li>
+<li>所有点两两不同。</li>
+</ul>
+<h3 id="解题思路"><a href="#解题思路" class="headerlink" title="解题思路"></a>解题思路</h3><h4 id="1-几何特性分析"><a href="#1-几何特性分析" class="headerlink" title="1. 几何特性分析"></a>1. 几何特性分析</h4><p>题目要求统计“水平梯形”的数量，关键定义在于“具有至少一对水平边”。<br>在笛卡尔坐标系中，两个点构成的线段如果是水平的，意味着它们的 <strong>纵坐标（y 值）相同</strong>。</p>
+<p>因此，我们要组成一个水平梯形，可以简化为以下步骤：</p>
+<ol>
+<li>在某个纵坐标 <code>y1</code> 上，选取两个点，构成一条水平底边。</li>
+<li>在另一个纵坐标 <code>y2</code> (<code>y1 != y2</code>) 上，选取两个点，构成另一条水平底边。</li>
+<li>这两条水平线段自然平行，从而构成了梯形的上下底（或者矩形，矩形也是特殊的梯形）。</li>
+</ol>
+<h4 id="2-组合数学转化"><a href="#2-组合数学转化" class="headerlink" title="2. 组合数学转化"></a>2. 组合数学转化</h4><p>根据上述分析，问题转化为：</p>
+<ol>
+<li><strong>统计每个 Y 轴层级上的点数</strong>：使用哈希表统计具有相同 <code>y</code> 坐标的点的数量 <code>c</code>。</li>
+<li><strong>计算单层的线段数</strong>：对于任意一行，如果有 <code>c</code> 个点，那么从中任选 2 个点可以组成的水平线段数量为 <code>C(c, 2)</code>，即 <code>c * (c - 1) / 2</code>。</li>
+<li><strong>计算层级间的组合</strong>：如果我们计算出了所有不同 <code>y</code> 层级各自能构成的线段数量，记为 <code>k1, k2, k3, ...</code>。那么总的梯形数量就是从这些层级中任选两层，将其线段数量相乘并累加。<br>即：<code>Total = k1*k2 + k1*k3 + ... + k2*k3 + ...</code></li>
+</ol>
+<h4 id="3-优化计算-枚举右，维护左"><a href="#3-优化计算-枚举右，维护左" class="headerlink" title="3. 优化计算 (枚举右，维护左)"></a>3. 优化计算 (枚举右，维护左)</h4><p>为了避免双重循环去两两配对不同层级的线段数（复杂度 O(N^2)），我们可以使用前缀和的思想：</p>
+<ul>
+<li>遍历每一个 <code>y</code> 层级。</li>
+<li>计算当前层级能构成的线段数 <code>k</code>。</li>
+<li>用一个变量 <code>s</code> 记录之前所有层级已经构成的线段总数。</li>
+<li>当前层级能与之前所有层级组成的梯形数量为 <code>s * k</code>。</li>
+<li>更新 <code>s</code>，将当前层的 <code>k</code> 加进去，供后续层级使用。</li>
+</ul>
+<p>这样，时间复杂度仅为 O(N)。</p>
+<h3 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h3><div class="tabs" id="code_block"><ul class="nav-tabs"><li class="tab active"><a href="#code_block-1">Python</a></li><li class="tab"><a href="#code_block-2">Go</a></li></ul><div class="tab-content"><div class="tab-pane active" id="code_block-1"><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">countTrapezoids</span>(<span class="params">self, points: <span class="type">List</span>[<span class="type">List</span>[<span class="built_in">int</span>]]</span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        MOD = <span class="number">1_000_000_007</span></span><br><span class="line">        <span class="comment"># 使用哈希表统计每个 y 坐标出现的次数</span></span><br><span class="line">        <span class="comment"># key 是 y 坐标，value 是该纵坐标上点的个数</span></span><br><span class="line">        cnt = Counter(p[<span class="number">1</span>] <span class="keyword">for</span> p <span class="keyword">in</span> points) </span><br><span class="line">        </span><br><span class="line">        ans = <span class="number">0</span> <span class="comment"># 用于累计最终结果</span></span><br><span class="line">        s = <span class="number">0</span>   <span class="comment"># 用于记录之前遍历过的所有层级能够组成的水平线段总数</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 遍历哈希表中的计数值 c</span></span><br><span class="line">        <span class="keyword">for</span> c <span class="keyword">in</span> cnt.values():</span><br><span class="line">            <span class="comment"># 计算当前 y 坐标层级能组成的水平线段数量</span></span><br><span class="line">            <span class="comment"># 即从 c 个点中选 2 个点的组合数：C(c, 2) = c * (c - 1) / 2</span></span><br><span class="line">            k = c * (c - <span class="number">1</span>) // <span class="number">2</span></span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 当前层的 k 条线段，可以与之前累积的 s 条线段任意两两组合</span></span><br><span class="line">            <span class="comment"># 每一对组合都代表一个水平梯形</span></span><br><span class="line">            ans += s * k</span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 更新累积的线段数，将当前层的线段数加入 s</span></span><br><span class="line">            s += k</span><br><span class="line">            </span><br><span class="line">        <span class="keyword">return</span> ans % MOD</span><br></pre></td></tr></table></figure></div><div class="tab-pane" id="code_block-2"><figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">countTrapezoids</span><span class="params">(points [][]<span class="type">int</span>)</span></span> <span class="type">int</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> MOD = <span class="number">1_000_000_007</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 使用 map 统计每个 y 坐标出现的次数</span></span><br><span class="line">    <span class="comment">// key: y 坐标, value: 该坐标上点的个数</span></span><br><span class="line">    cnt := <span class="keyword">map</span>[<span class="type">int</span>]<span class="type">int</span>&#123;&#125;</span><br><span class="line">    <span class="keyword">for</span> _, p := <span class="keyword">range</span> points &#123;</span><br><span class="line">        cnt[p[<span class="number">1</span>]]++</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    ans := <span class="number">0</span> <span class="comment">// 最终结果</span></span><br><span class="line">    s := <span class="number">0</span>   <span class="comment">// 前缀和：记录之前遍历过的层级能构成的水平线段总数</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 遍历 map 中的统计值</span></span><br><span class="line">    <span class="keyword">for</span> _, c := <span class="keyword">range</span> cnt &#123;</span><br><span class="line">        <span class="comment">// 计算当前 y 层级能构成的水平线段数量</span></span><br><span class="line">        <span class="comment">// 公式为组合数 C(c, 2) = c * (c - 1) / 2</span></span><br><span class="line">        k := c * (c - <span class="number">1</span>) / <span class="number">2</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 核心逻辑：枚举右（当前层），维护左（之前所有层的线段总数 s）</span></span><br><span class="line">        <span class="comment">// 当前层的 k 条线段与之前的 s 条线段两两组合</span></span><br><span class="line">        ans = (ans + s * k) % MOD</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 将当前层的线段数累加到 s 中，供后续层级匹配</span></span><br><span class="line">        s = (s + k) % MOD</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> ans</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div></div></div>
+
+<h3 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h3><ul>
+<li><p><strong>时间复杂度</strong>: <code>O(N)</code><br>其中 <code>N</code> 是数组 <code>points</code> 的长度。我们需要遍历一次数组来统计 <code>y</code> 坐标的频率，然后遍历哈希表的 <code>values</code>。哈希表的大小最多为 <code>N</code>。</p>
+</li>
+<li><p><strong>空间复杂度</strong>: <code>O(N)</code><br>用于存储 <code>y</code> 坐标频率的哈希表。在最坏情况下（所有点 <code>y</code> 坐标都不同），空间复杂度为 <code>O(N)</code>。</p>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>算法题解</category>
+        <category>常用数据结构</category>
+        <category>常用枚举技巧</category>
+        <category>枚举右，维护左</category>
+        <category>基础</category>
+      </categories>
+      <tags>
+        <tag>数组</tag>
+        <tag>哈希表</tag>
+        <tag>数学</tag>
+        <tag>几何</tag>
+        <tag>第459场周赛</tag>
+      </tags>
+  </entry>
 </search>
