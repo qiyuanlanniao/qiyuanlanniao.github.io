@@ -9558,4 +9558,87 @@
         <tag>第459场周赛</tag>
       </tags>
   </entry>
+  <entry>
+    <title>LeetCode 3371 | 识别数组中的最大异常值</title>
+    <url>//posts/leetcode-3371/</url>
+    <content><![CDATA[<blockquote class="blockquote-center">
+            <i class="fa fa-quote-left"></i>
+            <p>LeetCode 第 3371 题：<a href="https://leetcode.cn/problems/identify-the-largest-outlier-in-an-array/">识别数组中的最大异常值</a>。<br>这是一道结合了数学推导和哈希表计数的题目，关键在于理解总和、特殊数字之和以及异常值之间的数量关系。</p>
+
+            <i class="fa fa-quote-right"></i>
+          </blockquote>
+<span id="more"></span>
+
+<h3 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h3><p>给你一个整数数组 <code>nums</code>。该数组包含 <code>n</code> 个元素，其中 恰好 有 <code>n - 2</code> 个元素是 <strong>特殊数字</strong> 。剩下的 <strong>两个</strong> 元素中，一个是所有 <strong>特殊数字</strong> 的 <strong>和</strong> ，另一个是 <strong>异常值</strong> 。</p>
+<p><strong>异常值</strong> 的定义是：既不是原始特殊数字之一，也不是表示元素和的那个数。</p>
+<p>注意，特殊数字、和 以及 异常值 的下标必须 <strong>不同</strong> ，但可以共享 <strong>相同</strong> 的值。</p>
+<p>返回 <code>nums</code> 中可能的 <strong>最大异常值</strong>。</p>
+<p><strong>示例 1：</strong></p>
+<figure class="highlight text"><table><tr><td class="code"><pre><span class="line">输入： nums = [2,3,5,10]</span><br><span class="line">输出： 10</span><br><span class="line">解释：</span><br><span class="line">特殊数字可以是 2 和 3，因此和为 5，异常值为 10。</span><br></pre></td></tr></table></figure>
+
+<p><strong>示例 2：</strong></p>
+<figure class="highlight text"><table><tr><td class="code"><pre><span class="line">输入： nums = [-2,-1,-3,-6,4]</span><br><span class="line">输出： 4</span><br><span class="line">解释：</span><br><span class="line">特殊数字可以是 -2、-1 和 -3，因此和为 -6，异常值为 4。</span><br></pre></td></tr></table></figure>
+
+<p><strong>示例 3：</strong></p>
+<figure class="highlight text"><table><tr><td class="code"><pre><span class="line">输入： nums = [1,1,1,1,1,5,5]</span><br><span class="line">输出： 5</span><br><span class="line">解释：</span><br><span class="line">特殊数字可以是 1、1、1、1 和 1，因此和为 5，另一个 5 为异常值。</span><br></pre></td></tr></table></figure>
+
+<p><strong>提示：</strong></p>
+<ul>
+<li>3 &lt;&#x3D; nums.length &lt;&#x3D; 10^5</li>
+<li>-1000 &lt;&#x3D; nums[i] &lt;&#x3D; 1000</li>
+<li>输入保证 nums 中至少存在 一个 可能的异常值。</li>
+</ul>
+<h3 id="解题思路"><a href="#解题思路" class="headerlink" title="解题思路"></a>解题思路</h3><h4 id="1-数学推导"><a href="#1-数学推导" class="headerlink" title="1. 数学推导"></a>1. 数学推导</h4><p>设数组所有元素的总和为 <code>total</code>。<br>根据题意，数组被分成了三部分：</p>
+<ol>
+<li><code>n - 2</code> 个特殊数字，设它们的和为 <code>sum_special</code>。</li>
+<li>1 个元素是特殊数字的和，即该元素的值等于 <code>sum_special</code>。</li>
+<li>1 个元素是异常值，设为 <code>outlier</code>。</li>
+</ol>
+<p>我们可以列出以下等式：<br><code>total = sum_special + (特殊数字的和这一元素) + outlier</code><br>因为“特殊数字的和这一元素”的值就是 <code>sum_special</code>，所以：<br><code>total = sum_special + sum_special + outlier</code><br><code>total = 2 * sum_special + outlier</code></p>
+<p>由此可以推导出：<br><code>total - outlier = 2 * sum_special</code></p>
+<p>这意味着，如果我们从总和中减去潜在的异常值 <code>outlier</code>，剩下的值 <code>total - outlier</code> 必须满足两个条件：</p>
+<ol>
+<li>是一个偶数（因为它等于 <code>2 * sum_special</code>）。</li>
+<li>除以 2 后的值（即 <code>sum_special</code>）必须存在于数组中，充当“特殊数字的和”这个角色。</li>
+</ol>
+<h4 id="2-哈希表计数与枚举"><a href="#2-哈希表计数与枚举" class="headerlink" title="2. 哈希表计数与枚举"></a>2. 哈希表计数与枚举</h4><p>基于上述推导，我们可以采用枚举的方法：</p>
+<ol>
+<li><strong>预处理</strong>：首先计算数组的总和 <code>total</code>，并使用哈希表（或计数器）记录每个数字出现的次数。</li>
+<li><strong>枚举异常值</strong>：遍历数组中的每一个数字 <code>x</code>，将其假设为 <strong>异常值</strong>。</li>
+<li><strong>验证合法性</strong>：<ul>
+<li>首先从计数器中暂时减去 <code>x</code>（因为它被假设为异常值，不能同时作为“特殊数字的和”或“特殊数字”）。</li>
+<li>计算剩余部分的和：<code>remain = total - x</code>。</li>
+<li>检查 <code>remain</code> 是否为偶数。</li>
+<li>如果为偶数，计算目标值 <code>target = remain / 2</code>。</li>
+<li>检查 <code>target</code> 是否存在于计数器中（即 <code>cnt[target] &gt; 0</code>）。</li>
+<li>如果所有条件满足，说明 <code>x</code> 是一个合法的异常值，更新最大值结果。</li>
+<li>恢复计数器（将 <code>x</code> 加回去），继续枚举下一个数字。</li>
+</ul>
+</li>
+</ol>
+<p>该方法只需要遍历两次数组（一次统计，一次枚举），时间复杂度为 O(n)，非常高效。</p>
+<h3 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h3><div class="tabs" id="code_block"><ul class="nav-tabs"><li class="tab active"><a href="#code_block-1">Python</a></li><li class="tab"><a href="#code_block-2">Go</a></li></ul><div class="tab-content"><div class="tab-pane active" id="code_block-1"><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">getLargestOutlier</span>(<span class="params">self, nums: <span class="type">List</span>[<span class="built_in">int</span>]</span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        <span class="comment"># 统计每个数字出现的频率</span></span><br><span class="line">        cnt = Counter(nums)</span><br><span class="line">        <span class="comment"># 计算数组总和</span></span><br><span class="line">        total = <span class="built_in">sum</span>(nums)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 初始化答案为负无穷大</span></span><br><span class="line">        ans = -inf</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 遍历数组中的每个数字，将其作为潜在的“异常值” x</span></span><br><span class="line">        <span class="keyword">for</span> x <span class="keyword">in</span> nums:</span><br><span class="line">            <span class="comment"># 假设 x 是异常值，先将其从计数中减去</span></span><br><span class="line">            <span class="comment"># 这样做是为了处理 x 和“特殊数字之和”数值相同的情况</span></span><br><span class="line">            <span class="comment"># 例如 nums = [2, 2, 4]，total=8。若 x=4，remain=4，target=2，cnt[2]&gt;0，合法。</span></span><br><span class="line">            <span class="comment"># 若 nums = [2, 2]，total=4。若 x=2，remain=2，target=1，cnt[1]=0，不合法。</span></span><br><span class="line">            cnt[x] -= <span class="number">1</span></span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 根据公式 total = 2 * sum_special + outlier</span></span><br><span class="line">            <span class="comment"># 推导得：total - outlier = 2 * sum_special</span></span><br><span class="line">            <span class="comment"># 所以 (total - x) 必须是偶数</span></span><br><span class="line">            <span class="keyword">if</span> (total - x) % <span class="number">2</span> == <span class="number">0</span> <span class="keyword">and</span> cnt[(total - x) // <span class="number">2</span>] &gt; <span class="number">0</span>:</span><br><span class="line">                <span class="comment"># 如果满足条件，且计算出的 sum_special 存在于剩余数组中</span></span><br><span class="line">                <span class="comment"># 更新最大异常值</span></span><br><span class="line">                ans = <span class="built_in">max</span>(ans, x)</span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 恢复计数，以便下一次迭代</span></span><br><span class="line">            cnt[x] += <span class="number">1</span></span><br><span class="line">        <span class="keyword">return</span> ans</span><br></pre></td></tr></table></figure></div><div class="tab-pane" id="code_block-2"><figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">getLargestOutlier</span><span class="params">(nums []<span class="type">int</span>)</span></span> <span class="type">int</span> &#123;</span><br><span class="line">    <span class="comment">// 创建哈希表统计每个数字出现的次数</span></span><br><span class="line">    cnt := <span class="built_in">make</span>(<span class="keyword">map</span>[<span class="type">int</span>]<span class="type">int</span>)</span><br><span class="line">    total := <span class="number">0</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 一次遍历计算总和并统计频率</span></span><br><span class="line">    <span class="keyword">for</span> _, x := <span class="keyword">range</span> nums &#123;</span><br><span class="line">        cnt[x]++</span><br><span class="line">        total += x</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 初始化答案为极小值</span></span><br><span class="line">    <span class="comment">// 题目范围 -1000 &lt;= nums[i]，所以 -2000 足够小，或者使用 math.MinInt</span></span><br><span class="line">    ans := <span class="number">-10000</span> </span><br><span class="line"></span><br><span class="line">    <span class="comment">// 遍历数组，尝试将每个元素作为异常值</span></span><br><span class="line">    <span class="keyword">for</span> _, x := <span class="keyword">range</span> nums &#123;</span><br><span class="line">        <span class="comment">// 暂时移除当前元素 x，因为它被假设为异常值</span></span><br><span class="line">        cnt[x]--</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 计算移除异常值后的剩余和</span></span><br><span class="line">        remain := total - x</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 剩余和必须是偶数，因为 remain = 2 * sum_special</span></span><br><span class="line">        <span class="keyword">if</span> remain % <span class="number">2</span> == <span class="number">0</span> &#123;</span><br><span class="line">            <span class="comment">// 计算出需要的“特殊数字之和”</span></span><br><span class="line">            target := remain / <span class="number">2</span></span><br><span class="line">            </span><br><span class="line">            <span class="comment">// 检查这个和是否存在于剩余的数组元素中</span></span><br><span class="line">            <span class="keyword">if</span> cnt[target] &gt; <span class="number">0</span> &#123;</span><br><span class="line">                <span class="keyword">if</span> x &gt; ans &#123;</span><br><span class="line">                    ans = x</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 恢复当前元素的计数</span></span><br><span class="line">        cnt[x]++</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> ans</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div></div></div>
+
+<h3 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h3><ul>
+<li><p><strong>时间复杂度</strong>: <code>O(n)</code><br>我们需要遍历数组两次：第一次用于计算总和并建立频率哈希表，第二次用于枚举每个元素作为潜在的异常值。每次哈希表查找的操作是 <code>O(1)</code>。</p>
+</li>
+<li><p><strong>空间复杂度</strong>: <code>O(n)</code><br>需要一个哈希表来存储数组元素的频率。在最坏情况下（所有元素都不同），哈希表的大小与数组长度成正比。考虑到题目提示中 <code>nums[i]</code> 的范围在 -1000 到 1000 之间，实际空间复杂度受限于数值范围，可以视为常数级别 <code>O(C)</code>，其中 <code>C</code> 是数值范围的大小。</p>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>算法题解</category>
+        <category>常用数据结构</category>
+        <category>常用枚举技巧</category>
+        <category>枚举右，维护左</category>
+        <category>基础</category>
+      </categories>
+      <tags>
+        <tag>数组</tag>
+        <tag>哈希表</tag>
+        <tag>枚举</tag>
+        <tag>计数</tag>
+        <tag>第426场周赛</tag>
+      </tags>
+  </entry>
 </search>
