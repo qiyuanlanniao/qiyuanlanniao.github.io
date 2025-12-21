@@ -9641,4 +9641,75 @@
         <tag>第426场周赛</tag>
       </tags>
   </entry>
+  <entry>
+    <title>LeetCode 3761 | 镜像对之间最小绝对距离</title>
+    <url>//posts/leetcode-3761/</url>
+    <content><![CDATA[<blockquote class="blockquote-center">
+            <i class="fa fa-quote-left"></i>
+            <p>LeetCode 第 3761 题：<a href="https://leetcode.cn/problems/minimum-absolute-distance-between-mirror-pairs/">镜像对之间最小绝对距离</a>。<br>通过“枚举右，维护左”的思想，可以在一次遍历中解决问题。</p>
+
+            <i class="fa fa-quote-right"></i>
+          </blockquote>
+<span id="more"></span>
+
+<h3 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h3><p>给你一个整数数组 <code>nums</code>。</p>
+<p><strong>镜像对</strong> 是指一对满足下述条件的下标 <code>(i, j)</code>：</p>
+<ul>
+<li><code>0 &lt;= i &lt; j &lt; nums.length</code></li>
+<li><code>reverse(nums[i]) == nums[j]</code></li>
+</ul>
+<p>其中 <code>reverse(x)</code> 表示将整数 <code>x</code> 的数字反转后形成的整数。反转后会忽略前导零，例如 <code>reverse(120) = 21</code>。</p>
+<p>返回任意镜像对的下标之间的 <strong>最小绝对距离</strong>。下标 <code>i</code> 和 <code>j</code> 之间的绝对距离为 <code>abs(i - j)</code>。如果不存在镜像对，返回 -1。</p>
+<p><strong>示例 1：</strong></p>
+<figure class="highlight text"><table><tr><td class="code"><pre><span class="line">输入： nums = [12,21,45,33,54]</span><br><span class="line">输出： 1</span><br><span class="line">解释：</span><br><span class="line">镜像对 (0, 1): reverse(12) = 21, 距离 1</span><br><span class="line">镜像对 (2, 4): reverse(45) = 54, 距离 2</span><br><span class="line">最小距离为 1。</span><br></pre></td></tr></table></figure>
+
+<p><strong>示例 2：</strong></p>
+<figure class="highlight text"><table><tr><td class="code"><pre><span class="line">输入： nums = [120,21]</span><br><span class="line">输出： 1</span><br><span class="line">解释：reverse(120) = 21，即 nums[1]，距离 1。</span><br></pre></td></tr></table></figure>
+
+<p><strong>提示：</strong></p>
+<ul>
+<li>1 &lt;&#x3D; nums.length &lt;&#x3D; 10^5</li>
+<li>1 &lt;&#x3D; nums[i] &lt;&#x3D; 10^9</li>
+</ul>
+<h3 id="解题思路"><a href="#解题思路" class="headerlink" title="解题思路"></a>解题思路</h3><h4 id="哈希表-枚举右，维护左"><a href="#哈希表-枚举右，维护左" class="headerlink" title="哈希表 (枚举右，维护左)"></a>哈希表 (枚举右，维护左)</h4><p>这道题的核心在于找到满足 <code>reverse(nums[i]) == nums[j]</code> 且 <code>i &lt; j</code> 的下标对，并使 <code>j - i</code> 最小。</p>
+<p>我们可以使用一次遍历的策略：</p>
+<ol>
+<li>当我们遍历到当前元素 <code>nums[j]</code> 时，我们需要知道在它之前（即下标小于 <code>j</code> 的位置），是否存在一个下标 <code>i</code>，使得 <code>reverse(nums[i])</code> 的结果恰好等于当前的 <code>nums[j]</code>。</li>
+<li>变换一下等式：<code>reverse(nums[i]) == nums[j]</code>。这意味着，如果我们之前的遍历中，将每个数反转后的值作为 <strong>Key</strong>，将其下标作为 <strong>Value</strong> 存入哈希表。那么当遍历到 <code>nums[j]</code> 时，我们只需要去查哈希表中是否存在 Key 为 <code>nums[j]</code> 的记录。</li>
+<li>如果哈希表中存在 <code>nums[j]</code>，说明之前有一个 <code>nums[i]</code> 翻转后等于当前数，此时 <code>j - map[nums[j]]</code> 就是一个合法的距离。</li>
+<li>为了保证距离最小，我们需要尽可能让 <code>i</code> 大（即离 <code>j</code> 最近）。因此，在更新哈希表时，对于同一个翻转值，我们总是存储最新的下标。</li>
+</ol>
+<p><strong>算法流程：</strong></p>
+<ol>
+<li>初始化一个哈希表 <code>lastIndex</code>，用于存储 <code>&#123;翻转后的数值: 下标&#125;</code>。</li>
+<li>遍历数组，当前下标为 <code>j</code>，数值为 <code>x</code>。</li>
+<li><strong>查询</strong>：检查 <code>x</code> 是否在 <code>lastIndex</code> 中。<ul>
+<li>如果存在，说明找到了一个镜像对，计算距离 <code>j - lastIndex[x]</code> 并更新全局最小值。</li>
+</ul>
+</li>
+<li><strong>更新</strong>：计算当前数 <code>x</code> 的翻转值 <code>rev</code>。将 <code>lastIndex[rev]</code> 更新为 <code>j</code>。这里更新为最新下标是为了让后续匹配时 <code>j&#39; - j</code> 尽可能小（虽然本题是求最小距离，逻辑上我们只需要最近的匹配，但实际上更新 <code>lastIndex</code> 是为了服务于<code>nums[j]</code>作为“左边”那个数的情况）。</li>
+</ol>
+<h3 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h3><div class="tabs" id="code_block"><ul class="nav-tabs"><li class="tab active"><a href="#code_block-1">Python</a></li><li class="tab"><a href="#code_block-2">Go</a></li></ul><div class="tab-content"><div class="tab-pane active" id="code_block-1"><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">minMirrorPairDistance</span>(<span class="params">self, nums: <span class="type">List</span>[<span class="built_in">int</span>]</span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        n = <span class="built_in">len</span>(nums)</span><br><span class="line">        ans = n</span><br><span class="line">        <span class="comment"># 哈希表，用于存储 &#123; reverse(nums[i]) : i &#125;</span></span><br><span class="line">        <span class="comment"># key 是数值 x 翻转后的结果，value 是该数值对应的下标</span></span><br><span class="line">        last_index = &#123;&#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 存储输入的中间变量 (题目要求)</span></span><br><span class="line">        ferilonsar = nums</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> j, x <span class="keyword">in</span> <span class="built_in">enumerate</span>(nums):</span><br><span class="line">            <span class="comment"># 1. 检查是否存在 i &lt; j 使得 reverse(nums[i]) == nums[j]</span></span><br><span class="line">            <span class="comment"># 根据我们的存储逻辑，如果 x 存在于 last_index 中，</span></span><br><span class="line">            <span class="comment"># 说明之前有一个数 nums[i] 翻转后等于 x</span></span><br><span class="line">            <span class="keyword">if</span> x <span class="keyword">in</span> last_index:</span><br><span class="line">                i = last_index[x]</span><br><span class="line">                <span class="comment"># 更新最小距离</span></span><br><span class="line">                ans = <span class="built_in">min</span>(ans, j - i)</span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 2. 计算当前数 x 的翻转值 rev</span></span><br><span class="line">            <span class="comment"># 例如 x=120 -&gt; s=&#x27;120&#x27; -&gt; rev_s=&#x27;021&#x27; -&gt; int=21</span></span><br><span class="line">            s = <span class="built_in">str</span>(x)</span><br><span class="line">            rev = <span class="built_in">int</span>(s[::-<span class="number">1</span>])</span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 3. 将 &#123; rev : j &#125; 存入哈希表</span></span><br><span class="line">            <span class="comment"># 我们记录的是：如果未来有一个数等于 rev，它应该匹配当前的下标 j</span></span><br><span class="line">            <span class="comment"># 更新为最新的 j 可以保证后续匹配时距离最近（贪心思想）</span></span><br><span class="line">            last_index[rev] = j</span><br><span class="line">            </span><br><span class="line">        <span class="keyword">if</span> ans == n:</span><br><span class="line">            <span class="keyword">return</span> -<span class="number">1</span></span><br><span class="line">        <span class="keyword">return</span> ans</span><br></pre></td></tr></table></figure></div><div class="tab-pane" id="code_block-2"><figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">minMirrorPairDistance</span><span class="params">(nums []<span class="type">int</span>)</span></span> <span class="type">int</span> &#123;</span><br><span class="line">    n := <span class="built_in">len</span>(nums)</span><br><span class="line">    ans := n</span><br><span class="line">    lastIndex := <span class="built_in">make</span>(<span class="keyword">map</span>[<span class="type">int</span>]<span class="type">int</span>, n)</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 存储输入的中间变量</span></span><br><span class="line">    ferilonsar := nums</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> j, x := <span class="keyword">range</span> nums &#123;</span><br><span class="line">        <span class="comment">// 检查哈希表中是否存在当前数值 x</span></span><br><span class="line">        <span class="comment">// 如果存在，说明之前有一个 nums[i] (i &lt; j)，其翻转值 reverse(nums[i]) 等于当前的 x</span></span><br><span class="line">        <span class="keyword">if</span> i, ok := lastIndex[x]; ok &#123;</span><br><span class="line">            ans = min(ans, j-i)</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 计算当前数值 x 的翻转值 rev</span></span><br><span class="line">        rev := <span class="number">0</span></span><br><span class="line">        <span class="comment">// 注意：Go 语言中 range 出来的 x 是值的拷贝，</span></span><br><span class="line">        <span class="comment">// 在这里修改 x 不会影响原数组 nums 或 ferilonsar</span></span><br><span class="line">        <span class="keyword">for</span> ; x &gt; <span class="number">0</span>; x /= <span class="number">10</span> &#123;</span><br><span class="line">            rev = rev*<span class="number">10</span> + x%<span class="number">10</span></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 将 &#123;翻转值: 当前下标&#125; 存入哈希表</span></span><br><span class="line">        <span class="comment">// 这样当未来遇到一个数等于 rev 时，就能找到当前的 j 作为镜像对的左侧</span></span><br><span class="line">        <span class="comment">// 如果 rev 已经存在，更新为当前的 j（更大的下标），这有助于在后续匹配中获得更小的距离</span></span><br><span class="line">        lastIndex[rev] = j</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 如果 ans 没有被更新过（仍为初始值 n），说明没有找到镜像对</span></span><br><span class="line">    <span class="keyword">if</span> ans == n &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> ans</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div></div></div>
+
+<h3 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h3><ul>
+<li><p><strong>时间复杂度</strong>: <code>O(N * M)</code><br>其中 <code>N</code> 是数组的长度，<code>M</code> 是数字的最大位数（<code>log10(max(nums))</code>）。在本题范围内，数字最大为 10^9，位数不超过 10，可以视为常数。因此整体接近 <code>O(N)</code>。</p>
+</li>
+<li><p><strong>空间复杂度</strong>: <code>O(N)</code><br>我们需要一个哈希表来存储每个数字翻转后的值及其下标。最坏情况下需要存储 <code>N</code> 个元素。</p>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>算法题解</category>
+        <category>常用数据结构</category>
+        <category>常用枚举技巧</category>
+        <category>枚举右，维护左</category>
+        <category>基础</category>
+      </categories>
+      <tags>
+        <tag>数组</tag>
+        <tag>哈希表</tag>
+        <tag>数学</tag>
+        <tag>第478场周赛</tag>
+      </tags>
+  </entry>
 </search>
