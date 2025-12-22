@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"github.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"valine","storage":true,"lazyload":false,"nav":null,"activeClass":"valine"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="LeetCode 第 2905 题：找出满足差值条件的下标 II。该题相对I数据范围扩大到了 10^5，需要优化时间复杂度到 O(n)。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LeetCode 2905 | 找出满足差值条件的下标 II">
+<meta property="og:url" content="http://github.com/posts/leetcode-2905/index.html">
+<meta property="og:site_name" content="Changan&#39;s Blog">
+<meta property="og:description" content="LeetCode 第 2905 题：找出满足差值条件的下标 II。该题相对I数据范围扩大到了 10^5，需要优化时间复杂度到 O(n)。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-12-22T02:00:00.000Z">
+<meta property="article:modified_time" content="2025-12-22T02:00:00.000Z">
+<meta property="article:author" content="Changan">
+<meta property="article:tag" content="数组">
+<meta property="article:tag" content="双指针">
+<meta property="article:tag" content="第367场周赛">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://github.com/posts/leetcode-2905/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>LeetCode 2905 | 找出满足差值条件的下标 II | Changan's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Changan's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+    <a href="https://github.com/qiyuanlanniao" class="github-corner" aria-label="View source on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#151513; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"/><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"/><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"/></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Changan's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://github.com/posts/leetcode-2905/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Changan">
+      <meta itemprop="description" content="Good things take time">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Changan's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          LeetCode 2905 | 找出满足差值条件的下标 II
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2025-12-22 10:00:00" itemprop="dateCreated datePublished" datetime="2025-12-22T10:00:00+08:00">2025-12-22</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%AE%97%E6%B3%95%E9%A2%98%E8%A7%A3/" itemprop="url" rel="index"><span itemprop="name">算法题解</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%AE%97%E6%B3%95%E9%A2%98%E8%A7%A3/%E5%B8%B8%E7%94%A8%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" itemprop="url" rel="index"><span itemprop="name">常用数据结构</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%AE%97%E6%B3%95%E9%A2%98%E8%A7%A3/%E5%B8%B8%E7%94%A8%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E5%B8%B8%E7%94%A8%E6%9E%9A%E4%B8%BE%E6%8A%80%E5%B7%A7/" itemprop="url" rel="index"><span itemprop="name">常用枚举技巧</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%AE%97%E6%B3%95%E9%A2%98%E8%A7%A3/%E5%B8%B8%E7%94%A8%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E5%B8%B8%E7%94%A8%E6%9E%9A%E4%B8%BE%E6%8A%80%E5%B7%A7/%E6%9E%9A%E4%B8%BE%E5%8F%B3%EF%BC%8C%E7%BB%B4%E6%8A%A4%E5%B7%A6/" itemprop="url" rel="index"><span itemprop="name">枚举右，维护左</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%AE%97%E6%B3%95%E9%A2%98%E8%A7%A3/%E5%B8%B8%E7%94%A8%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E5%B8%B8%E7%94%A8%E6%9E%9A%E4%B8%BE%E6%8A%80%E5%B7%A7/%E6%9E%9A%E4%B8%BE%E5%8F%B3%EF%BC%8C%E7%BB%B4%E6%8A%A4%E5%B7%A6/%E5%9F%BA%E7%A1%80/" itemprop="url" rel="index"><span itemprop="name">基础</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/posts/leetcode-2905/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/posts/leetcode-2905/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <blockquote class="blockquote-center">
+            <i class="fa fa-quote-left"></i>
+            <p>LeetCode 第 2905 题：<a target="_blank" rel="noopener" href="https://leetcode.cn/problems/find-indices-with-index-and-value-difference-ii/">找出满足差值条件的下标 II</a>。<br>该题相对I数据范围扩大到了 10^5，需要优化时间复杂度到 O(n)。</p>
+
+            <i class="fa fa-quote-right"></i>
+          </blockquote>
+<span id="more"></span>
+
+<h3 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h3><p>给你一个下标从 0 开始、长度为 n 的整数数组 <code>nums</code> ，以及整数 <code>indexDifference</code> 和整数 <code>valueDifference</code> 。</p>
+<p>你的任务是从范围 <code>[0, n - 1]</code> 内找出 2 个满足下述所有条件的下标 <code>i</code> 和 <code>j</code> ：</p>
+<ol>
+<li><code>abs(i - j) &gt;= indexDifference</code></li>
+<li><code>abs(nums[i] - nums[j]) &gt;= valueDifference</code></li>
+</ol>
+<p>返回整数数组 <code>answer</code>。如果存在满足题目要求的两个下标，则 <code>answer = [i, j]</code> ；否则，<code>answer = [-1, -1]</code> 。如果存在多组可供选择的下标对，只需要返回其中任意一组即可。</p>
+<p><strong>注意</strong>：i 和 j 可能相等。</p>
+<p><strong>示例 1：</strong></p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">输入：nums = [5,1,4,1], indexDifference = 2, valueDifference = 4</span><br><span class="line">输出：[0,3]</span><br><span class="line">解释：在示例中，可以选择 i = 0 和 j = 3 。</span><br><span class="line">abs(0 - 3) &gt;= 2 且 abs(nums[0] - nums[3]) &gt;= 4 。</span><br><span class="line">因此，[0,3] 是一个符合题目要求的答案。</span><br><span class="line">[3,0] 也是符合题目要求的答案。</span><br></pre></td></tr></table></figure>
+
+<p><strong>示例 2：</strong></p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">输入：nums = [2,1], indexDifference = 0, valueDifference = 0</span><br><span class="line">输出：[0,0]</span><br><span class="line">解释：</span><br><span class="line">在示例中，可以选择 i = 0 和 j = 0 。 </span><br><span class="line">abs(0 - 0) &gt;= 0 且 abs(nums[0] - nums[0]) &gt;= 0 。 </span><br><span class="line">因此，[0,0] 是一个符合题目要求的答案。 </span><br><span class="line">[0,1]、[1,0] 和 [1,1] 也是符合题目要求的答案。 </span><br></pre></td></tr></table></figure>
+
+<p><strong>示例 3：</strong></p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">输入：nums = [1,2,3], indexDifference = 2, valueDifference = 4</span><br><span class="line">输出：[-1,-1]</span><br><span class="line">解释：在示例中，可以证明无法找出 2 个满足所有条件的下标。</span><br><span class="line">因此，返回 [-1,-1] 。</span><br></pre></td></tr></table></figure>
+
+<p><strong>提示：</strong></p>
+<ul>
+<li>1 &lt;&#x3D; n &#x3D;&#x3D; nums.length &lt;&#x3D; 10^5</li>
+<li>0 &lt;&#x3D; nums[i] &lt;&#x3D; 10^9</li>
+<li>0 &lt;&#x3D; indexDifference &lt;&#x3D; 10^5</li>
+<li>0 &lt;&#x3D; valueDifference &lt;&#x3D; 10^9</li>
+</ul>
+<h3 id="解题思路"><a href="#解题思路" class="headerlink" title="解题思路"></a>解题思路</h3><h4 id="1-为什么暴力法不可行"><a href="#1-为什么暴力法不可行" class="headerlink" title="1. 为什么暴力法不可行"></a>1. 为什么暴力法不可行</h4><p>如果是简单版（第 2903 题），数据范围较小，我们可以使用双重循环枚举所有可能的 <code>(i, j)</code> 对，时间复杂度为 O(n^2)。<br>但在本题中，<code>n</code> 高达 10^5，O(n^2) 的算法会超时。我们需要寻找 O(n) 的解法。</p>
+<h4 id="2-枚举右，维护左"><a href="#2-枚举右，维护左" class="headerlink" title="2. 枚举右，维护左"></a>2. 枚举右，维护左</h4><p>这道题的核心限制条件有两个：下标差和数值差。<br>我们可以通过<strong>枚举右端点</strong> <code>j</code>，来寻找合法的左端点 <code>i</code>。</p>
+<ol>
+<li><strong>下标条件</strong>：对于固定的 <code>j</code>，合法的 <code>i</code> 必须满足 <code>i &lt;= j - indexDifference</code>。</li>
+<li><strong>数值条件</strong>：我们需要找到一个合法的 <code>i</code>，使得 <code>abs(nums[i] - nums[j]) &gt;= valueDifference</code>。这个绝对值不等式可以拆分为两种情况：<ul>
+<li><code>nums[i] - nums[j] &gt;= valueDifference</code>，即 <code>nums[i] &gt;= nums[j] + valueDifference</code>。这意味着我们需要在合法的 <code>i</code> 范围内找到一个<strong>尽可能大</strong>的 <code>nums[i]</code>。</li>
+<li><code>nums[j] - nums[i] &gt;= valueDifference</code>，即 <code>nums[i] &lt;= nums[j] - valueDifference</code>。这意味着我们需要在合法的 <code>i</code> 范围内找到一个<strong>尽可能小</strong>的 <code>nums[i]</code>。</li>
+</ul>
+</li>
+</ol>
+<p><strong>算法流程</strong>：<br>我们遍历 <code>j</code> 从 <code>indexDifference</code> 到 <code>n - 1</code>。<br>在遍历过程中，合法的 <code>i</code> 的范围是 <code>[0, j - indexDifference]</code>。<br>随着 <code>j</code> 向右移动，合法范围的右边界 <code>j - indexDifference</code> 也在向右移动，每次只增加一个新的元素。<br>因此，我们只需要维护当前合法范围内的<strong>最大值下标</strong> <code>mx</code> 和<strong>最小值下标</strong> <code>mn</code> 即可。</p>
+<ul>
+<li>当遍历到 <code>j</code> 时，新的合法位置是 <code>i = j - indexDifference</code>。</li>
+<li>更新 <code>mx</code>：如果 <code>nums[i]</code> 比当前的最大值还大，更新 <code>mx = i</code>。</li>
+<li>更新 <code>mn</code>：如果 <code>nums[i]</code> 比当前的最小值还小，更新 <code>mn = i</code>。</li>
+<li>检查条件：<ul>
+<li>如果 <code>nums[mx] - nums[j] &gt;= valueDifference</code>，返回 <code>[mx, j]</code>。</li>
+<li>如果 <code>nums[j] - nums[mn] &gt;= valueDifference</code>，返回 <code>[mn, j]</code>。</li>
+</ul>
+</li>
+</ul>
+<p>这样，我们只需要遍历数组一次，时间复杂度为 O(n)。</p>
+<h3 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h3><div class="tabs" id="code_block"><ul class="nav-tabs"><li class="tab active"><a href="#code_block-1">Python</a></li><li class="tab"><a href="#code_block-2">Go</a></li></ul><div class="tab-content"><div class="tab-pane active" id="code_block-1"><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">findIndices</span>(<span class="params">self, nums: <span class="type">List</span>[<span class="built_in">int</span>], indexDifference: <span class="built_in">int</span>, valueDifference: <span class="built_in">int</span></span>) -&gt; <span class="type">List</span>[<span class="built_in">int</span>]:</span><br><span class="line">        <span class="comment"># mx 和 mn 分别记录满足下标条件的范围 [0, j - indexDifference] 内</span></span><br><span class="line">        <span class="comment"># 最大值和最小值的下标</span></span><br><span class="line">        mx = mn = <span class="number">0</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 枚举右端点 j，从 indexDifference 开始，保证 j - indexDifference &gt;= 0</span></span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(indexDifference, <span class="built_in">len</span>(nums)):</span><br><span class="line">            <span class="comment"># 计算当前新加入合法范围的左端点 i</span></span><br><span class="line">            i = j - indexDifference</span><br><span class="line"></span><br><span class="line">            <span class="comment"># 维护合法范围内的最大值下标</span></span><br><span class="line">            <span class="keyword">if</span> nums[i] &gt; nums[mx]:</span><br><span class="line">                mx = i</span><br><span class="line">            <span class="comment"># 维护合法范围内的最小值下标</span></span><br><span class="line">            <span class="keyword">if</span> nums[i] &lt; nums[mn]:</span><br><span class="line">                mn = i</span><br><span class="line"></span><br><span class="line">            <span class="comment"># 检查最大值与当前 nums[j] 的差值是否满足条件</span></span><br><span class="line">            <span class="comment"># 对应情况：nums[i] - nums[j] &gt;= valueDifference</span></span><br><span class="line">            <span class="keyword">if</span> nums[mx] - nums[j] &gt;= valueDifference:</span><br><span class="line">                <span class="keyword">return</span> [mx, j]</span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 检查当前 nums[j] 与最小值的差值是否满足条件</span></span><br><span class="line">            <span class="comment"># 对应情况：nums[j] - nums[i] &gt;= valueDifference</span></span><br><span class="line">            <span class="keyword">if</span> nums[j] - nums[mn] &gt;= valueDifference:</span><br><span class="line">                <span class="keyword">return</span> [mn, j]</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 如果遍历完都没找到，返回 [-1, -1]</span></span><br><span class="line">        <span class="keyword">return</span> [-<span class="number">1</span>, -<span class="number">1</span>]</span><br></pre></td></tr></table></figure></div><div class="tab-pane" id="code_block-2"><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">findIndices</span><span class="params">(nums []<span class="type">int</span>, indexDifference <span class="type">int</span>, valueDifference <span class="type">int</span>)</span></span> []<span class="type">int</span> &#123;</span><br><span class="line">    <span class="comment">// mx 和 mn 分别记录满足下标条件的范围 [0, j - indexDifference] 内</span></span><br><span class="line">    <span class="comment">// 最大值和最小值的下标</span></span><br><span class="line">    mx, mn := <span class="number">0</span>, <span class="number">0</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 枚举右端点 j，从 indexDifference 开始</span></span><br><span class="line">    <span class="keyword">for</span> j := indexDifference; j &lt; <span class="built_in">len</span>(nums); j++ &#123;</span><br><span class="line">        <span class="comment">// 计算当前新加入合法范围的左端点 i</span></span><br><span class="line">        i := j - indexDifference</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 维护合法范围内的最大值下标</span></span><br><span class="line">        <span class="keyword">if</span> nums[i] &gt; nums[mx] &#123;</span><br><span class="line">            mx = i</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 维护合法范围内的最小值下标</span></span><br><span class="line">        <span class="keyword">if</span> nums[i] &lt; nums[mn] &#123;</span><br><span class="line">            mn = i</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 检查最大值与当前 nums[j] 的差值是否满足条件</span></span><br><span class="line">        <span class="comment">// 对应情况：nums[i] - nums[j] &gt;= valueDifference</span></span><br><span class="line">        <span class="keyword">if</span> nums[mx] - nums[j] &gt;= valueDifference &#123;</span><br><span class="line">            <span class="keyword">return</span> []<span class="type">int</span>&#123;mx, j&#125;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 检查当前 nums[j] 与最小值的差值是否满足条件</span></span><br><span class="line">        <span class="comment">// 对应情况：nums[j] - nums[i] &gt;= valueDifference</span></span><br><span class="line">        <span class="keyword">if</span> nums[j] - nums[mn] &gt;= valueDifference &#123;</span><br><span class="line">            <span class="keyword">return</span> []<span class="type">int</span>&#123;mn, j&#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 如果遍历完都没找到，返回 [-1, -1]</span></span><br><span class="line">    <span class="keyword">return</span> []<span class="type">int</span>&#123;<span class="number">-1</span>, <span class="number">-1</span>&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div></div></div>
+
+<h3 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h3><ul>
+<li><p><strong>时间复杂度</strong>: O(n)<br>其中 n 是数组 <code>nums</code> 的长度。我们只需要遍历数组一次，每次迭代中的操作都是 O(1) 的。</p>
+</li>
+<li><p><strong>空间复杂度</strong>: O(1)<br>我们只需要常数级别的额外空间来存储 <code>mx</code>, <code>mn</code> 等变量。</p>
+</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%95%B0%E7%BB%84/" rel="tag"># 数组</a>
+              <a href="/tags/%E5%8F%8C%E6%8C%87%E9%92%88/" rel="tag"># 双指针</a>
+              <a href="/tags/%E7%AC%AC367%E5%9C%BA%E5%91%A8%E8%B5%9B/" rel="tag"># 第367场周赛</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/posts/leetcode-3584/" rel="prev" title="LeetCode 3584 | 子序列首尾元素的最大乘积">
+      <i class="fa fa-chevron-left"></i> LeetCode 3584 | 子序列首尾元素的最大乘积
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text">问题描述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E9%A2%98%E6%80%9D%E8%B7%AF"><span class="nav-number">2.</span> <span class="nav-text">解题思路</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-%E4%B8%BA%E4%BB%80%E4%B9%88%E6%9A%B4%E5%8A%9B%E6%B3%95%E4%B8%8D%E5%8F%AF%E8%A1%8C"><span class="nav-number">2.1.</span> <span class="nav-text">1. 为什么暴力法不可行</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-%E6%9E%9A%E4%B8%BE%E5%8F%B3%EF%BC%8C%E7%BB%B4%E6%8A%A4%E5%B7%A6"><span class="nav-number">2.2.</span> <span class="nav-text">2. 枚举右，维护左</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0"><span class="nav-number">3.</span> <span class="nav-text">代码实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%8D%E6%9D%82%E5%BA%A6%E5%88%86%E6%9E%90"><span class="nav-number">4.</span> <span class="nav-text">复杂度分析</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Changan"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Changan</p>
+  <div class="site-description" itemprop="description">Good things take time</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">111</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">22</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">116</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/qiyuanlanniao" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;qiyuanlanniao"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:hmca09502@gmail.com" title="E-Mail → mailto:hmca09502@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Changan</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('https://cdn.jsdelivr.net/npm/valine@1.5.3/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'fNBvdCThX5dQrppj7znaQ3xJ-gzGzoHsz',
+      appKey     : 'Mom6ApPuWkqQu8UwakobSJqh',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>
