@@ -9712,4 +9712,81 @@
         <tag>第478场周赛</tag>
       </tags>
   </entry>
+  <entry>
+    <title>LeetCode 3584 | 子序列首尾元素的最大乘积</title>
+    <url>//posts/leetcode-3584/</url>
+    <content><![CDATA[<blockquote class="blockquote-center">
+            <i class="fa fa-quote-left"></i>
+            <p>LeetCode 第 3584 题：<a href="https://leetcode.cn/problems/maximum-product-of-first-and-last-elements-of-a-subsequence/description/">子序列首尾元素的最大乘积</a>。<br>这是一道关于子序列与贪心思想的题目，核心在于如何在满足长度限制的情况下，通过一次遍历找到最优解。</p>
+
+            <i class="fa fa-quote-right"></i>
+          </blockquote>
+<span id="more"></span>
+
+<h3 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h3><p>给你一个整数数组 <code>nums</code> 和一个整数 <code>m</code>。</p>
+<p>返回任意大小为 <code>m</code> 的 <strong>子序列</strong> 中首尾元素乘积的最大值。</p>
+<p><strong>子序列</strong> 是可以通过删除原数组中的一些元素（或不删除任何元素），且不改变剩余元素顺序而得到的数组。</p>
+<p><strong>示例 1：</strong></p>
+<figure class="highlight text"><table><tr><td class="code"><pre><span class="line">输入： nums = [-1,-9,2,3,-2,-3,1], m = 1</span><br><span class="line">输出： 81</span><br><span class="line">解释：</span><br><span class="line">子序列 [-9] 的首尾元素乘积最大：-9 * -9 = 81。因此，答案是 81。</span><br></pre></td></tr></table></figure>
+
+<p><strong>示例 2：</strong></p>
+<figure class="highlight text"><table><tr><td class="code"><pre><span class="line">输入： nums = [1,3,-5,5,6,-4], m = 3</span><br><span class="line">输出： 20</span><br><span class="line">解释：</span><br><span class="line">子序列 [-5, 6, -4] 的首尾元素乘积最大。</span><br></pre></td></tr></table></figure>
+
+<p><strong>示例 3：</strong></p>
+<figure class="highlight text"><table><tr><td class="code"><pre><span class="line">输入： nums = [2,-1,2,-6,5,2,-5,7], m = 2</span><br><span class="line">输出： 35</span><br><span class="line">解释：</span><br><span class="line">子序列 [5, 7] 的首尾元素乘积最大。</span><br></pre></td></tr></table></figure>
+
+<p><strong>提示:</strong></p>
+<ul>
+<li><code>1 &lt;= nums.length &lt;= 10^5</code></li>
+<li><code>-10^5 &lt;= nums[i] &lt;= 10^5</code></li>
+<li><code>1 &lt;= m &lt;= nums.length</code></li>
+</ul>
+<h3 id="解题思路"><a href="#解题思路" class="headerlink" title="解题思路"></a>解题思路</h3><h4 id="1-问题分析"><a href="#1-问题分析" class="headerlink" title="1. 问题分析"></a>1. 问题分析</h4><p>题目要求选择一个长度为 <code>m</code> 的子序列，使得该子序列的 <strong>第一个元素</strong> 和 <strong>最后一个元素</strong> 的乘积最大。<br>假设我们在原数组 <code>nums</code> 中选择的子序列的第一个元素下标为 <code>j</code>，最后一个元素下标为 <code>i</code>。<br>由于是子序列，原数组中下标的相对顺序必须保持不变，即 <code>j &lt;= i</code>（如果是长度为 1，则 <code>j=i</code>）。</p>
+<p>为了构成一个长度至少为 <code>m</code> 的子序列，<code>j</code> 和 <code>i</code> 之间（包含 <code>j</code> 和 <code>i</code> 本身）必须至少有 <code>m</code> 个元素可供选择。也就是说，在原数组中，下标 <code>j</code> 和 <code>i</code> 必须满足：<br><code>i - j + 1 &gt;= m</code><br>即：<br><code>j &lt;= i - m + 1</code></p>
+<h4 id="2-枚举右，维护左"><a href="#2-枚举右，维护左" class="headerlink" title="2. 枚举右，维护左"></a>2. 枚举右，维护左</h4><p>我们可以遍历数组，枚举每一个元素作为子序列的 <strong>最后一个元素</strong>（记为 <code>x</code>，下标为 <code>i</code>）。<br>对于固定的 <code>i</code>，我们需要在合法的范围 <code>[0, i - m + 1]</code> 中找到一个 <strong>第一个元素</strong>（记为 <code>y</code>，下标为 <code>j</code>），使得 <code>x * y</code> 最大。</p>
+<ul>
+<li><p><strong>遍历过程</strong>：<br>我们让 <code>i</code> 从 <code>m - 1</code> 开始遍历到数组结束。<br>当 <code>i</code> 移动时，合法的 <code>j</code> 的范围上限 <code>i - m + 1</code> 也会随之向右移动一步。这意味着每一轮循环，都会有一个新的元素进入“合法的第一个元素”的候选池。</p>
+</li>
+<li><p><strong>维护极值</strong>：<br>为了使乘积 <code>x * y</code> 最大，我们需要考虑 <code>x</code> 的正负性：</p>
+<ul>
+<li>如果 <code>x</code> 是正数，我们需要 <code>y</code> 尽可能大（正得越多越好）。</li>
+<li>如果 <code>x</code> 是负数，我们需要 <code>y</code> 尽可能小（负得越多越好，负负得正）。</li>
+</ul>
+<p>因此，我们只需要在遍历过程中，动态维护合法范围内（<code>nums[0...i-m+1]</code>）的 <strong>最小值</strong> (<code>mn</code>) 和 <strong>最大值</strong> (<code>mx</code>)。</p>
+</li>
+</ul>
+<h4 id="3-算法流程"><a href="#3-算法流程" class="headerlink" title="3. 算法流程"></a>3. 算法流程</h4><ol>
+<li>初始化全局最大乘积 <code>ans</code> 为极小值。</li>
+<li>初始化当前合法左侧区间的最小值 <code>mn</code> 和最大值 <code>mx</code>。</li>
+<li>从 <code>i = m - 1</code> 开始遍历数组 <code>nums</code>：<ul>
+<li>获取新进入合法左侧区间的元素 <code>y = nums[i - m + 1]</code>。</li>
+<li>更新 <code>mn</code> 和 <code>mx</code>。</li>
+<li>获取当前作为子序列结尾的元素 <code>x = nums[i]</code>。</li>
+<li>计算 <code>x * mn</code> 和 <code>x * mx</code>，并更新 <code>ans</code>。</li>
+</ul>
+</li>
+<li>返回 <code>ans</code>。</li>
+</ol>
+<h3 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h3><div class="tabs" id="code_block"><ul class="nav-tabs"><li class="tab active"><a href="#code_block-1">Python</a></li><li class="tab"><a href="#code_block-2">Go</a></li></ul><div class="tab-content"><div class="tab-pane active" id="code_block-1"><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> math</span><br><span class="line"><span class="keyword">from</span> typing <span class="keyword">import</span> <span class="type">List</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">maximumProduct</span>(<span class="params">self, nums: <span class="type">List</span>[<span class="built_in">int</span>], m: <span class="built_in">int</span></span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">        <span class="comment"># 初始化答案为负无穷，确保能被任何实数结果更新</span></span><br><span class="line">        ans = -math.inf</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># mn 和 mx 用于维护 &quot;合法起始元素&quot; 的最小值和最大值</span></span><br><span class="line">        <span class="comment"># 初始时，mn 设为正无穷，mx 设为负无穷</span></span><br><span class="line">        mn, mx = math.inf, -math.inf</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 我们枚举子序列的 &quot;最后一个元素&quot; 的下标 i</span></span><br><span class="line">        <span class="comment"># i 至少需要是 m-1，这样前面才有足够的元素（包括它自己）构成长度为 m 的子序列</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(m - <span class="number">1</span>, <span class="built_in">len</span>(nums)):</span><br><span class="line">            <span class="comment"># y 是当前刚刚进入 &quot;合法起始元素范围&quot; 的那个数</span></span><br><span class="line">            <span class="comment"># 它的下标是 i - m + 1</span></span><br><span class="line">            <span class="comment"># 比如 m=2，当 i=1 时，y 是 nums[0]</span></span><br><span class="line">            y = nums[i - m + <span class="number">1</span>]</span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 更新合法范围内的最小值和最大值</span></span><br><span class="line">            <span class="keyword">if</span> y &lt; mn: mn = y</span><br><span class="line">            <span class="keyword">if</span> y &gt; mx: mx = y</span><br><span class="line">            </span><br><span class="line">            <span class="comment"># x 是当前选定的子序列 &quot;最后一个元素&quot;</span></span><br><span class="line">            x = nums[i]</span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 计算乘积</span></span><br><span class="line">            <span class="comment"># 如果 x 是正数，它乘以 mx (最大值) 可能得到最大积</span></span><br><span class="line">            <span class="comment"># 如果 x 是负数，它乘以 mn (最小值) 可能得到最大积（负负得正）</span></span><br><span class="line">            res1 = x * mn</span><br><span class="line">            res2 = x * mx</span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 更新全局最大值</span></span><br><span class="line">            <span class="keyword">if</span> res1 &gt; ans: ans = res1</span><br><span class="line">            <span class="keyword">if</span> res2 &gt; ans: ans = res2</span><br><span class="line">            </span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">int</span>(ans)</span><br></pre></td></tr></table></figure></div><div class="tab-pane" id="code_block-2"><figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">maximumProduct</span><span class="params">(nums []<span class="type">int</span>, m <span class="type">int</span>)</span></span> <span class="type">int64</span> &#123;</span><br><span class="line">    <span class="comment">// 初始化答案为 int64 范围内的最小值</span></span><br><span class="line">    ans := math.MinInt</span><br><span class="line">    <span class="comment">// mn 和 mx 分别记录合法左侧区间内的最小值和最大值</span></span><br><span class="line">    <span class="comment">// 初始时赋予相反的极值以便第一次比较时能被覆盖</span></span><br><span class="line">    mn,mx := math.MaxInt,math.MinInt</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 遍历数组，i 代表子序列 &quot;最后一个元素&quot; 的下标</span></span><br><span class="line">    <span class="comment">// 从 m-1 开始，是因为至少需要 m 个元素才能构成子序列</span></span><br><span class="line">    <span class="keyword">for</span> i := m<span class="number">-1</span>;i&lt;<span class="built_in">len</span>(nums);i++&#123;</span><br><span class="line">        <span class="comment">// y 代表子序列可能的 &quot;第一个元素&quot;</span></span><br><span class="line">        <span class="comment">// 随着 i 的增加，nums[i-m+1] 正好是可以作为第一个元素的最新成员</span></span><br><span class="line">        y:=nums[i-m+<span class="number">1</span>]</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 维护合法左侧区间 [0, i-m+1] 的最小值和最大值</span></span><br><span class="line">        mn = min(mn,y)</span><br><span class="line">        mx = max(mx,y)</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// x 是当前的 &quot;最后一个元素&quot;</span></span><br><span class="line">        x := nums[i]</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 计算最大乘积：</span></span><br><span class="line">        <span class="comment">// 1. 当前元素 x * 历史最小值 mn (应对 x 为负数的情况)</span></span><br><span class="line">        <span class="comment">// 2. 当前元素 x * 历史最大值 mx (应对 x 为正数的情况)</span></span><br><span class="line">        <span class="comment">// 更新全局最大值 ans</span></span><br><span class="line">        ans = max(ans,x*mn,x*mx)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 题目要求返回 int64</span></span><br><span class="line">    <span class="keyword">return</span> <span class="type">int64</span>(ans)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div></div></div>
+
+<h3 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h3><ul>
+<li><p><strong>时间复杂度</strong>: <code>O(N)</code><br>其中 <code>N</code> 是数组 <code>nums</code> 的长度。我们需要遍历数组一次，每次迭代中的操作（比较、乘法）都是 <code>O(1)</code> 的。</p>
+</li>
+<li><p><strong>空间复杂度</strong>: <code>O(1)</code><br>只需要常数级别的额外空间来存储 <code>mn</code>, <code>mx</code>, <code>ans</code>, <code>x</code>, <code>y</code> 等变量。</p>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>算法题解</category>
+        <category>常用数据结构</category>
+        <category>常用枚举技巧</category>
+        <category>枚举右，维护左</category>
+        <category>基础</category>
+      </categories>
+      <tags>
+        <tag>数组</tag>
+        <tag>双指针</tag>
+        <tag>第454场周赛</tag>
+      </tags>
+  </entry>
 </search>
