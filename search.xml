@@ -10069,4 +10069,69 @@
         <tag>第89场周赛</tag>
       </tags>
   </entry>
+  <entry>
+    <title>LeetCode 1019 | 链表中的下一个更大节点</title>
+    <url>//posts/leetcode-1019/</url>
+    <content><![CDATA[<blockquote class="blockquote-center">
+            <i class="fa fa-quote-left"></i>
+            <p>LeetCode 第 1019 题：<a href="https://leetcode.cn/problems/next-greater-node-in-linked-list/">链表中的下一个更大节点</a>。<br>问题的核心与“每日温度”类似，是寻找每个元素右侧第一个比它大的元素，但数据结构从数组变成了链表。</p>
+
+            <i class="fa fa-quote-right"></i>
+          </blockquote>
+<span id="more"></span>
+
+<h3 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h3><p>给定一个长度为 <code>n</code> 的链表 <code>head</code>。</p>
+<p>对于列表中的每个节点，查找下一个 <strong>更大节点</strong> 的值。也就是说，对于每个节点，找到它旁边的第一个节点的值，这个节点的值 <strong>严格大于</strong> 它的值。</p>
+<p>返回一个整数数组 <code>answer</code> ，其中 <code>answer[i]</code> 是第 <code>i</code> 个节点( 从1开始 )的下一个更大的节点的值。如果第 <code>i</code> 个节点没有下一个更大的节点，设置 <code>answer[i] = 0</code> 。</p>
+<p><strong>示例 1：</strong></p>
+<figure class="highlight text"><table><tr><td class="code"><pre><span class="line">输入：head = [2,1,5]</span><br><span class="line">输出：[5,5,0]</span><br></pre></td></tr></table></figure>
+
+<p><strong>示例 2：</strong></p>
+<figure class="highlight text"><table><tr><td class="code"><pre><span class="line">输入：head = [2,7,4,3,5]</span><br><span class="line">输出：[7,0,5,5,0]</span><br></pre></td></tr></table></figure>
+
+<p><strong>提示：</strong></p>
+<ul>
+<li>链表中节点数为 <code>n</code></li>
+<li>1 &lt;&#x3D; n &lt;&#x3D; 10^4</li>
+<li>1 &lt;&#x3D; Node.val &lt;&#x3D; 10^9</li>
+</ul>
+<h3 id="解题思路"><a href="#解题思路" class="headerlink" title="解题思路"></a>解题思路</h3><h4 id="1-问题的转化"><a href="#1-问题的转化" class="headerlink" title="1. 问题的转化"></a>1. 问题的转化</h4><p>这道题本质上是经典的 <strong>单调栈</strong> 问题，寻找右侧第一个比当前大的值。<br>如果输入是数组，我们可以直接 <strong>从后往前</strong> 遍历数组，维护一个单调栈来解决。<br>但在链表中，我们无法直接反向遍历。</p>
+<h4 id="2-解决方案：如何反向遍历链表？"><a href="#2-解决方案：如何反向遍历链表？" class="headerlink" title="2. 解决方案：如何反向遍历链表？"></a>2. 解决方案：如何反向遍历链表？</h4><p>针对链表无法直接倒序访问的特性，我们通常有两种策略：</p>
+<ol>
+<li><strong>转化为数组</strong>：先将链表遍历一遍，存入数组或列表，然后对数组使用单调栈解法（Python 代码采用此法，避免递归深度过大）。</li>
+<li><strong>利用递归</strong>：利用系统调用栈来实现倒序处理。先递归到链表末尾，在“归”的过程中处理当前节点，这天然就是从后往前的顺序（Go 代码采用此法）。</li>
+</ol>
+<h4 id="3-单调栈逻辑"><a href="#3-单调栈逻辑" class="headerlink" title="3. 单调栈逻辑"></a>3. 单调栈逻辑</h4><p>无论采用哪种遍历方式，核心逻辑是一致的：<br>我们维护一个栈，栈中存储链表节点的值（或者带上下标）。我们在 <strong>从后往前</strong> 处理节点时：</p>
+<ol>
+<li>如果栈不为空，且 <strong>栈顶元素 &lt;&#x3D; 当前节点值</strong>：<br>说明栈顶元素比当前节点小，且在当前节点的右边。对于当前节点更左边的节点来说，当前节点是“距离更近且更大”的优选，所以栈顶元素已经没用了，<strong>弹出栈顶</strong>。</li>
+<li>重复步骤 1，直到栈为空或栈顶元素 &gt; 当前节点值。</li>
+<li>此时，如果栈不为空，<strong>栈顶元素</strong> 就是当前节点右侧第一个更大的值。</li>
+<li>将 <strong>当前节点值</strong> 入栈。</li>
+</ol>
+<h3 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h3><div class="tabs" id="code_block"><ul class="nav-tabs"><li class="tab active"><a href="#code_block-1">Python</a></li><li class="tab"><a href="#code_block-2">Go</a></li></ul><div class="tab-content"><div class="tab-pane active" id="code_block-1"><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Definition for singly-linked list.</span></span><br><span class="line"><span class="comment"># class ListNode:</span></span><br><span class="line"><span class="comment">#     def __init__(self, val=0, next=None):</span></span><br><span class="line"><span class="comment">#         self.val = val</span></span><br><span class="line"><span class="comment">#         self.next = next</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">nextLargerNodes</span>(<span class="params">self, head: <span class="type">Optional</span>[ListNode]</span>) -&gt; <span class="type">List</span>[<span class="built_in">int</span>]:</span><br><span class="line">        <span class="comment"># 1. 将链表转换为数组，以便通过索引访问和倒序遍历</span></span><br><span class="line">        nums = []</span><br><span class="line">        curr = head</span><br><span class="line">        <span class="keyword">while</span> curr:</span><br><span class="line">            nums.append(curr.val)</span><br><span class="line">            curr = curr.<span class="built_in">next</span></span><br><span class="line">            </span><br><span class="line">        n = <span class="built_in">len</span>(nums)</span><br><span class="line">        ans = [<span class="number">0</span>] * n</span><br><span class="line">        st = [] <span class="comment"># 单调栈，存储数值</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 2. 从后往前遍历数组</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(n - <span class="number">1</span>, -<span class="number">1</span>, -<span class="number">1</span>):</span><br><span class="line">            val = nums[i]</span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 维护单调栈：弹出所有小于等于当前值的元素</span></span><br><span class="line">            <span class="comment"># 因为对于更左边的元素，当前值 val 是一个更好的“下一个更大值”候选</span></span><br><span class="line">            <span class="keyword">while</span> st <span class="keyword">and</span> st[-<span class="number">1</span>] &lt;= val:</span><br><span class="line">                st.pop()</span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 如果栈不为空，栈顶即为右侧第一个更大的值</span></span><br><span class="line">            <span class="keyword">if</span> st:</span><br><span class="line">                ans[i] = st[-<span class="number">1</span>]</span><br><span class="line">            </span><br><span class="line">            <span class="comment"># 将当前值入栈</span></span><br><span class="line">            st.append(val)</span><br><span class="line">            </span><br><span class="line">        <span class="keyword">return</span> ans</span><br></pre></td></tr></table></figure></div><div class="tab-pane" id="code_block-2"><figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Definition for singly-linked list.</span></span><br><span class="line"><span class="comment"> * type ListNode struct &#123;</span></span><br><span class="line"><span class="comment"> *     Val int</span></span><br><span class="line"><span class="comment"> *     Next *ListNode</span></span><br><span class="line"><span class="comment"> * &#125;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">nextLargerNodes</span><span class="params">(head *ListNode)</span></span> []<span class="type">int</span> &#123;</span><br><span class="line">    st := []<span class="type">int</span>&#123;&#125; <span class="comment">// 单调栈，用于存储节点的值</span></span><br><span class="line">    <span class="keyword">var</span> ans []<span class="type">int</span> <span class="comment">// 结果数组</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 定义递归函数 f</span></span><br><span class="line">    <span class="comment">// node: 当前遍历到的节点</span></span><br><span class="line">    <span class="comment">// i: 当前节点的索引（从0开始）</span></span><br><span class="line">    <span class="keyword">var</span> f <span class="function"><span class="keyword">func</span><span class="params">(*ListNode, <span class="type">int</span>)</span></span></span><br><span class="line">    f = <span class="function"><span class="keyword">func</span><span class="params">(node *ListNode, i <span class="type">int</span>)</span></span> &#123;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 基本情况：遍历到链表末尾</span></span><br><span class="line">        <span class="keyword">if</span> node == <span class="literal">nil</span> &#123;</span><br><span class="line">            <span class="comment">// 此时知道了链表的总长度 i，初始化结果数组</span></span><br><span class="line">            ans = <span class="built_in">make</span>([]<span class="type">int</span>, i)</span><br><span class="line">            <span class="keyword">return</span> </span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 递归调用：先深入到下一个节点</span></span><br><span class="line">        <span class="comment">// 这会一直执行直到链表末尾</span></span><br><span class="line">        f(node.Next, i+<span class="number">1</span>)</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// --- 下面的代码在递归返回（回溯）阶段执行 ---</span></span><br><span class="line">        <span class="comment">// 此时相当于“从后往前”遍历链表</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 单调栈逻辑：</span></span><br><span class="line">        <span class="comment">// 如果栈顶元素 &lt;= 当前节点值，说明栈顶元素不可能是左边节点的“下一个更大值”</span></span><br><span class="line">        <span class="comment">// （因为当前节点更近且更大），所以将其弹出</span></span><br><span class="line">        <span class="keyword">for</span> <span class="built_in">len</span>(st) &gt; <span class="number">0</span> &amp;&amp; st[<span class="built_in">len</span>(st)<span class="number">-1</span>] &lt;= node.Val &#123;</span><br><span class="line">            st = st[:<span class="built_in">len</span>(st)<span class="number">-1</span>]</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 如果栈不为空，栈顶元素就是当前节点右侧第一个更大的值</span></span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">len</span>(st) &gt; <span class="number">0</span> &#123;</span><br><span class="line">            ans[i] = st[<span class="built_in">len</span>(st)<span class="number">-1</span>]</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 若栈为空，ans[i] 默认为 0 (make 初始化时已置 0)</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 将当前节点的值压入栈中，供前面的节点（上一层递归）判断使用</span></span><br><span class="line">        st = <span class="built_in">append</span>(st, node.Val)</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 从头节点开始递归，索引从 0 开始</span></span><br><span class="line">    f(head, <span class="number">0</span>)</span><br><span class="line">    <span class="keyword">return</span> ans</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div></div></div>
+
+<h3 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h3><ul>
+<li><p><strong>时间复杂度</strong>: <code>O(n)</code><br>无论是通过数组转换还是递归，每个节点都只会被访问一次。在单调栈的操作中，每个节点的值最多被压入栈一次，也最多被弹出栈一次，均摊复杂度为 <code>O(1)</code>。因此总时间复杂度为线性。</p>
+</li>
+<li><p><strong>空间复杂度</strong>: <code>O(n)</code></p>
+<ul>
+<li><strong>Python</strong>: 需要额外的数组 <code>nums</code> 存储链表值，以及栈 <code>st</code> 和结果数组 <code>ans</code>，均为 <code>O(n)</code>。</li>
+<li><strong>Go</strong>: 递归调用栈的深度为 <code>n</code>，且手动维护的单调栈 <code>st</code> 和结果数组 <code>ans</code> 最坏情况下也为 <code>O(n)</code>。</li>
+</ul>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>算法题解</category>
+        <category>单调栈</category>
+        <category>进阶</category>
+      </categories>
+      <tags>
+        <tag>数组</tag>
+        <tag>栈</tag>
+        <tag>单调栈</tag>
+        <tag>链表</tag>
+        <tag>第130场周赛</tag>
+      </tags>
+  </entry>
 </search>
