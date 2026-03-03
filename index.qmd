@@ -1,0 +1,28 @@
+---
+title: "MIN HE"
+image: images/hemin_2026.jpg
+about:
+  id: hero-heading
+  template: trestles
+  image-width: 12em
+  image-shape: round
+  links:
+    - icon: mailbox
+      text: MHE009@e.ntu.edu.sg
+      href: mailto:MHE009@e.ntu.edu.sg
+    - icon: github
+      text: mhe009
+      href: https://github.com/mhe009
+---
+
+::: {#hero-heading}
+
+My research interests lie in multimodal, large-scale models, machine learning, visual language navigation, and embodied intelligence.
+
+## Background
+
+- 2026-Present: Master of Science, Nanyang Technological University, specializing in Machine Learning.
+
+- 2021-2025: Bachelor of Engineering, Chongqing University of Technology, majoring in Computer Science and Technology.
+
+:::
