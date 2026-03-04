@@ -13,7 +13,7 @@ about:
       href: mailto:MHE009@e.ntu.edu.sg
     - icon: github
       text: Github
-      href: https://github.com/mhe009
+      href: https://github.com/qiyuanlanniao
 format:
   html:
     link-external-newwindow: true
@@ -48,7 +48,7 @@ Proposed a robust diagnostic framework addressing speckle noise interference and
 :::
 
 ::: {.project-header}
-[A Review of Data Fusion and Deep Learning Models for Multimodal Sentiment Analysis.]{.project-title}
+[A Review of Data Fusion and Deep Learning Models for Multimodal Sentiment Analysis]{.project-title}
 [Completed]{.project-date}
 :::
 ::: {.project-desc}
