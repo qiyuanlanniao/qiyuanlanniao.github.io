@@ -1,28 +1,81 @@
 ---
 title: "MIN HE"
+page-layout: full
 image: images/hemin_2026.jpg
 about:
   id: hero-heading
   template: trestles
-  image-width: 12em
-  image-shape: round
+  image-width: 20em
+  image-shape: rectangle
   links:
     - icon: mailbox
-      text: MHE009@e.ntu.edu.sg
+      text: Reach me per email
       href: mailto:MHE009@e.ntu.edu.sg
     - icon: github
-      text: mhe009
+      text: Github
       href: https://github.com/mhe009
+format:
+  html:
+    link-external-newwindow: true
 ---
 
 ::: {#hero-heading}
 
-My research interests lie in multimodal, large-scale models, machine learning, visual language navigation, and embodied intelligence.
+My research interests lie in multimodal, large models, machine learning, visual language navigation, and embodied intelligence.
 
 ## Background
 
-- 2026-Present: Master of Science, Nanyang Technological University, specializing in Machine Learning.
+- 2026-Present: Master of Science, Nanyang Technological University, specializing in Machine Learning, under supervision of Prof. [Lihua Xie](https://scholar.google.com/citations?user=Fmrv3J8AAAAJ&hl=en).
 
-- 2021-2025: Bachelor of Engineering, Chongqing University of Technology, majoring in Computer Science and Technology.
+- 2021-2025: Bachelor of Engineering (Honours), Chongqing University of Technology, majoring in Computer Science and Technology, under supervision of Prof. [Xiaofei Zhu](https://www.atailab.cn/).
+
+## Academic Experience
+
+::: {.project-header}
+[OmniVLN: Open-Set Instance-Level 3D Semantic Mapping with Rotating LiDAR and Panoramic Vision]{.project-title}
+[Under Research]{.project-date}
+:::
+::: {.project-desc}
+To address the pain points of traditional large-scale model navigation in complex scenarios, such as limited field of vision, lack of spatial logic, and redundancy of reasoning tokens, we designed and engineered a 3D semantic mapping and hierarchical reasoning system with omnidirectional spatiotemporal consistency.
+:::
+
+::: {.project-header}
+[HSM-Net: A Multimodal Diagnostic Framework for Abdominal Trauma Based on Frequency Domain Denoising and LLM Prior]{.project-title}
+[Under Research]{.project-date}
+:::
+::: {.project-desc}
+Proposed a robust diagnostic framework addressing speckle noise interference and multimodal semantic gaps in ultrasound diagnosis.
+:::
+
+::: {.project-header}
+[A Review of Data Fusion and Deep Learning Models for Multimodal Sentiment Analysis.]{.project-title}
+[Completed]{.project-date}
+:::
+::: {.project-desc}
+He, M. (2025). A Review of Data Fusion and Deep Learning Models for Multimodal Sentiment Analysis. In Proceedings of the 1st International Conference on E-commerce and Artificial Intelligence - **ECAI**; ISBN 978-989-758-726-9, SciTePress, pages 5-12. DOI: 10.5220/0013189700004568
+:::
+
+## Internship Experience
+
+::: {.project-header}
+<div>
+  [Full-stack Development Engineer (Internship)]{.project-title}
+  [| ZhuoRuiYuan(Suzhou)]{.project-company}
+</div>
+[2025.07 - 2025.08]{.project-date}
+:::
+::: {.project-desc}
+Spearheaded the end-to-end design and independent development of an integrated asset management system, featuring a PC web admin console and a WeChat Mini-Program. This initiative successfully resolved critical issues of disorganized asset tracking, cumbersome workflows, and information silos.
+:::
+
+## Honors & Awards
+- Outstanding graduates of Chongqing, 2025
+- Outstanding Bachelor's Thesis Award, 2025
+- National Scholarship, 2024
+- Second Prize in the National Undergraduate Data Statistics and Analysis Competition, 2023
+- Finalist Award in the CCF National Algorithm Elite Competition, 2023
+- Third Prize in the National Finals of the Team Programming Ladder Competition, 2023
+- First Prize in the National Undergraduate Mathematics Competition, 2023
+- Second Prize in the National Undergraduate Mathematical Modeling Competition, 2023
 
 :::

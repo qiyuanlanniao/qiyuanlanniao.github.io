@@ -24,6 +24,7 @@ $theme-orange: #f9af11;
 $theme-pumpkin: #d05808;
 $theme-darkgreen1: #355E3B;
 $theme-darkgreen2: #445740;
+$sky-blue: #5da5da;
 
 /* 新增红色变量定义 */
 $red: #ff0000; /* 定义红色变量 */
@@ -32,7 +33,8 @@ $blue: #0000ff;  /* 定义蓝色变量 */
 /* 主要背景和字体颜色 */
 $body-bg: $theme-white;
 $body-color: $theme-darkcoffee1; /* 正文字体颜色 */
-$headings-color: $theme-milkcoffee2; /* 标题字体颜色 */
+//$headings-color: $theme-milkcoffee2; /* 标题字体颜色 */
+$headings-color: $sky-blue;
 $link-color: $red; /* 默认超链接颜色 */
 
 /* 代码样式 */
@@ -42,7 +44,11 @@ $code-block-bg-alpha: -0.8; /* 代码块背景的透明度 */
 $background-color: $theme-milkcoffee0; /* 页面背景色 */
 
 /* 导航栏 */
-$navbar-bg: $theme-darkgreen1; /* 导航栏背景颜色 */
+//$navbar-bg: $theme-darkgreen1; /* 导航栏背景颜色 */
+$navbar-bg: $theme-white;      /* 修改这里：背景改为白色 */
+$navbar-title-color: $sky-blue;
+$navbar-hl-color: $sky-blue;
+$navbar-fg: $theme-black;      /* 建议添加：文字改为深灰色/黑色，否则看不见 */
 
 /* 提示框颜色 */
 $callout-color-note: $theme-darkgreen2; /* 提示框的注释颜色 */
@@ -70,7 +76,7 @@ $font-size-root: 16px; /* 根字体大小 */
 
 /* 链接颜色 */
 $link-color: $red; /* 链接的颜色为红色 */
-$link-hover-color: $blue; /* 链接悬停时的颜色 */
+$link-hover-color: $sky-blue; /* 链接悬停时的颜色 */
 
 /*-- scss:rules --*/
 
@@ -105,26 +111,33 @@ code {
 }
 
 /* 标题样式 */
-h1 {
-  color: $theme-darkcoffee3;
-  font-family: $font-pt;
-  font-size: 40px;
-}
-
-h2 {
-  color: $theme-darkcoffee3;
-  font-family: $font-pt;
-  font-size: 30px;
-}
-
-h3, h4 {
-  color: $theme-mocha1;
+h1, h2, h3, h4 {                /* 5. 统一将所有标题设为蓝色 */
+  color: $sky-blue !important;
   font-family: $font-pt;
 }
 
-h4 {
-  color: $theme-darkgreen1;
-}
+h1 { font-size: 40px; }
+h2 { font-size: 30px; }
+//h1 {
+//  color: $theme-darkcoffee3;
+//  font-family: $font-pt;
+//  font-size: 40px;
+//}
+//
+//h2 {
+//  color: $theme-darkcoffee3;
+//  font-family: $font-pt;
+//  font-size: 30px;
+//}
+//
+//h3, h4 {
+//  color: $theme-mocha1;
+//  font-family: $font-pt;
+//}
+//
+//h4 {
+//  color: $theme-darkgreen1;
+//}
 
 /* 代码块和推送样式 */
 .render-commit-push {
@@ -147,4 +160,114 @@ h4 {
   border-bottom: 1px solid #E0A890;
   background-size: 1em;
   background-position: 1em 0.5em;
+}
+
+.navbar {
+  border-bottom: 1px solid #eee; /* 给白色导航栏加一个浅色的底边框，更有质感 */
+}
+.nav-link, .navbar-title {
+  color: $theme-black !important; /* 确保导航栏文字是黑色的 */
+}
+
+/* 1. 改变链接按钮的边框和文字颜色 */
+.about-link {
+  color: #5da5da !important;          /* 文字颜色：柔和天空蓝 */
+  border: 1px solid #5da5da !important; /* 边框颜色 */
+  border-radius: 5px;                 /* 圆角程度，可以根据喜好调整 */
+  padding: 5px 10px;                  /* 内边距 */
+  transition: all 0.3s ease;          /* 增加过渡动画，看起来更丝滑 */
+}
+
+/* 2. 改变鼠标悬停时的样式 */
+.about-link:hover {
+  background-color: #5da5da !important; /* 悬停时背景变蓝 */
+  color: white !important;              /* 悬停时文字变白 */
+  text-decoration: none !important;     /* 去掉下划线 */
+}
+
+/* 3. 如果你想改变图标（icon）的颜色 */
+.about-link i {
+  color: inherit; /* 图标跟随文字颜色 */
+}
+
+/* 1. 修改 "On this page" 标题的颜色（设为深灰，让它不那么抢眼） */
+#quarto-sidebar-toc-header {
+  color: #666666;
+  font-weight: 600;
+}
+
+/* 2. 修改目录中普通链接的颜色（设为浅灰或深灰） */
+.sidebar nav[role=doc-toc] ul li a {
+  color: #888888 !important;
+}
+
+/* 3. 修改【当前活动章节】的颜色（把那个红色换成天空蓝） */
+.sidebar nav[role=doc-toc] ul li a.active {
+  color: #5da5da !important;         /* 这里换成你喜欢的天空蓝 */
+  border-left: 2px solid #5da5da;    /* 左侧的那条小竖线也换成蓝色 */
+  font-weight: bold;
+}
+
+/* 4. 鼠标悬停在目录上的颜色 */
+.sidebar nav[role=doc-toc] ul li a:hover {
+  color: #5da5da !important;
+}
+
+/* 让 about 页面的内容区域更宽 */
+.quarto-about-trestles .about-entity {
+  //border-right: 1px solid #eee; /* 在图片和文字间加一条很淡的竖线，更美观 */
+  padding-right: 40px;
+  flex-basis: 20% !important;  /* 调整图片占用的宽度比例 */
+}
+
+.quarto-about-trestles .about-contents {
+  flex-basis: 80% !important;  /* 调整文字占用的宽度比例 */
+  padding-left: 40px;
+}
+
+/* 强制外层容器利用更多宽度 */
+.quarto-about-trestles {
+  max-width: 100%; /* 设置一个较大的最大宽度，或者设为 95% */
+  margin: 0 auto;
+}
+
+/* 项目条目容器 */
+.project-header {
+  display: flex;
+  justify-content: space-between; /* 关键：这行会让内容分别向左和向右靠齐 */
+  align-items: baseline;          /* 确保文字底部对齐 */
+  margin-top: 1.5em;
+  margin-bottom: 0.2em;
+}
+
+/* 项目名称样式 */
+.project-title {
+  font-weight: bold;
+  font-size: 1.1em;
+  color: #5da5da; /* 你的天空蓝 */
+}
+
+/* 重新定义时间样式，强制向右靠齐 */
+.project-date {
+  margin-left: auto;     /* 核心：自动推到最右边 */
+  text-align: right;     /* 文字右对齐 */
+
+  /* 你之前的样式 */
+  font-style: italic;
+  color: #666;
+  white-space: nowrap;
+  font-size: 0.95em;
+}
+
+/* 简介样式 */
+.project-desc {
+  margin-left: 0;
+  text-align: justify; /* 文字两端对齐，看起来更整齐 */
+  line-height: 1.6;
+}
+
+.project-company {
+  font-weight: 600;      /* 半加粗 */
+  color: #444;           /* 深灰色，与职位的蓝色区分开 */
+  margin-left: 8px;      /* 与职位的间距 */
 }
