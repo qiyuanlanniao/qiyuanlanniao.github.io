@@ -27,6 +27,8 @@ website:
         href: Chinese.qmd
       - text: "CV"
         href: CV_He_Min_NTU_MSc.pdf
+      - text: "简历"
+        href: 简历_何旻_NTU_硕士.pdf
 
 format:
   html:
