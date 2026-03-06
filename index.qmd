@@ -44,7 +44,7 @@ To address the pain points of traditional large-scale model navigation in comple
 [Under Research]{.project-date}
 :::
 ::: {.project-desc}
-Proposed a robust diagnostic framework addressing speckle noise interference and multimodal semantic gaps in ultrasound diagnosis.
+To address the challenges of speckle noise interference and the multimodal semantic gap in the diagnosis of abdominal trauma ultrasound, this project innovatively integrates frequency domain sensing denoising, large model semantic injection, and a hybrid expert dynamic routing mechanism.
 :::
 
 ::: {.project-header}

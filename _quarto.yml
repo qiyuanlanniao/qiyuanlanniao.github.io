@@ -5,7 +5,7 @@ project:
   
 website:
   page-navigation: true
-  title: "MIN HE"
+  title: ""
   site-url: https://mhe009.github.io
 #  favicon: images/site-logo.png
   repo-url: https://github.com/mhe009/mhe009.github.io
@@ -36,3 +36,4 @@ format:
     toc: true            # 启用目录
     toc-position: right  # 将目录放置在页面的右侧
     toc-depth: 3         # 设置目录的深度，数字越大，目录越详细
+    include-in-header: github-corner.html
