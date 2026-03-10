@@ -473,3 +473,15 @@ code {
   padding: 0.2em 0.4em;
   border-radius: 3px;
 }
+
+/* 去掉所有链接的下划线 */
+a {
+  text-decoration: none !important; /* 强制去掉下划线 */
+  border-bottom: none !important;   /* 有些主题是用底边框模拟的下划线，也要去掉 */
+}
+
+/* 如果希望鼠标悬停时也不出现下划线 */
+a:hover {
+  text-decoration: none !important;
+  border-bottom: none !important;
+}

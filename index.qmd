@@ -36,7 +36,7 @@ My research interests lie in multimodal, large models, machine learning, visual 
 [Under Research]{.project-date}
 :::
 ::: {.project-desc}
-To address the pain points of traditional large-scale model navigation in complex scenarios, such as limited field of vision, lack of spatial logic, and redundancy of reasoning tokens, we designed and engineered a 3D semantic mapping and hierarchical reasoning system with omnidirectional spatiotemporal consistency.
+To address the issues of missing spatial logic and context overload in large-scale complex scenarios, this method constructs a dynamic scene graph and a multi-resolution attention model, achieving omnidirectional consistent 3D semantic mapping with a long-range navigation success rate of 87.56%. Furthermore, it reduces token costs by up to 56% through backend geometry pre-computation.
 :::
 
 ::: {.project-header}
@@ -44,7 +44,7 @@ To address the pain points of traditional large-scale model navigation in comple
 [Under Research]{.project-date}
 :::
 ::: {.project-desc}
-To address the challenges of speckle noise interference and the multimodal semantic gap in the diagnosis of abdominal trauma ultrasound, this project innovatively integrates frequency domain sensing denoising, large model semantic injection, and a hybrid expert dynamic routing mechanism.
+To address the challenges of speckle noise interference and the multimodal semantic gap in the diagnosis of abdominal trauma ultrasound, this framework innovatively integrates FFT frequency domain denoising, LLM semantic injection, and a dynamic MoE expert system, achieving an accuracy of 91.87%, comprehensively surpassing 12 state-of-the-art methods such as FedMedCLIP and CardiacCLIP.
 :::
 
 ::: {.project-header}
@@ -55,18 +55,19 @@ To address the challenges of speckle noise interference and the multimodal seman
 He, M. (2025). A Review of Data Fusion and Deep Learning Models for Multimodal Sentiment Analysis. In Proceedings of the 1st International Conference on E-commerce and Artificial Intelligence - **ECAI**; ISBN 978-989-758-726-9, SciTePress, pages 5-12. DOI: 10.5220/0013189700004568
 :::
 
-## Internship Experience
+## Project Experience
 
 ::: {.project-header}
 <div>
-  [Full-stack Development Engineer (Internship)]{.project-title}
-  [| ZhuoRuiYuan(Suzhou)]{.project-company}
+  [AI Agent Intelligent Application Development]{.project-title}
 </div>
-[2025.07 - 2025.08]{.project-date}
+[2024.07 - 2024.09]{.project-date}
 :::
-::: {.project-desc}
-Spearheaded the end-to-end design and independent development of an integrated asset management system, featuring a PC web admin console and a WeChat Mini-Program. This initiative successfully resolved critical issues of disorganized asset tracking, cumbersome workflows, and information silos.
-:::
+- Led the design and core development of a multi-functional AI Agent application; conducted requirement analysis, technology selection, and architecture design, implementing core AI logic for intent recognition and task decomposition using LLM and LangChain.
+- Independently developed the RAG module, building a specialized knowledge base and optimizing semantic search; enabled dynamic tool scheduling through ToolKit, empowering the agent to autonomously perform complex tasks.
+- Designed and implemented a multi-turn conversation memory system and explored emotion detection. Integrated speech synthesis and Telegram Bot, and built an API layer using FastAPI to facilitate front-end and third-party system integration.
+- Led the Docker deployment and Langsmith monitoring; overcame key technical challenges, including custom tool integration, memory persistence, and multi-tool parameter validation, ensuring smooth engineering and operational performance.
+
 
 ## Honors & Awards
 - Outstanding graduates of Chongqing, 2025
