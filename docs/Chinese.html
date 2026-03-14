@@ -143,7 +143,6 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#教育背景" id="toc-教育背景" class="nav-link" data-scroll-target="#教育背景">教育背景</a></li>
   <li><a href="#研究兴趣" id="toc-研究兴趣" class="nav-link" data-scroll-target="#研究兴趣">研究兴趣</a></li>
   <li><a href="#科研经历" id="toc-科研经历" class="nav-link" data-scroll-target="#科研经历">科研经历</a></li>
-  <li><a href="#项目经历" id="toc-项目经历" class="nav-link" data-scroll-target="#项目经历">项目经历</a></li>
   <li><a href="#荣誉奖项" id="toc-荣誉奖项" class="nav-link" data-scroll-target="#荣誉奖项">荣誉奖项</a></li>
   </ul>
 </nav>
@@ -202,13 +201,13 @@ ul.task-list li input[type="checkbox"] {
 <p><span class="project-title">OmniVLN：面向空地视觉语言导航的全方位3D感知和令牌高效LLM推理</span> <span class="project-date">在研</span></p>
 </div>
 <div class="project-desc">
-<p>针对大规模复杂场景下LLM空间逻辑缺失及上下文过载的问题，该方法通过构建动态场景图和多分辨率注意力模型，算法上实现了全向一致的3D语义建图，长程导航成功率达87.56%，且通过后端几何预计算将Token成本最高压缩了56%。</p>
+<p>针对大规模3D场景中LLM空间推理缺失及上下文爆炸问题，基于 Python , PyTorch与 ROS2开发了一套全向感知驱动的具身智能Agent框架。通过构建动态场景图作为智能体世界模型，配合多分辨率空间注意力机制，实现了Zero-shot环境下的复杂长程导航，成功率达93.18%，并将 Token成本最高压缩了69.98%。</p>
 </div>
 <div class="project-header">
 <p><span class="project-title">HSM-Net: 基于频域去噪与LLM先验的多模态腹部创伤诊断框架</span> <span class="project-date">在研</span></p>
 </div>
 <div class="project-desc">
-<p>针对腹部创伤超声诊断中散斑噪声干扰及多模态语义鸿沟难题，该框架创新性地融合FFT频域降噪、LLM语义注入与动态MoE专家系统，准确率达 91.87%，全面超越FedMedCLIP、CardiacCLIP等12种SOTA方法。</p>
+<p>针对腹部创伤超声诊断中高频散斑噪声干扰及生理-影像跨模态语义鸿沟难题，基于Python和PyTorch开发了一套集成频域感知、大模型先验与动态决策的深度学习框架。在真实临床数据集上实现了91.87%的二分类准确率与90.62%的四级损伤分级精度，性能全面超越了包括CardiacCLIP在内的12种SOTA模型。</p>
 </div>
 <div class="project-header">
 <p><span class="project-title">A Review of Data Fusion and Deep Learning Models for Multimodal Sentiment Analysis.</span> <span class="project-date">已完成</span></p>
@@ -216,24 +215,6 @@ ul.task-list li input[type="checkbox"] {
 <div class="project-desc">
 <p>He, M. (2025). A Review of Data Fusion and Deep Learning Models for Multimodal Sentiment Analysis. In Proceedings of the 1st International Conference on E-commerce and Artificial Intelligence - <strong>ECAI</strong>; ISBN 978-989-758-726-9, SciTePress, pages 5-12. DOI: 10.5220/0013189700004568</p>
 </div>
-</section>
-<section id="项目经历" class="level2">
-<h2 class="anchored" data-anchor-id="项目经历">项目经历</h2>
-<div class="project-header">
-<div>
-<p><span class="project-title">AI Agent智能应用开发</span></p>
-</div>
-<p><span class="project-date">2024.07 ~ 2024.09</span></p>
-</div>
-<div class="project-desc">
-<p>负责并主导了一款多功能AI Agent智能应用的设计与开发，基于LLM、RAG、自动化工具调度、持久化记忆系统及情绪感知能力，实现面向特定场景的智能对话、任务执行与语音交互。</p>
-</div>
-<ul>
-<li>架构设计：基于LangChain构建模块化Agent架构，实现意图识别与复杂任务自动拆解。</li>
-<li>RAG 与调度：集成Qdrant向量数据库实现知识增强，设计动态工具调度系统支持Agent自主决策。</li>
-<li>交互与记忆：构建持久化记忆模块与FastAPI接口，集成Telegram Bot与语音SDK实现多模态交互。</li>
-<li>工程落地：主导Docker部署与LangSmith监控，攻克工具参数校验与记忆同步难题，显著提升鲁棒性。</li>
-</ul>
 </section>
 <section id="荣誉奖项" class="level2">
 <h2 class="anchored" data-anchor-id="荣誉奖项">荣誉奖项</h2>
@@ -243,9 +224,6 @@ ul.task-list li input[type="checkbox"] {
 <li>国家级-全国算法精英大赛全国总决赛入围奖</li>
 <li>国家级-团体程序设计天梯赛全国总决赛三等奖</li>
 <li>省市级-重庆市优秀毕业生</li>
-<li>省市级-全国大学生数学竞赛一等奖</li>
-<li>省市级-全国大学生数学建模竞赛二等奖</li>
-<li>校级-本科生毕业设计优秀论文</li>
 </ul>
 <!-- ![](https://fig-lianxh.oss-cn-shenzhen.aliyuncs.com/LianxhHome.PNG) -->
 

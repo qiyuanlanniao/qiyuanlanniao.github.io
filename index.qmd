@@ -29,14 +29,14 @@ My research interests lie in multimodal, large models, machine learning, visual 
 
 - 2021-2025: Bachelor of Engineering (Honours), Chongqing University of Technology, majoring in Computer Science and Technology, under supervision of Prof. [Xiaofei Zhu](https://www.atailab.cn/).
 
-## Academic Experience
+## Project Experience
 
 ::: {.project-header}
 [OmniVLN: Open-Set Instance-Level 3D Semantic Mapping with Rotating LiDAR and Panoramic Vision]{.project-title}
 [Under Research]{.project-date}
 :::
 ::: {.project-desc}
-To address the issues of missing spatial logic and context overload in large-scale complex scenarios, this method constructs a dynamic scene graph and a multi-resolution attention model, achieving omnidirectional consistent 3D semantic mapping with a long-range navigation success rate of 87.56%. Furthermore, it reduces token costs by up to 56% through backend geometry pre-computation.
+To address the issues of missing spatial reasoning and context explosion in large-scale 3D scenes using LLM, an omnidirectional perception-driven embodied intelligence agent framework was developed based on Python, PyTorch, and ROS2. By constructing a dynamic scene graph as the agent's world model and combining it with a multi-resolution spatial attention mechanism, complex long-range navigation in zero-shot environments was achieved with a success rate of 93.18%, while reducing token costs by up to 69.98%.
 :::
 
 ::: {.project-header}
@@ -44,7 +44,7 @@ To address the issues of missing spatial logic and context overload in large-sca
 [Under Research]{.project-date}
 :::
 ::: {.project-desc}
-To address the challenges of speckle noise interference and the multimodal semantic gap in the diagnosis of abdominal trauma ultrasound, this framework innovatively integrates FFT frequency domain denoising, LLM semantic injection, and a dynamic MoE expert system, achieving an accuracy of 91.87%, comprehensively surpassing 12 state-of-the-art methods such as FedMedCLIP and CardiacCLIP.
+To address the challenges of high-frequency speckle noise interference and the cross-modal semantic gap between physiology and imaging in abdominal trauma ultrasound diagnosis, a deep learning framework integrating frequency domain awareness, large model priors, and dynamic decision-making was developed using Python and PyTorch. On real clinical datasets, it achieved a binary classification accuracy of 91.87% and a four-level injury grading accuracy of 90.62%, comprehensively outperforming 12 state-of-the-art models, including CardiacCLIP.
 :::
 
 ::: {.project-header}
@@ -55,19 +55,6 @@ To address the challenges of speckle noise interference and the multimodal seman
 He, M. (2025). A Review of Data Fusion and Deep Learning Models for Multimodal Sentiment Analysis. In Proceedings of the 1st International Conference on E-commerce and Artificial Intelligence - **ECAI**; ISBN 978-989-758-726-9, SciTePress, pages 5-12. DOI: 10.5220/0013189700004568
 :::
 
-## Project Experience
-
-::: {.project-header}
-<div>
-  [AI Agent Intelligent Application Development]{.project-title}
-</div>
-[2024.07 - 2024.09]{.project-date}
-:::
-- Led the design and core development of a multi-functional AI Agent application; conducted requirement analysis, technology selection, and architecture design, implementing core AI logic for intent recognition and task decomposition using LLM and LangChain.
-- Independently developed the RAG module, building a specialized knowledge base and optimizing semantic search; enabled dynamic tool scheduling through ToolKit, empowering the agent to autonomously perform complex tasks.
-- Designed and implemented a multi-turn conversation memory system and explored emotion detection. Integrated speech synthesis and Telegram Bot, and built an API layer using FastAPI to facilitate front-end and third-party system integration.
-- Led the Docker deployment and Langsmith monitoring; overcame key technical challenges, including custom tool integration, memory persistence, and multi-tool parameter validation, ensuring smooth engineering and operational performance.
-
 
 ## Honors & Awards
 - Outstanding graduates of Chongqing, 2025
@@ -76,7 +63,5 @@ He, M. (2025). A Review of Data Fusion and Deep Learning Models for Multimodal S
 - Second Prize in the National Undergraduate Data Statistics and Analysis Competition, 2023
 - Finalist Award in the CCF National Algorithm Elite Competition, 2023
 - Third Prize in the National Finals of the Team Programming Ladder Competition, 2023
-- First Prize in the National Undergraduate Mathematics Competition, 2023
-- Second Prize in the National Undergraduate Mathematical Modeling Competition, 2023
 
 :::

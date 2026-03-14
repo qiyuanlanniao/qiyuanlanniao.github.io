@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="b9659c34-fbcf-4cde-9c4d-282a31b5f504" name="bigdata15">
+        <fileTransfer accessType="SFTP" host="ssh.atailab.cn" port="10015" sshConfigId="a3b44d76-0142-49f5-9586-0834f319cec0" sshConfig="bigdata15@ssh.atailab.cn:10015 password">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>
