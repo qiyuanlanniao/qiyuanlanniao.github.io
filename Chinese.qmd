@@ -11,7 +11,7 @@ editor:
 
 - 邮箱：MHE009@e.ntu.edu.sg
 - 地址：新加坡南洋大道50号，邮编639798
-- 个人主页：<https://mhe009.github.io>
+- 个人主页：<https://qiyuanlanniao.github.io>
 
 ## 教育背景
 
