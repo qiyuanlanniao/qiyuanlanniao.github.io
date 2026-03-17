@@ -21,7 +21,7 @@ format:
 
 ::: {#hero-heading}
 
-My research interests lie in multimodal, large models, machine learning, visual language navigation, and embodied intelligence.
+Research areas include multimodal learning, large language models, machine learning, intelligent agents, vision-language navigation, and embodied intelligence
 
 ## Background
 
