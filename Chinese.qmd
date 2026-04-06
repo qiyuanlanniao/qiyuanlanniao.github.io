@@ -25,13 +25,12 @@ editor:
 - 智能体
 - 机器学习
 - 具身智能
-- 视觉语言导航
 
 ## 科研经历
 
 ::: {.project-header}
-[OmniVLN：面向空地视觉语言导航的全方位3D感知和令牌高效LLM推理]{.project-title}
-[已投递]{.project-date}
+[OmniVLN：面向空地视觉语言导航的全方位3D感知和令牌高效LLM推理](https://arxiv.org/pdf/2603.17351){.project-title}
+[已投递 IEEE RA-L (SCI Q2 TOP)]{.project-date}
 :::
 ::: {.project-desc}
 针对大规模3D场景中LLM空间推理缺失及上下文爆炸问题，基于 Python , PyTorch与 ROS2开发了一套全向感知驱动的具身智能Agent框架。通过构建动态场景图作为智能体世界模型，配合多分辨率空间注意力机制，实现了Zero-shot环境下的复杂长程导航，成功率达93.18%，并将 Token成本最高压缩了69.98%。
@@ -39,18 +38,18 @@ editor:
 
 ::: {.project-header}
 [HSM-Net: 基于频域去噪与LLM先验的多模态腹部创伤诊断框架]{.project-title}
-[待投递]{.project-date}
+[拟投递 Artificial Intelligence in Medicine (SCI Q2 TOP)]{.project-date}
 :::
 ::: {.project-desc}
 针对腹部创伤超声诊断中高频散斑噪声干扰及生理-影像跨模态语义鸿沟难题，基于Python和PyTorch开发了一套集成频域感知、大模型先验与动态决策的深度学习框架。在真实临床数据集上实现了91.87%的二分类准确率与90.62%的四级损伤分级精度，性能全面超越了包括CardiacCLIP在内的12种SOTA模型。
 :::
 
 ::: {.project-header}
-[A Review of Data Fusion and Deep Learning Models for Multimodal Sentiment Analysis.]{.project-title}
-[已发表]{.project-date}
+[A Review of Data Fusion and Deep Learning Models for Multimodal Sentiment Analysis.](https://www.scitepress.org/Papers/2024/131897/131897.pdf){.project-title}
+[已发表 ECAI (CCF B)]{.project-date}
 :::
 ::: {.project-desc}
-He, M. (2025). A Review of Data Fusion and Deep Learning Models for Multimodal Sentiment Analysis. In Proceedings of the 1st International Conference on E-commerce and Artificial Intelligence - **ECAI**; ISBN 978-989-758-726-9, SciTePress, pages 5-12. DOI: 10.5220/0013189700004568
+He, M. (2025). A Review of Data Fusion and Deep Learning Models for Multimodal Sentiment Analysis. In Proceedings of the 1st International Conference on E-commerce and Artificial Intelligence - **ECAI (CCF B)**; ISBN 978-989-758-726-9, SciTePress, pages 5-12. DOI: 10.5220/0013189700004568
 :::
 
 

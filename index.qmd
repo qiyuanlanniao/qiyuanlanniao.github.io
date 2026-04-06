@@ -21,7 +21,7 @@ format:
 
 ::: {#hero-heading}
 
-Research areas include multimodal learning, large language models, machine learning, intelligent agents, vision-language navigation, and embodied intelligence.
+Research areas include multimodal learning, large language models, machine learning, intelligent agents, and embodied intelligence.
 
 ## Background
 
@@ -32,8 +32,8 @@ Research areas include multimodal learning, large language models, machine learn
 ## Project Experience
 
 ::: {.project-header}
-[OmniVLN: Open-Set Instance-Level 3D Semantic Mapping with Rotating LiDAR and Panoramic Vision]{.project-title}
-[Submitted]{.project-date}
+[OmniVLN: Open-Set Instance-Level 3D Semantic Mapping with Rotating LiDAR and Panoramic Vision](https://arxiv.org/pdf/2603.17351){.project-title}
+[Submitted to IEEE RA-L (SCI Q2 TOP)]{.project-date}
 :::
 ::: {.project-desc}
 To address the issues of missing spatial reasoning and context explosion in large-scale 3D scenes using LLM, an omnidirectional perception-driven embodied intelligence agent framework was developed based on Python, PyTorch, and ROS2. By constructing a dynamic scene graph as the agent's world model and combining it with a multi-resolution spatial attention mechanism, complex long-range navigation in zero-shot environments was achieved with a success rate of 93.18%, while reducing token costs by up to 69.98%.
@@ -41,18 +41,18 @@ To address the issues of missing spatial reasoning and context explosion in larg
 
 ::: {.project-header}
 [HSM-Net: A Multimodal Diagnostic Framework for Abdominal Trauma Based on Frequency Domain Denoising and LLM Prior]{.project-title}
-[To be submitted]{.project-date}
+[Proposed submission to Artificial Intelligence in Medicine (SCI Q2 TOP)]{.project-date}
 :::
 ::: {.project-desc}
 To address the challenges of high-frequency speckle noise interference and the cross-modal semantic gap between physiology and imaging in abdominal trauma ultrasound diagnosis, a deep learning framework integrating frequency domain awareness, large model priors, and dynamic decision-making was developed using Python and PyTorch. On real clinical datasets, it achieved a binary classification accuracy of 91.87% and a four-level injury grading accuracy of 90.62%, comprehensively outperforming 12 state-of-the-art models, including CardiacCLIP.
 :::
 
 ::: {.project-header}
-[A Review of Data Fusion and Deep Learning Models for Multimodal Sentiment Analysis]{.project-title}
-[Published]{.project-date}
+[A Review of Data Fusion and Deep Learning Models for Multimodal Sentiment Analysis](https://www.scitepress.org/Papers/2024/131897/131897.pdf){.project-title}
+[Published to ECAI (CCF B)]{.project-date}
 :::
 ::: {.project-desc}
-He, M. (2025). A Review of Data Fusion and Deep Learning Models for Multimodal Sentiment Analysis. In Proceedings of the 1st International Conference on E-commerce and Artificial Intelligence - **ECAI**; ISBN 978-989-758-726-9, SciTePress, pages 5-12. DOI: 10.5220/0013189700004568
+He, M. (2025). A Review of Data Fusion and Deep Learning Models for Multimodal Sentiment Analysis. In Proceedings of the 1st International Conference on E-commerce and Artificial Intelligence - **ECAI (CCF B)**; ISBN 978-989-758-726-9, SciTePress, pages 5-12. DOI: 10.5220/0013189700004568
 :::
 
 
