@@ -4,7 +4,7 @@
     "href": "index.html",
     "title": "MIN HE",
     "section": "",
-    "text": "Reach me per email\n  \n  \n    \n     Github\n  \n\n  \n  \nResearch areas include multimodal learning, large language models, machine learning, intelligent agents, and embodied intelligence.\n\n\n\n2026-Present: Master of Science, Nanyang Technological University, specializing in Machine Learning, under supervision of Prof. Lihua Xie.\n2021-2025: Bachelor of Engineering (Honours), Chongqing University of Technology, majoring in Computer Science and Technology, under supervision of Prof. Xiaofei Zhu.\n\n\n\n\n\nOmniVLN: Open-Set Instance-Level 3D Semantic Mapping with Rotating LiDAR and Panoramic Vision Submitted to IEEE RA-L (SCI Q2 TOP)\n\n\nTo address the issues of missing spatial reasoning and context explosion in large-scale 3D scenes using LLM, an omnidirectional perception-driven embodied intelligence agent framework was developed based on Python, PyTorch, and ROS2. By constructing a dynamic scene graph as the agent’s world model and combining it with a multi-resolution spatial attention mechanism, complex long-range navigation in zero-shot environments was achieved with a success rate of 93.18%, while reducing token costs by up to 69.98%.\n\n\nHSM-Net: A Multimodal Diagnostic Framework for Abdominal Trauma Based on Frequency Domain Denoising and LLM Prior Proposed submission to Artificial Intelligence in Medicine (SCI Q2 TOP)\n\n\nTo address the challenges of high-frequency speckle noise interference and the cross-modal semantic gap between physiology and imaging in abdominal trauma ultrasound diagnosis, a deep learning framework integrating frequency domain awareness, large model priors, and dynamic decision-making was developed using Python and PyTorch. On real clinical datasets, it achieved a binary classification accuracy of 91.87% and a four-level injury grading accuracy of 90.62%, comprehensively outperforming 12 state-of-the-art models, including CardiacCLIP.\n\n\nA Review of Data Fusion and Deep Learning Models for Multimodal Sentiment Analysis Published to ECAI (CCF B)\n\n\nHe, M. (2025). A Review of Data Fusion and Deep Learning Models for Multimodal Sentiment Analysis. In Proceedings of the 1st International Conference on E-commerce and Artificial Intelligence - ECAI (CCF B); ISBN 978-989-758-726-9, SciTePress, pages 5-12. DOI: 10.5220/0013189700004568\n\n\n\n\n\nOutstanding graduates of Chongqing, 2025\nOutstanding Bachelor’s Thesis Award, 2025\nNational Scholarship, 2024\nSecond Prize in the National Undergraduate Data Statistics and Analysis Competition, 2023\nFinalist Award in the CCF National Algorithm Elite Competition, 2023\nThird Prize in the National Finals of the Team Programming Ladder Competition, 2023"
+    "text": "Reach me per email\n  \n  \n    \n     Github\n  \n\n  \n  \nResearch areas include VLN, large language models, machine learning, intelligent agents, and embodied intelligence.\n\n\n\n2026-Present: Master of Science, Nanyang Technological University, specializing in Machine Learning, under supervision of Prof. Lihua Xie.\n2021-2025: Bachelor of Engineering (Honours), Chongqing University of Technology, majoring in Computer Science and Technology, under supervision of Prof. Xiaofei Zhu.\n\n\n\n\n\nLenovo (Shanghai) Information Technology Co., Ltd. (LR Robotics Algorithm) — Embodied AI Research Intern (Robotics) 2026.05-2026.08\n\n\nThe SOTA-level dual-system navigation model DualVLN (based on InternVLA-N1) was successfully adapted and deployed on the Lenovo Morningstar MX robot. The decision-making layer (System 2) fine-tunes QwenVL-2.5 (7B) to generate 2D pixel-space sub-goals, while the control layer (System 1) utilizes a Flow-Matching (NextDiT) model to predict 32-step continuous physical trajectories, achieving a 94.37% navigation success rate in real-world scenarios.\n\n\n\n\n\nOmniVLN: Open-Set Instance-Level 3D Semantic Mapping with Rotating LiDAR and Panoramic Vision Submitted to IEEE RA-L (SCI Q2 TOP)\n\n\nTo address the issues of missing spatial reasoning and context explosion in large-scale 3D scenes using LLM, an omnidirectional perception-driven embodied intelligence agent framework was developed based on Python, PyTorch, and ROS2. By constructing a dynamic scene graph as the agent’s world model and combining it with a multi-resolution spatial attention mechanism, complex long-range navigation in zero-shot environments was achieved with a success rate of 93.18%, while reducing token costs by up to 69.98%.\n\n\nA Review of Data Fusion and Deep Learning Models for Multimodal Sentiment Analysis. First Author，Published to ECAI，DOI: 10.5220/0013189700004568\n\n\n\n\n\nOutstanding graduates of Chongqing, 2025\nOutstanding Bachelor’s Thesis Award, 2025\nNational Scholarship, 2024\nSecond Prize in the National Undergraduate Data Statistics and Analysis Competition, 2023\nFinalist Award in the CCF National Algorithm Elite Competition, 2023\nThird Prize in the National Finals of the Team Programming Ladder Competition, 2023"
   },
   {
     "objectID": "index.html#background",
@@ -14,11 +14,18 @@
     "text": "2026-Present: Master of Science, Nanyang Technological University, specializing in Machine Learning, under supervision of Prof. Lihua Xie.\n2021-2025: Bachelor of Engineering (Honours), Chongqing University of Technology, majoring in Computer Science and Technology, under supervision of Prof. Xiaofei Zhu."
   },
   {
-    "objectID": "index.html#project-experience",
-    "href": "index.html#project-experience",
+    "objectID": "index.html#internship-experience",
+    "href": "index.html#internship-experience",
     "title": "MIN HE",
     "section": "",
-    "text": "OmniVLN: Open-Set Instance-Level 3D Semantic Mapping with Rotating LiDAR and Panoramic Vision Submitted to IEEE RA-L (SCI Q2 TOP)\n\n\nTo address the issues of missing spatial reasoning and context explosion in large-scale 3D scenes using LLM, an omnidirectional perception-driven embodied intelligence agent framework was developed based on Python, PyTorch, and ROS2. By constructing a dynamic scene graph as the agent’s world model and combining it with a multi-resolution spatial attention mechanism, complex long-range navigation in zero-shot environments was achieved with a success rate of 93.18%, while reducing token costs by up to 69.98%.\n\n\nHSM-Net: A Multimodal Diagnostic Framework for Abdominal Trauma Based on Frequency Domain Denoising and LLM Prior Proposed submission to Artificial Intelligence in Medicine (SCI Q2 TOP)\n\n\nTo address the challenges of high-frequency speckle noise interference and the cross-modal semantic gap between physiology and imaging in abdominal trauma ultrasound diagnosis, a deep learning framework integrating frequency domain awareness, large model priors, and dynamic decision-making was developed using Python and PyTorch. On real clinical datasets, it achieved a binary classification accuracy of 91.87% and a four-level injury grading accuracy of 90.62%, comprehensively outperforming 12 state-of-the-art models, including CardiacCLIP.\n\n\nA Review of Data Fusion and Deep Learning Models for Multimodal Sentiment Analysis Published to ECAI (CCF B)\n\n\nHe, M. (2025). A Review of Data Fusion and Deep Learning Models for Multimodal Sentiment Analysis. In Proceedings of the 1st International Conference on E-commerce and Artificial Intelligence - ECAI (CCF B); ISBN 978-989-758-726-9, SciTePress, pages 5-12. DOI: 10.5220/0013189700004568"
+    "text": "Lenovo (Shanghai) Information Technology Co., Ltd. (LR Robotics Algorithm) — Embodied AI Research Intern (Robotics) 2026.05-2026.08\n\n\nThe SOTA-level dual-system navigation model DualVLN (based on InternVLA-N1) was successfully adapted and deployed on the Lenovo Morningstar MX robot. The decision-making layer (System 2) fine-tunes QwenVL-2.5 (7B) to generate 2D pixel-space sub-goals, while the control layer (System 1) utilizes a Flow-Matching (NextDiT) model to predict 32-step continuous physical trajectories, achieving a 94.37% navigation success rate in real-world scenarios."
+  },
+  {
+    "objectID": "index.html#research-experience",
+    "href": "index.html#research-experience",
+    "title": "MIN HE",
+    "section": "",
+    "text": "OmniVLN: Open-Set Instance-Level 3D Semantic Mapping with Rotating LiDAR and Panoramic Vision Submitted to IEEE RA-L (SCI Q2 TOP)\n\n\nTo address the issues of missing spatial reasoning and context explosion in large-scale 3D scenes using LLM, an omnidirectional perception-driven embodied intelligence agent framework was developed based on Python, PyTorch, and ROS2. By constructing a dynamic scene graph as the agent’s world model and combining it with a multi-resolution spatial attention mechanism, complex long-range navigation in zero-shot environments was achieved with a success rate of 93.18%, while reducing token costs by up to 69.98%.\n\n\nA Review of Data Fusion and Deep Learning Models for Multimodal Sentiment Analysis. First Author，Published to ECAI，DOI: 10.5220/0013189700004568"
   },
   {
     "objectID": "index.html#honors-awards",
@@ -32,14 +39,14 @@
     "href": "Chinese.html",
     "title": "中文简历",
     "section": "",
-    "text": "何旻，男，中共党员。现就读于南洋理工大学电子与电气工程学院，研究方向为具身智能、视觉语言导航等。2025年毕业于重庆理工大学计算机科学与工程学院，获工学荣誉学士学位。\n\n邮箱：MHE009@e.ntu.edu.sg\n地址：新加坡南洋大道50号，邮编639798\n个人主页：https://qiyuanlanniao.github.io"
+    "text": "何旻，男，中共党员。现就读于南洋理工大学电子与电气工程学院，研究方向为具身智能、视觉语言导航、大模型智能体等。2025年毕业于重庆理工大学计算机科学与工程学院，获工学荣誉学士学位。\n\n邮箱：MHE009@e.ntu.edu.sg\n地址：新加坡南洋大道50号，邮编639798\n个人主页：https://qiyuanlanniao.github.io"
   },
   {
     "objectID": "Chinese.html#个人简介",
     "href": "Chinese.html#个人简介",
     "title": "中文简历",
     "section": "",
-    "text": "何旻，男，中共党员。现就读于南洋理工大学电子与电气工程学院，研究方向为具身智能、视觉语言导航等。2025年毕业于重庆理工大学计算机科学与工程学院，获工学荣誉学士学位。\n\n邮箱：MHE009@e.ntu.edu.sg\n地址：新加坡南洋大道50号，邮编639798\n个人主页：https://qiyuanlanniao.github.io"
+    "text": "何旻，男，中共党员。现就读于南洋理工大学电子与电气工程学院，研究方向为具身智能、视觉语言导航、大模型智能体等。2025年毕业于重庆理工大学计算机科学与工程学院，获工学荣誉学士学位。\n\n邮箱：MHE009@e.ntu.edu.sg\n地址：新加坡南洋大道50号，邮编639798\n个人主页：https://qiyuanlanniao.github.io"
   },
   {
     "objectID": "Chinese.html#教育背景",
@@ -53,14 +60,21 @@
     "href": "Chinese.html#研究兴趣",
     "title": "中文简历",
     "section": "研究兴趣",
-    "text": "研究兴趣\n\n多模态\n大模型\n智能体\n机器学习\n具身智能"
+    "text": "研究兴趣\n\nVLN\n智能体\n大模型\n具身智能"
+  },
+  {
+    "objectID": "Chinese.html#实习经历",
+    "href": "Chinese.html#实习经历",
+    "title": "中文简历",
+    "section": "实习经历",
+    "text": "实习经历\n\n联想（上海）信息技术有限公司（LR Robotics Algorithm）- 机器人具身智能研究实习生 2026.05-2026.08\n\n\n将 SOTA 级双系统导航模型 DualVLN（基于 InternVLA-N1） 成功适配并部署于联想晨星MX机器人真机。决策层（System 2）微调 QwenVL-2.5（7B）生成 2D 像素亚目标点；控制层（System 1）基于 Flow-Matching（NextDiT）模型预测32步连续物理轨迹，真实场景导航成功率94.37%。"
   },
   {
     "objectID": "Chinese.html#科研经历",
     "href": "Chinese.html#科研经历",
     "title": "中文简历",
     "section": "科研经历",
-    "text": "科研经历\n\nOmniVLN：面向空地视觉语言导航的全方位3D感知和令牌高效LLM推理 已投递 IEEE RA-L (SCI Q2 TOP)\n\n\n针对大规模3D场景中LLM空间推理缺失及上下文爆炸问题，基于 Python , PyTorch与 ROS2开发了一套全向感知驱动的具身智能Agent框架。通过构建动态场景图作为智能体世界模型，配合多分辨率空间注意力机制，实现了Zero-shot环境下的复杂长程导航，成功率达93.18%，并将 Token成本最高压缩了69.98%。\n\n\nHSM-Net: 基于频域去噪与LLM先验的多模态腹部创伤诊断框架 拟投递 Artificial Intelligence in Medicine (SCI Q2 TOP)\n\n\n针对腹部创伤超声诊断中高频散斑噪声干扰及生理-影像跨模态语义鸿沟难题，基于Python和PyTorch开发了一套集成频域感知、大模型先验与动态决策的深度学习框架。在真实临床数据集上实现了91.87%的二分类准确率与90.62%的四级损伤分级精度，性能全面超越了包括CardiacCLIP在内的12种SOTA模型。\n\n\nA Review of Data Fusion and Deep Learning Models for Multimodal Sentiment Analysis. 已发表 ECAI (CCF B)\n\n\nHe, M. (2025). A Review of Data Fusion and Deep Learning Models for Multimodal Sentiment Analysis. In Proceedings of the 1st International Conference on E-commerce and Artificial Intelligence - ECAI (CCF B); ISBN 978-989-758-726-9, SciTePress, pages 5-12. DOI: 10.5220/0013189700004568"
+    "text": "科研经历\n\nOmniVLN：面向空地视觉语言导航的全方位3D感知和令牌高效LLM推理 First Author, IEEE RA-L (SCI Q2 TOP, Under Review)\n\n\n针对大规模3D场景中LLM空间推理缺失及上下文爆炸问题，基于 Python , PyTorch与 ROS2开发了一套全向感知驱动的具身智能Agent框架。通过构建动态场景图作为智能体世界模型，配合多分辨率空间注意力机制，实现了Zero-shot环境下的复杂长程导航，成功率达93.18%，并将 Token成本最高压缩了69.98%。\n\n\nA Review of Data Fusion and Deep Learning Models for Multimodal Sentiment Analysis. First Author，Published to ECAI，DOI: 10.5220/0013189700004568"
   },
   {
     "objectID": "Chinese.html#荣誉奖项",

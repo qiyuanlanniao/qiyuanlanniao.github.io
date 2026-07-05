@@ -21,7 +21,7 @@ format:
 
 ::: {#hero-heading}
 
-Research areas include multimodal learning, large language models, machine learning, intelligent agents, and embodied intelligence.
+Research areas include VLN, large language models, machine learning, intelligent agents, and embodied intelligence.
 
 ## Background
 
@@ -29,7 +29,17 @@ Research areas include multimodal learning, large language models, machine learn
 
 - 2021-2025: Bachelor of Engineering (Honours), Chongqing University of Technology, majoring in Computer Science and Technology, under supervision of Prof. [Xiaofei Zhu](https://www.atailab.cn/).
 
-## Project Experience
+## Internship Experience
+
+::: {.project-header}
+[Lenovo (Shanghai) Information Technology Co., Ltd. (LR Robotics Algorithm) — Embodied AI Research Intern (Robotics)]{.project-title}
+[2026.05-2026.08]{.project-date}
+:::
+::: {.project-desc}
+The SOTA-level dual-system navigation model DualVLN (based on InternVLA-N1) was successfully adapted and deployed on the Lenovo Morningstar MX robot. The decision-making layer (System 2) fine-tunes QwenVL-2.5 (7B) to generate 2D pixel-space sub-goals, while the control layer (System 1) utilizes a Flow-Matching (NextDiT) model to predict 32-step continuous physical trajectories, achieving a 94.37% navigation success rate in real-world scenarios.
+:::
+
+## Research Experience
 
 ::: {.project-header}
 [OmniVLN: Open-Set Instance-Level 3D Semantic Mapping with Rotating LiDAR and Panoramic Vision](https://arxiv.org/pdf/2603.17351){.project-title}
@@ -40,19 +50,8 @@ To address the issues of missing spatial reasoning and context explosion in larg
 :::
 
 ::: {.project-header}
-[HSM-Net: A Multimodal Diagnostic Framework for Abdominal Trauma Based on Frequency Domain Denoising and LLM Prior]{.project-title}
-[Proposed submission to Artificial Intelligence in Medicine (SCI Q2 TOP)]{.project-date}
-:::
-::: {.project-desc}
-To address the challenges of high-frequency speckle noise interference and the cross-modal semantic gap between physiology and imaging in abdominal trauma ultrasound diagnosis, a deep learning framework integrating frequency domain awareness, large model priors, and dynamic decision-making was developed using Python and PyTorch. On real clinical datasets, it achieved a binary classification accuracy of 91.87% and a four-level injury grading accuracy of 90.62%, comprehensively outperforming 12 state-of-the-art models, including CardiacCLIP.
-:::
-
-::: {.project-header}
-[A Review of Data Fusion and Deep Learning Models for Multimodal Sentiment Analysis](https://www.scitepress.org/Papers/2024/131897/131897.pdf){.project-title}
-[Published to ECAI (CCF B)]{.project-date}
-:::
-::: {.project-desc}
-He, M. (2025). A Review of Data Fusion and Deep Learning Models for Multimodal Sentiment Analysis. In Proceedings of the 1st International Conference on E-commerce and Artificial Intelligence - **ECAI (CCF B)**; ISBN 978-989-758-726-9, SciTePress, pages 5-12. DOI: 10.5220/0013189700004568
+[A Review of Data Fusion and Deep Learning Models for Multimodal Sentiment Analysis.](https://www.scitepress.org/Papers/2024/131897/131897.pdf){.project-title}
+[First Author，Published to ECAI，DOI: 10.5220/0013189700004568]{.project-date}
 :::
 
 
