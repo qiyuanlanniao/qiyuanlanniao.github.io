@@ -31,7 +31,7 @@ editor:
 [2026.05-2026.08]{.project-date}
 :::
 ::: {.project-desc}
-将 SOTA 级双系统导航模型 DualVLN（基于 InternVLA-N1） 成功适配并部署于联想晨星MX机器人真机。决策层（System 2）微调 QwenVL-2.5（7B）生成 2D 像素亚目标点；控制层（System 1）基于 Flow-Matching（NextDiT）模型预测32步连续物理轨迹，真实场景导航成功率94.37%。
+以联想晨星机器人为载体，构建了由任务规划主脑NavAgent与双系统导航InternVLA-N1-DualVLN协同智能体系统。NavAgent基于LangGraph状态机与MCP统一调度ROS2工具箱，负责全局任务解析、记忆存储、遥测自检与异常诊断。DualVLN负责具体的运动生成，利用System2（2HZ，微调QwenVL-2.5）预测2D像素亚目标，并由System1（30HZ，NextDiT）输出高频物理轨迹。SR提升10.1%，SPL提升6.7%，NE降低17.6%，StR降低32.5%。
 :::
 
 ## 科研经历
@@ -41,7 +41,7 @@ editor:
 [First Author, IEEE RA-L (SCI Q2 TOP, Under Review)]{.project-date}
 :::
 ::: {.project-desc}
-针对大规模3D场景中LLM空间推理缺失及上下文爆炸问题，基于 Python , PyTorch与 ROS2开发了一套全向感知驱动的具身智能Agent框架。通过构建动态场景图作为智能体世界模型，配合多分辨率空间注意力机制，实现了Zero-shot环境下的复杂长程导航，成功率达93.18%，并将 Token成本最高压缩了69.98%。
+针对大规模3D场景中LLM空间推理缺失及上下文爆炸问题，基于 Python , PyTorch与 ROS2开发了一套全向感知驱动的具身智能Agent框架。通过构建动态场景图作为智能体世界模型，配合多分辨率空间注意力机制，实现 Zero-shot长程导航，SR达93.18%，Token成本降低69.98%。
 :::
 
 ::: {.project-header}
