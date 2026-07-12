@@ -38,7 +38,7 @@ editor:
 
 ::: {.project-header}
 [OmniVLN：面向空地视觉语言导航的全方位3D感知和令牌高效LLM推理](https://arxiv.org/pdf/2603.17351){.project-title}
-[First Author, IEEE RA-L (SCI Q2 TOP, Under Review)]{.project-date}
+[Co-first Author, IEEE RA-L (SCI Q2 TOP, Under Review)]{.project-date}
 :::
 ::: {.project-desc}
 针对大规模3D场景中LLM空间推理缺失及上下文爆炸问题，基于 Python , PyTorch与 ROS2开发了一套全向感知驱动的具身智能Agent框架。通过构建动态场景图作为智能体世界模型，配合多分辨率空间注意力机制，实现 Zero-shot长程导航，SR达93.18%，Token成本降低69.98%。
