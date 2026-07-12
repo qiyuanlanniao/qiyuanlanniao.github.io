@@ -52,7 +52,7 @@ To address the issues of missing spatial reasoning and context explosion in larg
 
 ::: {.project-header}
 [A Review of Data Fusion and Deep Learning Models for Multimodal Sentiment Analysis.](https://www.scitepress.org/Papers/2024/131897/131897.pdf){.project-title}
-[First Author，Published to ECAI，DOI: 10.5220/0013189700004568]{.project-date}
+[First Author, Published to In Proceedings of E-commerce and Artificial Intelligence (ECAI 2024)]{.project-date}
 :::
 
 
