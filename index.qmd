@@ -21,7 +21,7 @@ format:
 
 ::: {#hero-heading}
 
-Research areas include VLN, large language models, machine learning, intelligent agents, and embodied intelligence.
+Research areas include Vision-and-Language Navigation (VLN), Vision-Language Action (VLA), World Model (WM), and AI agents.
 
 ## Background
 
@@ -40,7 +40,14 @@ Leveraging the Lenovo Morningstar robot as the platform, a collaborative intelli
 task parsing, memory storage, telemetry self-checks, and anomaly diagnosis. DualVLN manages specific motion generation: System 2 (2 Hz; fine-tuned QwenVL-2.5) predicts 2D pixel sub-goals, while System 1 (30 Hz; NextDiT) outputs high-frequency physical trajectories. SR increased by 10.1%, SPL increased by 6.7%, NE decreased by 17.6%, and StR decreased by 32.5%.
 :::
 
-## Research Experience
+## Project Experience
+::: {.project-header}
+[Fine-tuning SmolVLA Robot Grasping Policies Using Multimodal Synthetic Data]{.project-title}
+[2026.07-2026.08]{.project-date}
+:::
+::: {.project-desc}
+This project successfully executed the full embodied AI development pipeline—spanning synthetic data generation, VLA policy fine-tuning, and closed-loop evaluation—on the AMD GPU (ROCm) platform. Leveraging the Genesis physics engine, the team automatically collected and packaged a multimodal dataset of 13,500 frames in LeRobot format and performed efficient, low-memory fine-tuning on the 450-million-parameter SmolVLA model (with VRAM usage as low as 2.27 GB). Ultimately, end-to-end closed-loop control was achieved in a virtual environment, yielding a 55% success rate for grasping and lifting tasks at novel, randomly assigned target locations.
+:::
 
 ::: {.project-header}
 [OmniVLN: Open-Set Instance-Level 3D Semantic Mapping with Rotating LiDAR and Panoramic Vision](https://arxiv.org/pdf/2603.17351){.project-title}
