@@ -191,7 +191,7 @@ ul.task-list li input[type="checkbox"] {
 <ul>
 <li>VLN</li>
 <li>VLA</li>
-<li>WM</li>
+<li>WAM</li>
 <li>Agent</li>
 </ul>
 </section>
@@ -207,10 +207,10 @@ ul.task-list li input[type="checkbox"] {
 <section id="项目经历" class="level2">
 <h2 class="anchored" data-anchor-id="项目经历">项目经历</h2>
 <div class="project-header">
-<p><span class="project-title">基于多模态合成数据的 SmolVLA 机器人抓取策略微调</span> <span class="project-date">2026.07-2026.08</span></p>
+<p><span class="project-title">基于多模态合成数据的SmolVLA机器人水果抓取策略微调与闭环评测</span> <span class="project-date">2026.07-2026.08</span></p>
 </div>
 <div class="project-desc">
-<p>本项目在 AMD GPU（ROCm）计算平台上构建了“仿真合成数据生成→VLA 策略微调→闭环评估”的具身智能全链路开发流程。依托Genesis物理引擎，自动采集并封装了包含13500帧的多模态数据集，数据格式采用 LeRobot 标准；同时针对参数量达4.5亿的SmolVLA模型开展低显存高效微调，模型显存占用最低仅2.27GB。最终在虚拟仿真环境中实现端到端闭环控制，针对随机生成的全新抓取、举升目标点位，任务成功率达到 55%。</p>
+<p>本项目在AMD GPU（ROCm）构建了“多目标仿真合成数据生成 → VLA 策略微调 →闭环评测”的全链路开发。利用Genesis的IK专家控制器采集Franka机械臂针对多种几何形态水果的抓取轨迹，聚合封装为 LeRobot 标准多模态数据集。在此基础上对SmolVLA进行微调，并在多目标随机扰动场景下完成闭环放置验证。</p>
 </div>
 <div class="project-header">
 <p><a href="https://arxiv.org/pdf/2603.17351" class="project-title">OmniVLN：面向空地视觉语言导航的全方位3D感知和令牌高效LLM推理</a> <span class="project-date">Co-first Author, IEEE RA-L (SCI Q2 TOP, Under Review)</span></p>

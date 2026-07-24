@@ -21,7 +21,7 @@ format:
 
 ::: {#hero-heading}
 
-Research areas include Vision-and-Language Navigation (VLN), Vision-Language Action (VLA), World Model (WM), and AI agents.
+Research areas include Vision-and-Language Navigation (VLN), Vision-Language Action (VLA), World Action Model (WAM), and AI Agent.
 
 ## Background
 
@@ -42,11 +42,11 @@ task parsing, memory storage, telemetry self-checks, and anomaly diagnosis. Dual
 
 ## Project Experience
 ::: {.project-header}
-[Fine-tuning SmolVLA Robot Grasping Policies Using Multimodal Synthetic Data]{.project-title}
+[Fine-tuning and Closed-loop Evaluation of SmolVLA Robot Fruit-Grasping Strategies Based on Multimodal Synthetic Data]{.project-title}
 [2026.07-2026.08]{.project-date}
 :::
 ::: {.project-desc}
-This project successfully executed the full embodied AI development pipeline—spanning synthetic data generation, VLA policy fine-tuning, and closed-loop evaluation—on the AMD GPU (ROCm) platform. Leveraging the Genesis physics engine, the team automatically collected and packaged a multimodal dataset of 13,500 frames in LeRobot format and performed efficient, low-memory fine-tuning on the 450-million-parameter SmolVLA model (with VRAM usage as low as 2.27 GB). Ultimately, end-to-end closed-loop control was achieved in a virtual environment, yielding a 55% success rate for grasping and lifting tasks at novel, randomly assigned target locations.
+This project establishes an end-to-end development pipeline—comprising multi-object simulated synthetic data generation, VLA policy fine-tuning, and closed-loop evaluation—on AMD GPUs (ROCm). It utilizes the Genesis IK expert controller to capture grasping trajectories of a Franka robotic arm for fruits of various geometries, aggregating and packaging the data into a LeRobot-standard multimodal dataset. Based on this, SmolVLA is fine-tuned, and closed-loop placement validation is conducted in scenarios featuring multiple objects and random perturbations.
 :::
 
 ::: {.project-header}
