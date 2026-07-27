@@ -36,11 +36,11 @@ editor:
 
 ## 项目经历
 ::: {.project-header}
-[基于多模态合成数据的SmolVLA机器人水果抓取策略微调与闭环评测]{.project-title}
+[基于多模态合成数据的SmolVLA机器人水果抓取策略微调与闭环评测](https://github.com/qiyuanlanniao/Franka_Fruit_Pick){.project-title}
 [2026.07-2026.08]{.project-date}
 :::
 ::: {.project-desc}
-本项目在AMD GPU（ROCm）构建了“多目标仿真合成数据生成 → VLA 策略微调 →闭环评测”的全链路开发。利用Genesis的IK专家控制器采集Franka机械臂针对多种几何形态水果的抓取轨迹，聚合封装为 LeRobot 标准多模态数据集。在此基础上对SmolVLA进行微调，并在多目标随机扰动场景下完成闭环放置验证。
+本项目在AMD GPU（ROCm）构建了“多目标仿真合成数据生成 → VLA策略微调 → 闭环评测”的全链路开发。利用Genesis的IK专家控制器自主生成并聚合了包含150组（3万+帧） 3类几何水果的标准LeRobot多模态数据集。在此基础上完成了SmolVLA的模仿学习微调，并在包含跨域视觉与物理干扰的环境下，实现了76%的端到端闭环放置成功率（较无DR模型提升8%）。
 :::
 
 ::: {.project-header}
@@ -48,7 +48,7 @@ editor:
 [Co-first Author, IEEE RA-L (SCI Q2 TOP, Under Review)]{.project-date}
 :::
 ::: {.project-desc}
-针对大规模3D场景中LLM空间推理缺失及上下文爆炸问题，基于 Python , PyTorch与 ROS2开发了一套全向感知驱动的具身智能Agent框架。通过构建动态场景图作为智能体世界模型，配合多分辨率空间注意力机制，实现 Zero-shot长程导航，SR达93.18%，Token成本降低69.98%。
+针对大规模3D场景中LLM空间推理缺失及上下文爆炸问题，基于Python, PyTorch与 ROS 2开发了一套全向感知驱动的具身智能Agent框架。前端融合旋转雷达与全景视觉，构建5层动态场景图，结合持续同调自适应房间分割与VLM混合剪枝，决策端首创立体8邻域与多分辨率空间注意力提示，实现 Zero-shot长程导航，SR达93.18%（视角依赖准确率提升 22.73%），Token成本降低69.98%。
 :::
 
 ::: {.project-header}
@@ -61,7 +61,6 @@ editor:
 
 - 国家级-国家奖学金
 - 国家级-全国大学生数据统计与分析竞赛全国二等奖
-- 国家级-全国算法精英大赛全国总决赛入围奖
 - 国家级-团体程序设计天梯赛全国总决赛三等奖
 - 省市级-重庆市优秀毕业生
 

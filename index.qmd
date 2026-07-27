@@ -42,11 +42,11 @@ task parsing, memory storage, telemetry self-checks, and anomaly diagnosis. Dual
 
 ## Project Experience
 ::: {.project-header}
-[Fine-tuning and Closed-loop Evaluation of SmolVLA Robot Fruit-Grasping Strategies Based on Multimodal Synthetic Data]{.project-title}
-[2026.07-2026.08]{.project-date}
+[Fine-tuning and Closed-loop Evaluation of SmolVLA Robot Fruit-Grasping Strategies Based on Multimodal Synthetic Data](https://github.com/qiyuanlanniao/Franka_Fruit_Pick){.project-title}
+[2026.07-Present]{.project-date}
 :::
 ::: {.project-desc}
-This project establishes an end-to-end development pipeline—comprising multi-object simulated synthetic data generation, VLA policy fine-tuning, and closed-loop evaluation—on AMD GPUs (ROCm). It utilizes the Genesis IK expert controller to capture grasping trajectories of a Franka robotic arm for fruits of various geometries, aggregating and packaging the data into a LeRobot-standard multimodal dataset. Based on this, SmolVLA is fine-tuned, and closed-loop placement validation is conducted in scenarios featuring multiple objects and random perturbations.
+This project established an end-to-end development pipeline—spanning multi-objective synthetic data generation, VLA policy fine-tuning, and closed-loop evaluation—on AMD GPUs (ROCm). Leveraging the Genesis IK expert controller, the team autonomously generated and aggregated a standard LeRobot multimodal dataset comprising 150 episodes (over 30,000 frames) featuring three categories of geometric fruit. Building on this, SmolVLA underwent imitation learning fine-tuning, achieving a 76% success rate in end-to-end closed-loop placement tasks within environments characterized by cross-domain visual and physical disturbances (an 8% improvement over models without domain randomization).
 :::
 
 ::: {.project-header}
@@ -54,7 +54,7 @@ This project establishes an end-to-end development pipeline—comprising multi-o
 [Co-first Author, IEEE RA-L (SCI Q2 TOP, Under Review)]{.project-date}
 :::
 ::: {.project-desc}
-To address the issues of missing spatial reasoning and context explosion in large-scale 3D scenes using LLM, an omnidirectional perception-driven embodied intelligence agent framework was developed based on Python, PyTorch, and ROS2. By constructing a dynamic scene graph as the agent's world model and combining it with a multi-resolution spatial attention mechanism, complex long-range navigation in zero-shot environments was achieved with a success rate of 93.18%, while reducing token costs by up to 69.98%.
+To address the lack of spatial reasoning capabilities in LLMs and the issue of context explosion within large-scale 3D environments, we developed an omnidirectional perception-driven embodied AI agent framework using Python, PyTorch, and ROS 2. The front-end integrates rotating LiDAR and panoramic vision to construct a five-layer dynamic scene graph, utilizing persistent homology-based adaptive room segmentation and VLM-based hybrid pruning. At the decision-making level, we pioneered the use of 3D 8-neighbor connectivity and multi-resolution spatial attention prompting to achieve zero-shot long-range navigation; this resulted in a 93.18% success rate (with a 22.73% improvement in viewpoint-dependent accuracy) and a 69.98% reduction in token costs.
 :::
 
 ::: {.project-header}
@@ -68,7 +68,6 @@ To address the issues of missing spatial reasoning and context explosion in larg
 - Outstanding Bachelor's Thesis Award, 2025
 - National Scholarship, 2024
 - Second Prize in the National Undergraduate Data Statistics and Analysis Competition, 2023
-- Finalist Award in the CCF National Algorithm Elite Competition, 2023
 - Third Prize in the National Finals of the Team Programming Ladder Competition, 2023
 
 :::
