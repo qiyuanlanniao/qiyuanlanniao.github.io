@@ -21,7 +21,7 @@ format:
 
 ::: {#hero-heading}
 
-Research areas include Vision-and-Language Navigation (VLN), Vision-Language Action (VLA), World Action Model (WAM), and AI Agent.
+Research areas include Vision-Language Action (VLA), Vision-and-Language Navigation (VLN), World Action Model (WAM), and AI Agent.
 
 ## Background
 
@@ -36,17 +36,16 @@ Research areas include Vision-and-Language Navigation (VLN), Vision-Language Act
 [2026.05-2026.08]{.project-date}
 :::
 ::: {.project-desc}
-Leveraging the Lenovo Morningstar robot as the platform, a collaborative intelligent agent system has been constructed, comprising the task-planning "mastermind" NavAgent and the dual-system navigator InternVLA-N1-DualVLN. NavAgent utilizes the LangGraph state machine and MCP to orchestrate the ROS2 toolkit, handling global 
-task parsing, memory storage, telemetry self-checks, and anomaly diagnosis. DualVLN manages specific motion generation: System 2 (2 Hz; fine-tuned QwenVL-2.5) predicts 2D pixel sub-goals, while System 1 (30 Hz; NextDiT) outputs high-frequency physical trajectories. SR increased by 10.1%, SPL increased by 6.7%, NE decreased by 17.6%, and StR decreased by 32.5%.
+Using the Lenovo Morningstar MX robot as a platform, an intelligent agent system, AgenticVLN, was constructed, which is a collaborative system of NavAgent (the task planning mastermind) and DualVLN (a slow-fast dual-system navigation). NavAgent, based on a LangGraph state machine, is responsible for global task parsing, memory storage, telemetry self-checking, and anomaly diagnosis. DualVLN is responsible for specific motion generation, using System2 (2Hz, fine-tuned QwenVL-2.5) to predict 2D pixel sub-targets, and System1 (30Hz, NextDiT) to output high-frequency physical trajectories. SR increased by 10.1%, SPL increased by 6.7%, NE decreased by 17.6%, and StR decreased by 32.5%.
 :::
 
 ## Project Experience
 ::: {.project-header}
-[Fine-tuning and Closed-loop Evaluation of SmolVLA Robot Fruit-Grasping Strategies Based on Multimodal Synthetic Data](https://github.com/qiyuanlanniao/Franka_Fruit_Pick){.project-title}
-[2026.07-Present]{.project-date}
+[DirectVLA: Development of a High-Frequency, Low-Memory Real-Time VLA Strategy for a Simplified Direct Mapping Architecture]{.project-title}
+[2026.06-Present]{.project-date}
 :::
 ::: {.project-desc}
-This project established an end-to-end development pipeline—spanning multi-objective synthetic data generation, VLA policy fine-tuning, and closed-loop evaluation—on AMD GPUs (ROCm). Leveraging the Genesis IK expert controller, the team autonomously generated and aggregated a standard LeRobot multimodal dataset comprising 150 episodes (over 30,000 frames) featuring three categories of geometric fruit. Building on this, SmolVLA underwent imitation learning fine-tuning, achieving a 76% success rate in end-to-end closed-loop placement tasks within environments characterized by cross-domain visual and physical disturbances (an 8% improvement over models without domain randomization).
+Addressing the bottlenecks of traditional VLA, which relies on LLM with billions of parameters, resulting in large memory requirements (>10 GB) and high latency (~11 Hz), we spearheaded the development of DirectVLA, a real-time strategy with a minimalist direct mapping architecture. The project abandons the V→L→A path, constructing a V+L→A model based on DINOv3 and BERT, combining bidirectional text-to-image interaction with non-autoregressive continuous action block decoding. On a single RTX 4090, the model achieves an ultra-low latency of ~30ms with only 0.2B parameters and 0.9GB of memory. High robustness closed-loop verification was completed on a single LIBERO arm (97.7%), RoboTwin dual arms (60.2%), and the xMate SR3 real-world device (up to 92.5%).
 :::
 
 ::: {.project-header}
@@ -54,7 +53,7 @@ This project established an end-to-end development pipeline—spanning multi-obj
 [Co-first Author, IEEE RA-L (SCI Q2 TOP, Under Review)]{.project-date}
 :::
 ::: {.project-desc}
-To address the lack of spatial reasoning capabilities in LLMs and the issue of context explosion within large-scale 3D environments, we developed an omnidirectional perception-driven embodied AI agent framework using Python, PyTorch, and ROS 2. The front-end integrates rotating LiDAR and panoramic vision to construct a five-layer dynamic scene graph, utilizing persistent homology-based adaptive room segmentation and VLM-based hybrid pruning. At the decision-making level, we pioneered the use of 3D 8-neighbor connectivity and multi-resolution spatial attention prompting to achieve zero-shot long-range navigation; this resulted in a 93.18% success rate (with a 22.73% improvement in viewpoint-dependent accuracy) and a 69.98% reduction in token costs.
+To address the challenges of spatial reasoning deficiencies and context bloat in embodied agents, an autonomous navigation agent architecture based on a LangGraph state graph and a 5-layer dynamic scene graph environment world model is constructed. The system integrates continuous coherent topology-based room allocation and VLM dual-graph pruning to refine spatial representations. At the decision-making end, an innovative ego-centric 3D 8-neighborhood observation model and a multi-resolution spatial attention cue mechanism are implemented, combined with Actor-Critic self-reflection and spatial toolchain enhancements to achieve a long-range zero-shot proactive perception closed loop. Experiments show that the agent's decision success rate reaches 93.18% (with a 22.73% improvement in viewpoint-dependent accuracy) and inference token consumption is reduced by 69.98%.
 :::
 
 ::: {.project-header}
