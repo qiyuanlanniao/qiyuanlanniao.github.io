@@ -27,7 +27,7 @@ editor:
 
 ## 实习经历
 ::: {.project-header}
-[联想（上海）信息技术有限公司（LR Robotics Algorithm）- 机器人具身智能研究实习生]{.project-title}
+[联想（上海）信息技术有限公司（LR Robotics Algorithm）- 机器人具身智能研究实习生](https://github.com/qiyuanlanniao/AgenticVLN){.project-title}
 [2026.05-2026.08]{.project-date}
 :::
 ::: {.project-desc}
@@ -36,7 +36,7 @@ editor:
 
 ## 项目经历
 ::: {.project-header}
-[DirectVLA：极简直接映射架构的高频低显存实时VLA策略研发]{.project-title}
+[DirectVLA：极简直接映射架构的高频低显存实时VLA策略研发](https://github.com/qiyuanlanniao/DirectVLA){.project-title}
 [2026.06-今]{.project-date}
 :::
 ::: {.project-desc}

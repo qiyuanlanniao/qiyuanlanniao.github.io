@@ -198,7 +198,7 @@ ul.task-list li input[type="checkbox"] {
 <section id="实习经历" class="level2">
 <h2 class="anchored" data-anchor-id="实习经历">实习经历</h2>
 <div class="project-header">
-<p><span class="project-title">联想（上海）信息技术有限公司（LR Robotics Algorithm）- 机器人具身智能研究实习生</span> <span class="project-date">2026.05-2026.08</span></p>
+<p><a href="https://github.com/qiyuanlanniao/AgenticVLN" class="project-title">联想（上海）信息技术有限公司（LR Robotics Algorithm）- 机器人具身智能研究实习生</a> <span class="project-date">2026.05-2026.08</span></p>
 </div>
 <div class="project-desc">
 <p>以联想晨星MX机器人为载体，构建了由任务规划主脑NavAgent与Slow-Fast双系统导航DualVLN协同的智能体系统AgenticVLN。NavAgent基于LangGraph状态机，负责全局任务解析、记忆存储、遥测自检与异常诊断。DualVLN负责具体的运动生成，利用System2（2HZ，微调QwenVL-2.5）预测2D像素亚目标，并由System1（30HZ，NextDiT）输出高频物理轨迹。SR提升10.1%, SPL提升6.7%, NE降低17.6%, StR降低32.5%。</p>
@@ -207,7 +207,7 @@ ul.task-list li input[type="checkbox"] {
 <section id="项目经历" class="level2">
 <h2 class="anchored" data-anchor-id="项目经历">项目经历</h2>
 <div class="project-header">
-<p><span class="project-title">DirectVLA：极简直接映射架构的高频低显存实时VLA策略研发</span> <span class="project-date">2026.06-今</span></p>
+<p><a href="https://github.com/qiyuanlanniao/DirectVLA" class="project-title">DirectVLA：极简直接映射架构的高频低显存实时VLA策略研发</a> <span class="project-date">2026.06-今</span></p>
 </div>
 <div class="project-desc">
 <p>针对传统 VLA 依赖数十亿参数 LLM 导致显存大（&gt;10 GB）且延迟高（~11 Hz）的瓶颈，主导研发了极简直接映射架构的实时策略DirectVLA。项目摒弃V→L→A 路径，基于DINOv3与BERT构建V+L→A模型，结合双向图文交互与非自回归连续动作块解码。在单张RTX 4090上，模型以仅0.2B参数和0.9GB显存实现~30ms超低延迟。 在LIBERO单臂（97.7%），RoboTwin双臂（60.2%）及xMate SR3实机（最高 92.5%）上完成高鲁棒性闭环验证。</p>

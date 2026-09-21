@@ -32,7 +32,7 @@ Research areas include Vision-Language Action (VLA), Vision-and-Language Navigat
 ## Internship Experience
 
 ::: {.project-header}
-[Lenovo (Shanghai) Information Technology Co., Ltd. (LR Robotics Algorithm) — Embodied AI Research Intern (Robotics)]{.project-title}
+[Lenovo (Shanghai) Information Technology Co., Ltd. (LR Robotics Algorithm) — Embodied AI Research Intern (Robotics)](https://github.com/qiyuanlanniao/AgenticVLN){.project-title}
 [2026.05-2026.08]{.project-date}
 :::
 ::: {.project-desc}
@@ -41,7 +41,7 @@ Using the Lenovo Morningstar MX robot as a platform, an intelligent agent system
 
 ## Project Experience
 ::: {.project-header}
-[DirectVLA: Development of a High-Frequency, Low-Memory Real-Time VLA Strategy for a Simplified Direct Mapping Architecture]{.project-title}
+[DirectVLA: Development of a High-Frequency, Low-Memory Real-Time VLA Strategy for a Simplified Direct Mapping Architecture](https://github.com/qiyuanlanniao/DirectVLA){.project-title}
 [2026.06-Present]{.project-date}
 :::
 ::: {.project-desc}
