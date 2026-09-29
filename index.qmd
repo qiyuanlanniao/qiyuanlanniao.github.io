@@ -45,7 +45,7 @@ Using the Lenovo Morningstar MX robot as a platform, an intelligent agent system
 [2026.06-Present]{.project-date}
 :::
 ::: {.project-desc}
-Addressing the bottlenecks of traditional VLA, which relies on LLM with billions of parameters, resulting in large memory requirements (>10 GB) and high latency (~11 Hz), we spearheaded the development of DirectVLA, a real-time strategy with a minimalist direct mapping architecture. The project abandons the V→L→A path, constructing a V+L→A model based on DINOv3 and BERT, combining bidirectional text-to-image interaction with non-autoregressive continuous action block decoding. On a single RTX 4090, the model achieves an ultra-low latency of ~30ms with only 0.2B parameters and 0.9GB of memory. High robustness closed-loop verification was completed on a single LIBERO arm (97.7%), RoboTwin dual arms (60.2%), and the xMate SR3 real-world device (up to 92.5%).
+Addressing the bottlenecks of traditional VLA, which relies on LLM with billions of parameters, resulting in large memory requirements (>10 GB) and high latency (~11 Hz), we spearheaded the development of DirectVLA, a real-time strategy with a minimalist direct mapping architecture. The project abandons the V→L→A path, constructing a V+L→A model based on DINOv3 and BERT, combining bidirectional text-to-image interaction with non-autoregressive continuous action block decoding. On a single RTX 4090, the model achieves an ultra-low latency of ~30ms with only 0.22B parameters and 0.9GB of memory. High robustness closed-loop verification was completed on a single LIBERO arm (98.7%), RoboTwin dual arms (60.2%), and the xMate SR3 real-world device (up to 92.5%).
 :::
 
 ::: {.project-header}
