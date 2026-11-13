@@ -39,7 +39,7 @@ To address the limitations of traditional discrete Vision-Language-Action (VLA) 
 :::
 
 ::: {.project-header}
-[OmniVLN: Open-Set Instance-Level 3D Semantic Mapping with Rotating LiDAR and Panoramic Vision](https://arxiv.org/pdf/2603.17351){.project-title}
+[OmniVLN: Omnidirectional 3D Perception and Token-Efficient LLM Reasoning for Visual-Language Navigation across Air and Ground Platforms](https://arxiv.org/pdf/2603.17351){.project-title}
 [Co-first Author, CVPR (CCF-A, Under Review)]{.project-date}
 :::
 ::: {.project-desc}
@@ -68,7 +68,7 @@ Using the Lenovo Morningstar MX robot as a platform, an intelligent agent system
 - Outstanding graduates of Chongqing, 2025
 - Outstanding Bachelor's Thesis Award, 2025
 - National Scholarship, 2024
-- Second Prize in the National Undergraduate Data Statistics and Analysis Competition, 2023
+- First Prize, National College Student Mathematics Competition, 2023
 - Third Prize in the National Finals of the Team Programming Ladder Competition, 2023
 
 :::
