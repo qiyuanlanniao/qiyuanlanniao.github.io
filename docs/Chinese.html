@@ -142,8 +142,8 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#个人简介" id="toc-个人简介" class="nav-link active" data-scroll-target="#个人简介">个人简介</a></li>
   <li><a href="#教育背景" id="toc-教育背景" class="nav-link" data-scroll-target="#教育背景">教育背景</a></li>
   <li><a href="#研究兴趣" id="toc-研究兴趣" class="nav-link" data-scroll-target="#研究兴趣">研究兴趣</a></li>
+  <li><a href="#科研经历" id="toc-科研经历" class="nav-link" data-scroll-target="#科研经历">科研经历</a></li>
   <li><a href="#实习经历" id="toc-实习经历" class="nav-link" data-scroll-target="#实习经历">实习经历</a></li>
-  <li><a href="#项目经历" id="toc-项目经历" class="nav-link" data-scroll-target="#项目经历">项目经历</a></li>
   <li><a href="#荣誉奖项" id="toc-荣誉奖项" class="nav-link" data-scroll-target="#荣誉奖项">荣誉奖项</a></li>
   </ul>
 </nav>
@@ -195,22 +195,13 @@ ul.task-list li input[type="checkbox"] {
 <li>Agent</li>
 </ul>
 </section>
-<section id="实习经历" class="level2">
-<h2 class="anchored" data-anchor-id="实习经历">实习经历</h2>
+<section id="科研经历" class="level2">
+<h2 class="anchored" data-anchor-id="科研经历">科研经历</h2>
 <div class="project-header">
-<p><a href="https://github.com/qiyuanlanniao/AgenticVLN" class="project-title">联想（上海）信息技术有限公司（LR Robotics Algorithm）- 机器人具身智能研究实习生</a> <span class="project-date">2026.05-2026.08</span></p>
+<p><a href="https://github.com/qiyuanlanniao/DirectVLA" class="project-title">EVAct: 耦合离散分布与连续估计的自适应体素演化高精度VLA策略研发</a> <span class="project-date">Co-first Author, CVPR (CCF-A, Under Review)</span></p>
 </div>
 <div class="project-desc">
-<p>以联想晨星MX机器人为载体，构建了由任务规划主脑NavAgent与Slow-Fast双系统导航DualVLN协同的智能体系统AgenticVLN。NavAgent基于LangGraph状态机，负责全局任务解析、记忆存储、遥测自检与异常诊断。DualVLN负责具体的运动生成，利用System2（2HZ，微调QwenVL-2.5）预测2D像素亚目标，并由System1（30HZ，NextDiT）输出高频物理轨迹。SR提升10.1%, SPL提升6.7%, NE降低17.6%, StR降低32.5%。</p>
-</div>
-</section>
-<section id="项目经历" class="level2">
-<h2 class="anchored" data-anchor-id="项目经历">项目经历</h2>
-<div class="project-header">
-<p><a href="https://github.com/qiyuanlanniao/DirectVLA" class="project-title">DirectVLA：极简直接映射架构的高频低显存实时VLA策略研发</a> <span class="project-date">2026.06-今</span></p>
-</div>
-<div class="project-desc">
-<p>针对传统 VLA 依赖数十亿参数 LLM 导致显存大（&gt;10 GB）且延迟高（~11 Hz）的瓶颈，主导研发了极简直接映射架构的实时策略DirectVLA。项目摒弃V→L→A 路径，基于DINOv3与BERT构建V+L→A模型，结合双向图文交互与非自回归连续动作块解码。在单张RTX 4090上，模型以仅0.22B参数和0.9GB显存实现~30ms超低延迟。 在LIBERO单臂（98.7%），RoboTwin双臂（60.2%）及xMate SR3实机（最高 92.5%）上完成高鲁棒性闭环验证。</p>
+<p>针对传统离散VLA精度受限与连续扩散策略延迟高的瓶颈，主导研发了耦合离散概率预测与连续动作估计的实时策略EVAct。项目基于DINOv3与BERT构建轻量骨干，提出自适应动作体素演化机制，结合坐标体素嵌入打分、局部邻域连续聚合与不确定性弹性外扩。在单张RTX 4090上以仅0.2B参数量和&lt;1 GB显存实现~32Hz高频实时控制。在 LIBERO(98.7%)、Meta-World (86.8%)及ROKAE双臂实机(75.0%)上完成高鲁棒性闭环验证。</p>
 </div>
 <div class="project-header">
 <p><a href="https://arxiv.org/pdf/2603.17351" class="project-title">OmniVLN：面向空地视觉语言导航的全方位3D感知和令牌高效LLM推理</a> <span class="project-date">Co-first Author, IEEE RA-L (SCI Q2 TOP, Under Review)</span></p>
@@ -220,6 +211,15 @@ ul.task-list li input[type="checkbox"] {
 </div>
 <div class="project-header">
 <p><a href="https://www.scitepress.org/Papers/2024/131897/131897.pdf" class="project-title">A Review of Data Fusion and Deep Learning Models for Multimodal Sentiment Analysis.</a> <span class="project-date">First Author, Published to In Proceedings of E-commerce and Artificial Intelligence (ECAI 2024)</span></p>
+</div>
+</section>
+<section id="实习经历" class="level2">
+<h2 class="anchored" data-anchor-id="实习经历">实习经历</h2>
+<div class="project-header">
+<p><a href="https://github.com/qiyuanlanniao/AgenticVLN" class="project-title">联想（上海）信息技术有限公司（LR Robotics Algorithm）- 机器人具身智能研究实习生</a> <span class="project-date">2026.05-2026.08</span></p>
+</div>
+<div class="project-desc">
+<p>以联想晨星MX机器人为载体，构建了由任务规划主脑NavAgent与Slow-Fast双系统导航DualVLN协同的智能体系统AgenticVLN。NavAgent基于LangGraph状态机，负责全局任务解析、记忆存储、遥测自检与异常诊断。DualVLN负责具体的运动生成，利用System2（2HZ，微调QwenVL-2.5）预测2D像素亚目标，并由System1（30HZ，NextDiT）输出高频物理轨迹。SR提升10.1%, SPL提升6.7%, NE降低17.6%, StR降低32.5%。</p>
 </div>
 </section>
 <section id="荣誉奖项" class="level2">
