@@ -32,7 +32,7 @@ Research areas include Vision-Language Action (VLA), Vision-and-Language Navigat
 ## Research Experience
 ::: {.project-header}
 [Zoom In, Don’t Lock In: Evolving Action Voxels for Vision-Language-Action Models](https://github.com/qiyuanlanniao/DirectVLA){.project-title}
-[2026.07-2026.11]{.project-date}
+[Co-first Author, CVPR (CCF-A, Under Review)]{.project-date}
 :::
 ::: {.project-desc}
 To address the limitations of traditional discrete Vision-Language-Action (VLA) models—namely, restricted precision and the high latency inherent in continuous diffusion-based strategies—we developed EVAct, a real-time policy framework that couples discrete probabilistic prediction with continuous action estimation. The model utilizes a lightweight backbone built upon DINOv3 and BERT, and incorporates an adaptive action-voxel evolution mechanism. This approach integrates coordinate-voxel embedding-based scoring, continuous aggregation within local neighborhoods, and uncertainty-aware, elastic expansion. With only 0.2 billion parameters and a VRAM footprint of less than 1 GB, EVAct achieves high-frequency, real-time control at approximately 32 Hz on a single RTX 4090 GPU. Its robust closed-loop performance has been validated across the LIBERO (98.7%) and Meta-World (86.8%) benchmarks, as well as on a physical ROKAE dual-arm robotic system (75.0%).

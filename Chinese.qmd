@@ -40,7 +40,7 @@ editor:
 [Co-first Author, IEEE RA-L (SCI Q2 TOP, Under Review)]{.project-date}
 :::
 ::: {.project-desc}
-针对具身Agent空间推理缺失与上下文膨胀难题，构建基于LangGraph状态图与 5层动态场景图环境世界模型的自主导航Agent架构。系统融合持续同调拓扑分房与VLM双重图剪枝精化空间表征；决策端首创 Ego-centric立体8邻域观测模型与多分辨率空间注意力提示机制，结合 Actor-Critic自反思与空间工具链增强实现长程 Zero-shot主动感知闭环。实验表明Agent决策成功率达 93.18%（视角依赖准确率提升22.73%），推理 Token 消耗降低 69.98%。
+针对具身Agent空间推理缺失与上下文膨胀难题，构建基于LangGraph状态图与5层动态场景图环境世界模型的自主导航Agent架构。系统融合持续同调拓扑分房与VLM双重图剪枝精化空间表征；决策端首创 Ego-centric立体8邻域观测模型与多分辨率空间注意力提示机制，结合 Actor-Critic自反思与空间工具链增强实现长程 Zero-shot主动感知闭环。实验表明Agent决策成功率达 93.18%（视角依赖准确率提升22.73%），推理 Token 消耗降低 69.98%。
 :::
 
 ::: {.project-header}
