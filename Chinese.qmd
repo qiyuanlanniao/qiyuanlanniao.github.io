@@ -27,13 +27,6 @@ editor:
 
 
 ## 科研经历
-::: {.project-header}
-[EVAct: 耦合离散分布与连续估计的自适应体素演化高精度VLA策略研发](https://github.com/qiyuanlanniao/DirectVLA){.project-title}
-[Co-first Author, CVPR (CCF-A, Under Review)]{.project-date}
-:::
-::: {.project-desc}
-针对传统离散VLA精度受限与连续扩散策略延迟高的瓶颈，主导研发了耦合离散概率预测与连续动作估计的实时策略EVAct。项目基于DINOv3与BERT构建轻量骨干，提出自适应动作体素演化机制，结合坐标体素嵌入打分、局部邻域连续聚合与不确定性弹性外扩。在单张RTX 4090上以仅0.2B参数量和<1 GB显存实现~32Hz高频实时控制。在 LIBERO(98.7%)、Meta-World (86.8%)及ROKAE双臂实机(75.0%)上完成高鲁棒性闭环验证。
-:::
 
 ::: {.project-header}
 [OmniVLN：面向空地视觉语言导航的全方位3D感知和令牌高效LLM推理](https://arxiv.org/pdf/2603.17351){.project-title}
