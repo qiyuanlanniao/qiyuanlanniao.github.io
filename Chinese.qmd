@@ -29,11 +29,30 @@ editor:
 ## 科研经历
 
 ::: {.project-header}
+[EVAct: 耦合离散分布与连续估计的自适应体素演化高精度VLA策略研发](https://openreview.net/forum?id=4oLoa9MUUQ){.project-title}
+[Student First Author, CVPR (CCF-A, Under Review)]{.project-date}
+:::
+::: {.project-desc}
+针对传统离散VLA精度受限与连续扩散策略延迟高的瓶颈，主导研发了耦合离散概率预测与连续动作估计的实时策略EVAct。项目基于DINOv3与BERT构建轻量骨干，提出自适应动作体素演化机制，结合坐标体素嵌入打分、局部邻域连续聚合与不确定性弹性外扩。在单张RTX 4090上以仅0.2B参数量和<1 GB显存实现~32Hz高频实时控制。在 LIBERO(98.7%)、Meta-World (86.8%)及ROKAE双臂实机(75.0%)上完成高鲁棒性闭环验证。
+<div class="project-impact">
+<span class="impact-metric"><strong>~32 Hz</strong><small>实时控制</small></span>
+<span class="impact-metric"><strong>0.2B</strong><small>模型参数</small></span>
+<span class="impact-metric"><strong>98.7%</strong><small>LIBERO</small></span>
+<span class="impact-metric"><strong>86.8%</strong><small>Meta-World</small></span>
+</div>
+:::
+
+::: {.project-header}
 [OmniVLN：面向空地视觉语言导航的全方位3D感知和令牌高效LLM推理](https://arxiv.org/pdf/2603.17351){.project-title}
 [Co-first Author, IEEE RA-L (SCI Q2 TOP, Under Review)]{.project-date}
 :::
 ::: {.project-desc}
 针对具身Agent空间推理缺失与上下文膨胀难题，构建基于LangGraph状态图与5层动态场景图环境世界模型的自主导航Agent架构。系统融合持续同调拓扑分房与VLM双重图剪枝精化空间表征；决策端首创 Ego-centric立体8邻域观测模型与多分辨率空间注意力提示机制，结合 Actor-Critic自反思与空间工具链增强实现长程 Zero-shot主动感知闭环。实验表明Agent决策成功率达 93.18%（视角依赖准确率提升22.73%），推理 Token 消耗降低 69.98%。
+<div class="project-impact">
+<span class="impact-metric"><strong>93.18%</strong><small>决策成功率</small></span>
+<span class="impact-metric"><strong>+22.73%</strong><small>视角依赖准确率</small></span>
+<span class="impact-metric"><strong>−69.98%</strong><small>推理 Token</small></span>
+</div>
 :::
 
 ::: {.project-header}
@@ -48,6 +67,12 @@ editor:
 :::
 ::: {.project-desc}
 以联想晨星MX机器人为载体，构建了由任务规划主脑NavAgent与Slow-Fast双系统导航DualVLN协同的智能体系统AgenticVLN。NavAgent基于LangGraph状态机，负责全局任务解析、记忆存储、遥测自检与异常诊断。DualVLN负责具体的运动生成，利用System2（2HZ，微调QwenVL-2.5）预测2D像素亚目标，并由System1（30HZ，NextDiT）输出高频物理轨迹。SR提升10.1%, SPL提升6.7%, NE降低17.6%, StR降低32.5%。
+<div class="project-impact">
+<span class="impact-metric"><strong>+10.1%</strong><small>成功率</small></span>
+<span class="impact-metric"><strong>+6.7%</strong><small>SPL</small></span>
+<span class="impact-metric"><strong>−17.6%</strong><small>导航误差</small></span>
+<span class="impact-metric"><strong>−32.5%</strong><small>StR</small></span>
+</div>
 :::
 
 ## 荣誉奖项
